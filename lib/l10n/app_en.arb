@@ -1,0 +1,27 @@
+{
+  "@@locale": "en",
+  "bottom_home_page": "home",
+  "@bottom_home_page": {
+    "description": "Bottom navigation bar home page naming."
+  },
+  "bottom_setting_page": "setting",
+  "@bottom_setting_page": {
+    "description": "Bottom navigation bar setting page naming."
+  },
+  "start_initialization_starting": "Initializing，please wait patiently...",
+  "@start_initialization_starting": {
+    "description": "Initial state prompt for the startup page."
+  },
+  "start_initialization_loadingData": "Fetching data...",
+  "@start_initialization_loadingData": {
+    "description": "Initializing, Fetching data."
+  },
+  "start_initialization_complete": "Initialization completed.",
+  "@start_initialization_complete": {
+    "description": "Initialization completed."
+  },
+  "start_initialization_unknown": "Initialization in progress with unknown status...",
+  "@start_initialization_unknown": {
+    "description": "Initialization in progress with unknown status"
+  }
+}
