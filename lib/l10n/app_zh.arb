@@ -1,0 +1,27 @@
+{
+  "@@locale": "zh",
+  "bottom_home_page": "主页",
+  "@bottom_home_page": {
+    "description": "Bottom navigation bar home page naming."
+  },
+  "bottom_setting_page": "设置",
+  "@bottom_setting_page": {
+    "description": "Bottom navigation bar setting page naming."
+  },
+  "start_initialization_starting": "初始化中，请耐性等待...",
+  "@start_initialization_starting": {
+    "description": "启动页面的初始状态提示"
+  },
+  "start_initialization_loadingData": "正在获取数据...",
+  "@start_initialization_loadingData": {
+    "description": "初始化获取数据提示"
+  },
+  "start_initialization_complete": "初始化完成",
+  "@start_initialization_complete": {
+    "description": "初始化完成提示"
+  },
+  "start_initialization_unknown": "未知的初始化进行中...",
+  "@start_initialization_unknown": {
+    "description": "未知的初始化提示"
+  }
+}
