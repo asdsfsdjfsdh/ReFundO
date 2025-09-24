@@ -216,7 +216,7 @@ class FloatingLogin {
                                     }
                                     setState(() => _isLoading = true);
                                     try {
-                                      await onLogin(context,username, password, _rememberMe);
+                                      await onLogin(context,username, password,_rememberMe);
                                       hide();
                                     } finally {
                                       setState(() => _isLoading = false);

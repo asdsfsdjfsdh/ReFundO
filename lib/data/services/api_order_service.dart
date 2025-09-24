@@ -7,10 +7,10 @@ class ApiOrderService{
   Future<List<OrderModel>> getOrders() async{
     // 暂时占位
     List<OrderModel> orders = [
-      OrderModel(id: "1", value: 10, refundAmount: 3, timestamp: DateTime.timestamp(), isRefund: false),
-      OrderModel(id: "2", value: 20, refundAmount: 3, timestamp: DateTime.timestamp(), isRefund: false),
-      OrderModel(id: "3", value: 30, refundAmount: 3, timestamp: DateTime.timestamp(), isRefund: true),
-      OrderModel(id: "4", value: 40, refundAmount: 3, timestamp: DateTime.timestamp(), isRefund: true),
+      OrderModel(ProductId: "1", price: 10, refundAmount: 3, OrderTime: DateTime.timestamp(), isRefund: false),
+      OrderModel(ProductId: "2", price: 20, refundAmount: 3, OrderTime: DateTime.timestamp(), isRefund: false),
+      OrderModel(ProductId: "3", price: 30, refundAmount: 3, OrderTime: DateTime.timestamp(), isRefund: true),
+      OrderModel(ProductId: "4", price: 40, refundAmount: 3, OrderTime: DateTime.timestamp(), isRefund: true),
     ];
     return orders;
   }

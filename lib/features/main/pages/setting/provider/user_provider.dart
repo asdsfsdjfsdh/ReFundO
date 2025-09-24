@@ -21,6 +21,7 @@ class UserProvider with ChangeNotifier{
       if(isRemember!){
         String? username = await UserStorage.getUsername();
         String? password = await UserStorage.getPassword();
+        String? Email = await UserStorage.getEmail();
         LogUtil.d("初始化：", "自动登入");
         login(username!, password!);
       }
@@ -34,6 +35,10 @@ class UserProvider with ChangeNotifier{
     try{
       _user = await _service.logic(username, password);
       LogUtil.d("登入", "成功登入");
+      // if(_user == null) {
+      //   LogUtil.e("登入", "账号或密码错误");
+      //   return;
+      // }
       _isLogin = true;
     }catch(e){
       LogUtil.e("登入", e.toString());

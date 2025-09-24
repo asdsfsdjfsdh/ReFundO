@@ -20,8 +20,8 @@ Widget orderWidget(List<OrderModel> models) {
             ),
             child: Icon(Icons.receipt, color: Colors.blue[700]),
           ),
-          title: Text('订单号: ${order.id}'),
-          subtitle: Text('时间: ${order.timestamp}'),
+          title: Text('订单号: ${order.ProductId}'),
+          subtitle: Text('时间: ${order.OrderTime}'),
           trailing: Text(
             order.refundAmount.toString(),
             style: TextStyle(
