@@ -7,7 +7,7 @@ class ApiUserLogicService {
   final Dio _dio = Dio();
 
   ApiUserLogicService() {
-    _dio.options.baseUrl = "http://172.22.235.82:4040";
+    _dio.options.baseUrl = "http://10.0.2.2:4040";
     _dio.options.contentType = Headers.jsonContentType; //
 
     // 添加拦截器
@@ -20,8 +20,16 @@ class ApiUserLogicService {
           if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
+          print('请求地址: ${options.uri}');
+          print('请求头: ${options.headers}');
+          print('请求参数: ${options.data}');
 
           return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          print('响应状态码: ${response.statusCode}');
+          print('响应数据: ${response.data}');
+          return handler.next(response);
         },
         onError: (e, handler) async {
           // 处理 Token 过期
@@ -48,6 +56,13 @@ class ApiUserLogicService {
     return prefs.getString('access_token') ?? '';
   }
 
+  //清除token
+  Future<void> clearToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token'); // 移除 key 为 'access_token' 的存储
+    print('Token cleared successfully');
+  }
+
   // 登入
   Future<UserModel> logic(String username, String password) async {
     try {
@@ -62,13 +77,14 @@ class ApiUserLogicService {
       print(responseData['result']);
       if (responseData['result'] == null) {
         print(111);
-        throw Exception(message);
+        return  UserModel.fromJson({}, errorMessage: message);
       } else {
         print(responseData['result']['user']);
         await _saveToken(responseData['result']['token']);
         return UserModel.fromJson(responseData['result']['user']);
       }
     } catch (e) {
+      // print(111);
       return Future.error(e.toString());
     }
     // return UserModel(username: username, userAccount: username, AmountSum: 30,RefundedAmount:100,Email:'',CardNumber:'');
@@ -83,11 +99,7 @@ class ApiUserLogicService {
     try {
       Response response = await _dio.post(
         "/api/user/register",
-        data: {
-          "name": username,
-          "email": userEmail,
-          "password": password,
-        },
+        data: {"name": username, "email": userEmail, "password": password},
       );
       final String responseData = response.data;
 

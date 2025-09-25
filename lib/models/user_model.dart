@@ -12,6 +12,8 @@ class UserModel{
 
   final String CardNumber;
 
+  final String errorMessage;
+
   // 初始化方法
   UserModel({
     required this.username,
@@ -20,6 +22,7 @@ class UserModel{
     required this.RefundedAmount,
     required this.Email,
     required this.CardNumber
+  , this.errorMessage = ''
   });
 
   // 配置转化Json方法
@@ -45,14 +48,15 @@ class UserModel{
   // }
 
   // 从Json的转化方法
-factory UserModel.fromJson(Map<String,dynamic> json){
+factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''}) {
   return UserModel(
       username: json['name'] as String? ?? '',
       userAccount: json['userid'] as String? ?? '',
       AmountSum: (json['AmountSum'] as num?)?.toDouble() ?? 0.0,
       RefundedAmount: (json['RefundedAmount'] as num?)?.toDouble() ?? 0.0,
       Email: json['Email'] as String? ?? '',
-      CardNumber: json['CardNumber'] as String? ?? ''
+      CardNumber: json['CardNumber'] as String? ?? '',
+      errorMessage: errorMessage
   );
 }
 
