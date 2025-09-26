@@ -1,4 +1,5 @@
 import 'package:refundo/core/utils/log_util.dart';
+import 'package:refundo/features/main/pages/home/home_page.dart';
 import 'package:refundo/models/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,10 +21,6 @@ class ApiUserLogicService {
           if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-          print('请求地址: ${options.uri}');
-          print('请求头: ${options.headers}');
-          print('请求参数: ${options.data}');
-
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -56,13 +53,6 @@ class ApiUserLogicService {
     return prefs.getString('access_token') ?? '';
   }
 
-  //清除token
-  Future<void> clearToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('access_token'); // 移除 key 为 'access_token' 的存储
-    print('Token cleared successfully');
-  }
-
   // 登入
   Future<UserModel> logic(String username, String password) async {
     try {
@@ -73,14 +63,13 @@ class ApiUserLogicService {
       );
       final Map<String, dynamic> responseData = response.data;
       String message = responseData['message'];
-      print(message);
-      print(responseData['result']);
       if (responseData['result'] == null) {
-        print(111);
+        // print(111);
         return  UserModel.fromJson({}, errorMessage: message);
       } else {
-        print(responseData['result']['user']);
+        // print(responseData['result']['user']);
         await _saveToken(responseData['result']['token']);
+        
         return UserModel.fromJson(responseData['result']['user']);
       }
     } catch (e) {
@@ -109,4 +98,10 @@ class ApiUserLogicService {
     }
     LogUtil.d("注册", "成功");
   }
+
+  //传出dio实例
+  Future<Dio> getDioInstance() async {
+    return _dio;
+  }
+
 }

@@ -11,7 +11,12 @@ import 'package:refundo/routes/routes.dart';
 import 'package:provider/provider.dart';
 
 void main() async{
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserProvider(), // ✅ 全局提供
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget{

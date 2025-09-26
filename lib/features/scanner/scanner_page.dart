@@ -26,7 +26,7 @@ class ScannerPage extends StatelessWidget {
 
   void _showTextResultDialog(BuildContext context, Code result) {
     String? decodedText = result.text;
-    print(decodedText);
+    print(decodedText); 
     showDialog(
       context: context,
       builder: (BuildContext context) {

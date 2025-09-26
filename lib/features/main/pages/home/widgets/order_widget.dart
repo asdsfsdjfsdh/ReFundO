@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:refundo/models/order_model.dart';
 
 Widget orderWidget(List<OrderModel> models) {
+  print(models.length);
   return ListView.builder(
     itemCount: models.length,
     itemBuilder: (context, index) {
       final order = models[index];
+      if (models.isEmpty) {
+      return Center(child: Text('无数据'));
+    }
       return Card(
         margin: const EdgeInsets.only(bottom: 10),
         child: ListTile(
@@ -20,7 +24,7 @@ Widget orderWidget(List<OrderModel> models) {
             ),
             child: Icon(Icons.receipt, color: Colors.blue[700]),
           ),
-          title: Text('订单号: ${order.ProductId}'),
+          title: Text('订单号: ${order.orderid}'),
           subtitle: Text('时间: ${order.OrderTime}'),
           trailing: Text(
             order.refundAmount.toString(),

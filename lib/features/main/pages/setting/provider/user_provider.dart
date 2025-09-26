@@ -4,12 +4,17 @@ import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/utils/storage/setting_storage.dart';
 import 'package:refundo/core/utils/storage/user_storage.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
+import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? _user;
   final ApiUserLogicService _service = ApiUserLogicService();
   bool _isLogin = false;
+
+  Function()? onloginSuccess;
+  Function()? onlogout;
 
   UserModel? get user => _user;
   bool get isLogin => _isLogin;
@@ -41,12 +46,14 @@ class UserProvider with ChangeNotifier {
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
+        onloginSuccess?.call();
+        print(111);
       }
 
       return _user!;
     } catch (e) {
       LogUtil.e("登入", e.toString());
-      return UserModel.fromJson({},errorMessage: e.toString());
+      return UserModel.fromJson({}, errorMessage: e.toString());
     } finally {
       //
       notifyListeners();
@@ -69,12 +76,19 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  // 注销账号
-  Future<void> logOut() async {
+  // 注销账号,清除token
+  Future<void> logOut(BuildContext context) async {
     try {
       _isLogin = false;
       _user = null;
       SettingStorage.saveRememberAccount(false);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('access_token'); // 移除 key 为 'access_token' 的存储
+      //清除订单信息
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      orderProvider.clearOrders();
+      print('Token cleared successfully');
+      onlogout?.call();
     } catch (e) {
       LogUtil.d("账号", "注销失败$e");
     } finally {
