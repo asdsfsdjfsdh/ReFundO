@@ -22,11 +22,11 @@ class ProductModel{
   };
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-    ProductId: json['ProductId'],
-    price: json['price'],
-    RefundAmount: json['RefundAmount'],
-    Hash: json['Hash'],
-    RefundPercent: json['RefundPercent'],
+    ProductId: json['ProductId'] as String ? ?? '',
+    price: json['price'] as double ? ?? -1.0,
+    RefundAmount: json['RefundAmount'] as double ? ?? -1.0,
+    Hash: json['Hash'] as String ? ?? '',
+    RefundPercent: json['RefundPercent'] as double ? ?? -1.0,
   );
 
  @override

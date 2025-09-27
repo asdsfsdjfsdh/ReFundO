@@ -46,9 +46,9 @@ class UserProvider with ChangeNotifier {
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
-        onloginSuccess?.call();
         print(111);
       }
+      onloginSuccess?.call();
 
       return _user!;
     } catch (e) {
