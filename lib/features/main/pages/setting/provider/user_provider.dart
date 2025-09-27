@@ -13,14 +13,14 @@ class UserProvider with ChangeNotifier {
   final ApiUserLogicService _service = ApiUserLogicService();
   bool _isLogin = false;
 
-  Function()? onloginSuccess;
+  Function(double?)? onloginSuccess;
   Function()? onlogout;
 
   UserModel? get user => _user;
   bool get isLogin => _isLogin;
 
   // 初始化用户系统
-  Future<void> initProvider() async {
+  Future<void> initProvider(BuildContext context) async {
     bool? isRemember = await SettingStorage.getRememberAccount();
     try {
       if (isRemember!) {
@@ -28,7 +28,7 @@ class UserProvider with ChangeNotifier {
         String? password = await UserStorage.getPassword();
         String? Email = await UserStorage.getEmail();
         LogUtil.d("初始化：", "自动登入");
-        login(username!, password!);
+        login(username!, password!,context);
       }
     } catch (e) {
       SettingStorage.saveRememberAccount(false);
@@ -36,9 +36,9 @@ class UserProvider with ChangeNotifier {
   }
 
   // 向后端请求登入
-  Future<UserModel> login(String username, String password) async {
+  Future<UserModel> login(String username, String password,BuildContext context) async {
     try {
-      _user = await _service.logic(username, password);
+      _user = await _service.logic(username, password,context);
 
       if (_user!.errorMessage.isNotEmpty) {
         LogUtil.e("登入", _user!.errorMessage);
@@ -48,7 +48,7 @@ class UserProvider with ChangeNotifier {
         _isLogin = true;
         print(111);
       }
-      onloginSuccess?.call();
+      onloginSuccess?.call(_user?.AmountSum);
 
       return _user!;
     } catch (e) {
@@ -65,9 +65,10 @@ class UserProvider with ChangeNotifier {
     String username,
     String userEmail,
     String password,
+    BuildContext context
   ) async {
     try {
-      await _service.register(username, userEmail, password);
+      await _service.register(username, userEmail, password,context);
       LogUtil.d("注册", "成功注册账号");
     } catch (e) {
       LogUtil.e("注册", e.toString());

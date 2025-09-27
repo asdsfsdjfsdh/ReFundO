@@ -9,9 +9,6 @@ Widget orderWidget(List<OrderModel> models) {
     itemCount: models.length,
     itemBuilder: (context, index) {
       final order = models[index];
-      if (models.isEmpty) {
-      return Center(child: Text('无数据'));
-    }
       return Card(
         margin: const EdgeInsets.only(bottom: 10),
         child: ListTile(

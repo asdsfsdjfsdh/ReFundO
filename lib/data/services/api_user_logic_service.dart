@@ -1,63 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/features/main/pages/home/home_page.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiUserLogicService {
-  final Dio _dio = Dio();
-
-  ApiUserLogicService() {
-    _dio.options.baseUrl = "http://172.22.43.122:4040";
-    _dio.options.contentType = Headers.jsonContentType; //
-
-    // 添加拦截器
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          // 从 SharedPreferences 获取 Token
-          String token = await _getToken();
-
-          if (token.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          return handler.next(options);
-        },
-        onResponse: (response, handler) {
-          print('响应状态码: ${response.statusCode}');
-          print('响应数据: ${response.data}');
-          return handler.next(response);
-        },
-        onError: (e, handler) async {
-          // 处理 Token 过期
-          if (e.response?.statusCode == 401) {
-            // 重新获取 Token 或跳转到登录页
-            print('Token expired, redirecting to login');
-            // 在这里处理 Token 过期逻辑
-          }
-          return handler.next(e);
-        },
-      ),
-    );
-  }
-  // 保存token
-  Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('access_token', token);
-    print('Token saved successfully');
-  }
-
-  // 获取token
-  Future<String> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token') ?? '';
-  }
-
   // 登入
-  Future<UserModel> logic(String username, String password) async {
+  Future<UserModel> logic(String username, String password,BuildContext context ) async {
     try {
       print(username + password);
-      Response response = await _dio.post(
+      DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
+      Response response = await dioProvider.dio.post(
         "/api/user/login",
         data: {"name": username, "password": password, "email": username},
       );
@@ -68,7 +24,7 @@ class ApiUserLogicService {
         return  UserModel.fromJson({}, errorMessage: message);
       } else {
         // print(responseData['result']['user']);
-        await _saveToken(responseData['result']['token']);
+        await dioProvider.saveToken(responseData['result']['token']);
         
         return UserModel.fromJson(responseData['result']['user']);
       }
@@ -84,9 +40,10 @@ class ApiUserLogicService {
     String username,
     String userEmail,
     String password,
+    BuildContext context
   ) async {
     try {
-      Response response = await _dio.post(
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
         "/api/user/register",
         data: {"name": username, "email": userEmail, "password": password},
       );
@@ -98,10 +55,4 @@ class ApiUserLogicService {
     }
     LogUtil.d("注册", "成功");
   }
-
-  //传出dio实例
-  Future<Dio> getDioInstance() async {
-    return _dio;
-  }
-
 }

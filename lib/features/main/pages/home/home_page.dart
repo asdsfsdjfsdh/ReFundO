@@ -9,6 +9,7 @@ import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/features/main/pages/home/widgets/order_widget.dart';
 import 'package:refundo/features/main/pages/home/widgets/refund_widget.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/features/scanner/scanner_page.dart';
 import 'package:refundo/models/order_model.dart';
@@ -22,27 +23,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // List<OrderModel>? _orders;
   late UserProvider _api_loginc;
+  late OrderProvider _api_order;
+  late double _totalAmount = 0.0;
   @override
   void initState() {
     super.initState();
     _api_loginc = Provider.of<UserProvider>(context, listen: false);
+    _api_order = Provider.of<OrderProvider>(context, listen: false);
     _api_loginc.onloginSuccess = _loadData;
     _api_loginc.onlogout = _loadData;
-    print(222);
+    _api_order.onProgress = _loadData;
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadData([double? amountSum = 0.0]) async {
     try {
       // 等待服务初始化完成后再获取数据
+      setState(() {
+        _totalAmount += amountSum!;
+      });
       await Future.delayed(Duration(milliseconds: 100)); // 给一点初始化时间
-
       OrderProvider orderProvider = Provider.of<OrderProvider>(
         context,
         listen: false,
       );
-      await orderProvider.getOrders();
+      await orderProvider.getOrders(context);
       print("加载数据成功");
     } catch (e) {
       LogUtil.e("主页", "加载数据失败: $e");
@@ -78,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.yellow, width: 2),
                     ),
-                    child: Center(child: Text('占位')),
+                    child: Center(child: Text(_totalAmount.toString())),
                   ),
                   const SizedBox(height: 40),
                   Row(

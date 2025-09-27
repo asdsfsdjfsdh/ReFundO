@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/Product_model.dart';
 
 class ScannerPage extends StatelessWidget {
@@ -45,7 +46,7 @@ class ScannerPage extends StatelessWidget {
     
     ProductModel product = ProductModel.fromJson(productData);
     OrderProvider orderProvider = Provider.of<OrderProvider>(context, listen: false);
-    String message = await orderProvider.InsertOrder(product);
+    String message = await orderProvider.InsertOrder(product,context);
     print(message);
 
     _showCenterToast(context, message);

@@ -4,11 +4,15 @@ import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/utils/storage/setting_storage.dart';
 import 'package:refundo/core/utils/storage/user_storage.dart';
 import 'package:refundo/core/widgets/floating_register.dart';
+import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/user_model.dart';
 
 /// 悬浮窗登录组件
 class FloatingLogin {
+  //dio实例
+
   /// 用于控制悬浮窗的显示与隐藏
   static OverlayEntry? _overlayEntry;
 
@@ -30,12 +34,13 @@ class FloatingLogin {
     String password,
     bool rememberMe,
   ) async {
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    UserModel user = await userProvider.login(username, password);
+    UserModel user = await userProvider.login(username, password,context);
     _errorMessage = user.errorMessage;
     SettingStorage.saveRememberAccount(rememberMe);
     if (rememberMe) {
-      UserStorage.savePassword(username);
+      UserStorage.savePassword(password);
       UserStorage.saveUsername(username);
       LogUtil.d("登入:", "保存用户名和密码");
     } else {
@@ -251,22 +256,20 @@ class FloatingLogin {
                                     return;
                                   }
                                   try {
+                                    setState(() => _isLoading = true);
                                     await onLogin(
                                       context,
                                       username,
                                       password,
                                       _rememberMe,
                                     );
-                                    print(_errorMessage);
-                                    setState(() => _isLoading = true);
+                                    
                                     if(_errorMessage == null || _errorMessage == ''){
-
                                       hide();
                                       setState(() => _errorMessage = null);
                                     }
                                     
                                   } finally {
-                                    
                                     setState(() => _isLoading = false);
                                   }
                                 },

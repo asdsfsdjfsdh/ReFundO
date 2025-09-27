@@ -1,55 +1,28 @@
 // 访问后端订单扫描数据
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/Product_model.dart';
 import 'package:refundo/models/order_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiOrderService {
-  Dio _dio = Dio();
   bool _isInitialized = false;
 
   List<OrderModel> _orders = [];
 
-  ApiOrderService() {
-    _initDio();
-  }
-
-  Future<void> _initDio() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString('access_token') ?? '';
-      if (token.isNotEmpty) {
-        Dio tempDio = await ApiUserLogicService().getDioInstance();
-        if (tempDio.options.baseUrl.isNotEmpty) {
-          _dio = tempDio;
-        } else {
-          _dio.options.baseUrl = 'http://172.22.43.122:4040';
-          _dio.options.contentType = Headers.jsonContentType;
-        }
-      } else {
-        _dio.options.baseUrl = 'http://172.22.43.122:4040';
-        _dio.options.contentType = Headers.jsonContentType;
-      }
-    } catch (e) {
-      _dio.options.baseUrl = 'http://172.22.43.122:4040';
-      _dio.options.contentType = Headers.jsonContentType;
-      print('异步初始化失败: $e');
-    } finally {
-      _isInitialized = true;
-    }
-  }
-
   // 获取订单数
-  Future<List<OrderModel>> getOrders() async {
-    if (!_isInitialized) {
-      await _initDio();
-    }
+  Future<List<OrderModel>> getOrders(BuildContext context) async {
+    DioProvider dioProvider = Provider.of<DioProvider>(
+      context,
+      listen: false,
+    );
     _orders = [];
 
-    Response response = await _dio.post('/api/orders/init');
+    Response response = await dioProvider.dio.post('/api/orders/init');
     // print(response);
     String message = response.data['message'];
     List<dynamic> ordersRequest = response.data['result'];
@@ -63,9 +36,13 @@ class ApiOrderService {
   }
 
   // 添加订单
-  Future<Map<String, dynamic>> insertOrder(ProductModel product) async {
+  Future<Map<String, dynamic>> insertOrder(ProductModel product, BuildContext context) async {
     try {
-      Response response = await _dio.post(
+      DioProvider dioProvider = Provider.of<DioProvider>(
+      context,
+      listen: false,
+    );
+      Response response = await dioProvider.dio.post(
         '/api/orders/insert',
         data: {
           "price": product.price,

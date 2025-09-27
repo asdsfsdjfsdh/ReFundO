@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/widgets/floating_login.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 
 /// 悬浮窗注册组件
@@ -21,7 +23,7 @@ class FloatingRegister {
 
   // 注册逻辑
   static Future<void> onRegister(BuildContext context, String username, String userEmail, String password) async{
-    Provider.of<UserProvider>(context,listen: false).register(username, userEmail, password);
+    Provider.of<UserProvider>(context,listen: false).register(username, userEmail, password,context);
   }
 
   /// 显示注册悬浮窗

@@ -11,10 +11,12 @@ class OrderProvider with ChangeNotifier {
   List<OrderModel>? _orders;
   final ApiOrderService _orderService = ApiOrderService();
 
+  Function(double?)? onProgress;
+
   List<OrderModel>? get orders => _orders;
 
   // 获取订单信息
-  Future<void> getOrders() async {
+  Future<void> getOrders(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('access_token') ?? '';
@@ -22,7 +24,7 @@ class OrderProvider with ChangeNotifier {
       print(token.isEmpty);
       if (token.isNotEmpty) {
         try {
-          _orders = await _orderService.getOrders();
+          _orders = await _orderService.getOrders(context);
           notifyListeners();
         } on DioException catch (e) {
           print(token);
@@ -47,7 +49,7 @@ class OrderProvider with ChangeNotifier {
   }
 
   // 添加订单信息
-  Future<String> InsertOrder(ProductModel product) async {
+  Future<String> InsertOrder(ProductModel product, BuildContext context) async {
     try {
       print(product);
       //检查产品信息完整性
@@ -58,12 +60,13 @@ class OrderProvider with ChangeNotifier {
           product.RefundPercent != -1) {
         //插入订单
         
-        Map<String, dynamic> result = await _orderService.insertOrder(product);
+        Map<String, dynamic> result = await _orderService.insertOrder(product, context);
         String message = result['message'];
-        if(result['result'] != null){
-          OrderModel order = OrderModel.fromJson(result['result']);
-          _orders?.add(order);
+        OrderModel order = OrderModel.fromJson(result['result']);
+        if(order != null){
+          _orders!.add(order);
           notifyListeners();
+          onProgress?.call(order.refundAmount);
         }
         return message;
       } else {

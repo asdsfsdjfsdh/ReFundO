@@ -32,9 +32,9 @@ class InitializationModel with ChangeNotifier{
     await Future.delayed(const Duration(seconds: 1));
     notifyListeners();
     _currentStatus = InitializationStatus.loadingData;
-    Provider.of<OrderProvider>(context,listen: false).getOrders();
+    Provider.of<OrderProvider>(context,listen: false).getOrders(context);
     Provider.of<RefundProvider>(context,listen: false).getRefunds();
-    Provider.of<UserProvider>(context,listen: false).initProvider();
+    Provider.of<UserProvider>(context,listen: false).initProvider(context);
     await Future.delayed(const Duration(seconds: 3));
     _isInitial = true;
     notifyListeners();
