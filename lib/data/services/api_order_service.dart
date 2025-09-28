@@ -57,7 +57,7 @@ class ApiOrderService {
       String message = response.data['message'];
       Map<String, dynamic> result = {
         "message": message,
-        "order": order,
+        "result": order,
       };
       return result;
     } on DioException catch (e) {

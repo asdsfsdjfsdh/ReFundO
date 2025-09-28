@@ -62,11 +62,11 @@ class OrderProvider with ChangeNotifier {
         
         Map<String, dynamic> result = await _orderService.insertOrder(product, context);
         String message = result['message'];
-        OrderModel order = OrderModel.fromJson(result['result']);
+        OrderModel order = result['result'];
         if(order != null){
-          _orders!.add(order);
+          _orders!.add(result['result']);
           notifyListeners();
-          onProgress?.call(order.refundAmount);
+          onProgress?.call(result['result'].refundAmount);
         }
         return message;
       } else {

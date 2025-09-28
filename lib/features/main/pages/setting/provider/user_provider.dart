@@ -46,9 +46,10 @@ class UserProvider with ChangeNotifier {
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
-        print(111);
       }
-      onloginSuccess?.call(_user?.AmountSum);
+      print(_user);
+      print(_user!.AmountSum);
+      onloginSuccess?.call(_user!.AmountSum);
 
       return _user!;
     } catch (e) {

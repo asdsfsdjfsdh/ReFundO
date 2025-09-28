@@ -20,12 +20,9 @@ class ApiUserLogicService {
       final Map<String, dynamic> responseData = response.data;
       String message = responseData['message'];
       if (responseData['result'] == null) {
-        // print(111);
         return  UserModel.fromJson({}, errorMessage: message);
       } else {
-        // print(responseData['result']['user']);
         await dioProvider.saveToken(responseData['result']['token']);
-        
         return UserModel.fromJson(responseData['result']['user']);
       }
     } catch (e) {

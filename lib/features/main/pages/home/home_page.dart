@@ -83,7 +83,10 @@ class _HomePageState extends State<HomePage> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.yellow, width: 2),
                     ),
-                    child: Center(child: Text(_totalAmount.toString())),
+                    child: Center(child: Text("$_totalAmount\$",
+                      style: TextStyle(
+                        fontSize: 24,
+                      ))),
                   ),
                   const SizedBox(height: 40),
                   Row(

@@ -51,11 +51,11 @@ class UserModel{
 factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''}) {
   return UserModel(
       username: json['name'] as String? ?? '',
-      userAccount: json['userid'] as String? ?? '',
-      AmountSum: (json['AmountSum'] as num?)?.toDouble() ?? 0.0,
-      RefundedAmount: (json['RefundedAmount'] as num?)?.toDouble() ?? 0.0,
-      Email: json['Email'] as String? ?? '',
-      CardNumber: json['CardNumber'] as String? ?? '',
+      userAccount: (json['uid'] as num?)?.toString() ?? '',
+      AmountSum: (json['amountSum'] as num?)?.toDouble() ?? 0.0,
+      RefundedAmount: (json['refundedAmount'] as num?)?.toDouble() ?? 0.0,
+      Email: json['email'] as String? ?? '',
+      CardNumber: json['cardNumber'] as String? ?? '',
       errorMessage: errorMessage
   );
 }
