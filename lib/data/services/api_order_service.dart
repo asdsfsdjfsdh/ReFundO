@@ -16,10 +16,7 @@ class ApiOrderService {
 
   // 获取订单数
   Future<List<OrderModel>> getOrders(BuildContext context) async {
-    DioProvider dioProvider = Provider.of<DioProvider>(
-      context,
-      listen: false,
-    );
+    DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
     _orders = [];
 
     Response response = await dioProvider.dio.post('/api/orders/init');
@@ -36,12 +33,15 @@ class ApiOrderService {
   }
 
   // 添加订单
-  Future<Map<String, dynamic>> insertOrder(ProductModel product, BuildContext context) async {
+  Future<Map<String, dynamic>> insertOrder(
+    ProductModel product,
+    BuildContext context,
+  ) async {
     try {
       DioProvider dioProvider = Provider.of<DioProvider>(
-      context,
-      listen: false,
-    );
+        context,
+        listen: false,
+      );
       Response response = await dioProvider.dio.post(
         '/api/orders/insert',
         data: {
@@ -53,19 +53,20 @@ class ApiOrderService {
         },
       );
       print(response);
-      OrderModel order = OrderModel.fromJson(response.data['result']);
-      String message = response.data['message'];
-      Map<String, dynamic> result = {
-        "message": message,
-        "result": order,
-      };
-      return result;
+      if (response.data['result'] != null) {
+        OrderModel order = OrderModel.fromJson(response.data['result']);
+        String message = response.data['message'];
+        Map<String, dynamic> result = {"message": message, "result": order};
+        return result;
+      } else {
+        // 处理 result 为空的情况
+        String message = response.data['message'];
+        Map<String, dynamic> result = {"message": message, "result": null};
+        return result;
+      }
     } on DioException catch (e) {
       String message = '占位错误';
-      Map<String, dynamic> result = {
-        "message": message,
-        "order": null,
-      };
+      Map<String, dynamic> result = {"message": message, "order": null};
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -101,10 +102,7 @@ class ApiOrderService {
       // 处理其他异常
       print('未知错误: $e');
       String message = '未知错误: $e';
-      Map<String, dynamic> result = {
-        "message": message,
-        "order": null,
-      };
+      Map<String, dynamic> result = {"message": message, "order": null};
       return result;
     }
   }

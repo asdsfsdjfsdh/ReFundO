@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     try {
       // 等待服务初始化完成后再获取数据
       setState(() {
-        _totalAmount += amountSum!;
+        _totalAmount = amountSum!;
       });
       await Future.delayed(Duration(milliseconds: 100)); // 给一点初始化时间
       OrderProvider orderProvider = Provider.of<OrderProvider>(

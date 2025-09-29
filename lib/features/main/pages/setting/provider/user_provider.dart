@@ -1,3 +1,5 @@
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
@@ -97,4 +99,16 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> Info(BuildContext context) async {
+    try {
+      _user = await _service.getUserInfo(context);
+      print("_user:" + _user.toString());
+      onloginSuccess?.call(_user!.AmountSum);
+    } catch (e) {
+      LogUtil.e("获取用户信息", e.toString());
+    } finally {
+      notifyListeners();
+    }
+  } 
 }

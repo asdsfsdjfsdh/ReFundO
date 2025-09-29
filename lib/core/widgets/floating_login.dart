@@ -123,7 +123,10 @@ class FloatingLogin {
                               icon: const Icon(Icons.close),
                               onPressed: () {
                                 hide();
-                                setState(() => _errorMessage = null);
+                                setState() {
+                                  _errorMessage = null;
+                                  _isLoading = false;
+                                }
                               },
                             ),
                           ],

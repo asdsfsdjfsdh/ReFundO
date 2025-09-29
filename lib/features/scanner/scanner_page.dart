@@ -25,45 +25,29 @@ class _ScannerPageState extends State<ScannerPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('扫描二维码'),
-        actions: [
-          if (!_isScanning)
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {
-                setState(() {
-                  _isScanning = true;
-                });
-              },
-            ),
-        ],
       ),
-      body: _handleScanResult(context),
+      body: ReaderWidget(
+        cropPercent: 1.0,
+        onScan: (result) async {
+          // 处理扫描结果
+          if(_isScanning){
+            if (result.isValid && result.format == (1 << 13)) {
+            _isScanning = false;
+            _showTextResultDialog(context, result);
+          } else {
+            // 显示错误提示
+            setState(() {
+              _message = '无效的二维码';
+              _isScanning = false;
+            });
+            _showDialog(context, _message);
+          }
+          }
+        },
+      )
     );
   }
 
-  Widget _handleScanResult(BuildContext context) {
-    return Stack(
-      children: [
-        if (_isScanning)
-          ReaderWidget(
-            cropPercent: 1.0,
-            onScan: (result) async {
-              // 处理扫描结果
-              if (result.isValid && result.format == (1 << 13)) {
-                _isScanning = false;
-                _showTextResultDialog(context, result);
-              } else {
-                // 显示错误提示
-                setState(() {
-                  _message = '无效的二维码';
-                });
-              }
-            },
-          ),
-        ...[?_showCenterToast(context, _message)],
-      ],
-    );
-  }
 
   void _showTextResultDialog(BuildContext context, Code result) async {
     String? decodedText = result.text;
@@ -79,7 +63,10 @@ class _ScannerPageState extends State<ScannerPage> {
 
     setState(() {
       _message = message;
+      _showDialog(context, _message);
     });
+
+    
     // _showCenterToast(context, message);
     // showDialog(
     //   context: context,
@@ -89,61 +76,52 @@ class _ScannerPageState extends State<ScannerPage> {
     // );
   }
 
-  Widget? _showCenterToast(BuildContext context, String message) {
-    if (message == '') {
-      return null;
-    }
-    return Center(
-      child: Column(
-        children: [
-          Text(message, style: TextStyle(fontSize: 16)),
-          //调整按钮位置在右下角
-          SizedBox(height: 10),
-
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              setState(() {
-                _isScanning = true;
-              });
-            },
-            child: Text('确定'),
-          ),
-        ],
-      ),
+  void _showDialog(BuildContext context, String message) {
+   showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('提示'),
+          content: Text(_message, style: TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              child: Text('确定'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _isScanning = true;
+                });
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
-  //中心提示框
-  // void _showCenterToast(BuildContext context, String message) {
-  //   final overlayEntry = OverlayEntry(
-  //     builder: (context) => Positioned(
-  //       top: 0,
-  //       left: 0,
-  //       right: 0,
-  //       bottom: 0,
-  //       child: Center(
-  //         child: Container(
-  //           padding: EdgeInsets.all(10),
-  //           decoration: BoxDecoration(
-  //             color: Colors.black54,
-  //             borderRadius: BorderRadius.circular(8),
-  //           ),
-  //           child: Text(
-  //             message,
-  //             style: TextStyle(color: Colors.white, fontSize: 16,
-  //             decoration: TextDecoration.none,),
-  //           ),
+  // Widget? _showCenterToast(BuildContext context, String message) {
+  //   if (message == '') {
+  //     return null;
+  //   }
+  //   return Center(
+  //     child: Column(
+  //       children: [
+  //         Text(message, style: TextStyle(fontSize: 16)),
+  //         //调整按钮位置在右下角
+  //         SizedBox(height: 10),
+
+  //         ElevatedButton(
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //             setState(() {
+  //               _isScanning = true;
+  //             });
+  //           },
+  //           child: Text('确定'),
   //         ),
-  //       ),
+  //       ],
   //     ),
   //   );
-
-  //   Overlay.of(context).insert(overlayEntry);
-
-  //   Future.delayed(Duration(seconds: 2), () {
-  //     overlayEntry.remove();
-  //   });
   // }
 
   //解析二维码数据

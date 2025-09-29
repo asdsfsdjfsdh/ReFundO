@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_order_service.dart';
+import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/Product_model.dart';
 import 'package:refundo/models/order_model.dart';
 import 'package:refundo/models/refund_model.dart';
@@ -61,12 +63,13 @@ class OrderProvider with ChangeNotifier {
         //插入订单
         
         Map<String, dynamic> result = await _orderService.insertOrder(product, context);
+        print(result);
         String message = result['message'];
-        OrderModel order = result['result'];
+        OrderModel? order = result['result'];
         if(order != null){
           _orders!.add(result['result']);
           notifyListeners();
-          onProgress?.call(result['result'].refundAmount);
+          Provider.of<UserProvider>(context, listen: false).Info(context);
         }
         return message;
       } else {
