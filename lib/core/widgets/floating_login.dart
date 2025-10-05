@@ -36,7 +36,7 @@ class FloatingLogin {
   ) async {
     final orderProvider = Provider.of<OrderProvider>(context, listen: false);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    UserModel user = await userProvider.login(username, password,context);
+    UserModel user = await userProvider.login(username, password, context);
     _errorMessage = user.errorMessage;
     SettingStorage.saveRememberAccount(rememberMe);
     if (rememberMe) {
@@ -68,6 +68,9 @@ class FloatingLogin {
           // 半透明遮罩，点击可关闭
           GestureDetector(
             onTap: () {
+                _errorMessage = null;
+                _isLoading = false;
+
               hide();
             },
             child: Container(
@@ -122,11 +125,12 @@ class FloatingLogin {
                             IconButton(
                               icon: const Icon(Icons.close),
                               onPressed: () {
-                                hide();
-                                setState() {
+                                setState(() {
                                   _errorMessage = null;
                                   _isLoading = false;
-                                }
+                                });
+
+                                hide();
                               },
                             ),
                           ],
@@ -156,7 +160,6 @@ class FloatingLogin {
                           ),
                           const SizedBox(height: 16),
                         ],
-
 
                         // 用户名输入框
                         TextFormField(
@@ -266,12 +269,12 @@ class FloatingLogin {
                                       password,
                                       _rememberMe,
                                     );
-                                    
-                                    if(_errorMessage == null || _errorMessage == ''){
+
+                                    if (_errorMessage == null ||
+                                        _errorMessage == '') {
                                       hide();
                                       setState(() => _errorMessage = null);
                                     }
-                                    
                                   } finally {
                                     setState(() => _isLoading = false);
                                   }

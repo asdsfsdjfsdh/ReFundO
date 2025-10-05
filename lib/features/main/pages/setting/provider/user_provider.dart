@@ -15,8 +15,9 @@ class UserProvider with ChangeNotifier {
   final ApiUserLogicService _service = ApiUserLogicService();
   bool _isLogin = false;
 
-  Function(double?)? onloginSuccess;
+  Function(double)? onloginSuccess;
   Function()? onlogout;
+  Function()? onOrder;
 
   UserModel? get user => _user;
   bool get isLogin => _isLogin;
@@ -31,6 +32,10 @@ class UserProvider with ChangeNotifier {
         String? Email = await UserStorage.getEmail();
         LogUtil.d("初始化：", "自动登入");
         login(username!, password!,context);
+      
+      }else{
+         final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('access_token');
       }
     } catch (e) {
       SettingStorage.saveRememberAccount(false);
@@ -41,7 +46,6 @@ class UserProvider with ChangeNotifier {
   Future<UserModel> login(String username, String password,BuildContext context) async {
     try {
       _user = await _service.logic(username, password,context);
-
       if (_user!.errorMessage.isNotEmpty) {
         LogUtil.e("登入", _user!.errorMessage);
         _isLogin = false;
@@ -49,16 +53,17 @@ class UserProvider with ChangeNotifier {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
       }
-      print(_user);
-      print(_user!.AmountSum);
-      onloginSuccess?.call(_user!.AmountSum);
-
+      // print("开始回调第一个函数");
+      // onloginSuccess?.call(_user!.AmountSum);
+      // print("第一个函数回调结束，开始回调第二个函数");
+      // onOrder?.call();
+      // print("第二个函数回调结束");
+      Provider.of<OrderProvider>(context, listen: false).getOrders(context);
       return _user!;
     } catch (e) {
       LogUtil.e("登入", e.toString());
       return UserModel.fromJson({}, errorMessage: e.toString());
     } finally {
-      //
       notifyListeners();
     }
   }
@@ -92,7 +97,6 @@ class UserProvider with ChangeNotifier {
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
       orderProvider.clearOrders();
       print('Token cleared successfully');
-      onlogout?.call();
     } catch (e) {
       LogUtil.d("账号", "注销失败$e");
     } finally {
@@ -104,7 +108,7 @@ class UserProvider with ChangeNotifier {
     try {
       _user = await _service.getUserInfo(context);
       print("_user:" + _user.toString());
-      onloginSuccess?.call(_user!.AmountSum);
+
     } catch (e) {
       LogUtil.e("获取用户信息", e.toString());
     } finally {

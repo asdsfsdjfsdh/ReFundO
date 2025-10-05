@@ -8,6 +8,7 @@ import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/Product_model.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -60,6 +61,8 @@ class _ScannerPageState extends State<ScannerPage> {
       listen: false,
     );
     String message = await orderProvider.InsertOrder(product, context);
+    Provider.of<UserProvider>(context, listen: false).Info(context);
+    
 
     setState(() {
       _message = message;

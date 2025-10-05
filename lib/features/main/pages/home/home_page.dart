@@ -24,31 +24,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late UserProvider _api_loginc;
-  late OrderProvider _api_order;
   late double _totalAmount = 0.0;
   @override
   void initState() {
     super.initState();
     _api_loginc = Provider.of<UserProvider>(context, listen: false);
-    _api_order = Provider.of<OrderProvider>(context, listen: false);
-    _api_loginc.onloginSuccess = _loadData;
+    _api_loginc.onloginSuccess = _initAmount;
     _api_loginc.onlogout = _loadData;
-    _api_order.onProgress = _loadData;
+    _api_loginc.onOrder = _loadData;
   }
 
-  Future<void> _loadData([double? amountSum = 0.0]) async {
+ Future<void> _initAmount(double amount) async {
+  setState(() {
+    _totalAmount = amount;
+  });
+ }
+
+  Future<void> _loadData() async {
     try {
       // 等待服务初始化完成后再获取数据
-      setState(() {
-        _totalAmount = amountSum!;
-      });
       await Future.delayed(Duration(milliseconds: 100)); // 给一点初始化时间
       OrderProvider orderProvider = Provider.of<OrderProvider>(
         context,
         listen: false,
       );
+
       await orderProvider.getOrders(context);
-      print("加载数据成功");
     } catch (e) {
       LogUtil.e("主页", "加载数据失败: $e");
     }
@@ -61,6 +62,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(
       builder: (context, value, child) {
+        final UserProvider userProvider = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        );
+        _totalAmount = userProvider.user?.AmountSum ?? 0.0;
         return Scaffold(
           appBar: AppBar(
             title: const Text("主页"),
@@ -83,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.yellow, width: 2),
                     ),
-                    child: Center(child: Text("$_totalAmount\$",
+                    child: Center(child: Text((userProvider.user?.AmountSum ?? 0.0).toString() + " \$",
                       style: TextStyle(
                         fontSize: 24,
                       ))),

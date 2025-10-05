@@ -13,8 +13,6 @@ class OrderProvider with ChangeNotifier {
   List<OrderModel>? _orders;
   final ApiOrderService _orderService = ApiOrderService();
 
-  Function(double?)? onProgress;
-
   List<OrderModel>? get orders => _orders;
 
   // 获取订单信息
@@ -68,8 +66,8 @@ class OrderProvider with ChangeNotifier {
         OrderModel? order = result['result'];
         if(order != null){
           _orders!.add(result['result']);
-          notifyListeners();
           Provider.of<UserProvider>(context, listen: false).Info(context);
+          notifyListeners();
         }
         return message;
       } else {
