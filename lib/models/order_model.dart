@@ -1,47 +1,47 @@
 class OrderModel{
   // 订单号
-  final String id;
+  final int orderid;
   // 产品价格
-  final double value;
+  final double price;
   // 返还金额
   final double refundAmount;
   // 扫描时间
-  final DateTime timestamp;
-  // 是否提现
+  final String OrderTime;
+  // 是否提现,hash值
   final bool isRefund;
 
   // 初始化方法
   OrderModel({
-    required this.id,
-    required this.value,
+    required this.orderid,
+    required this.price,
     required this.refundAmount,
-    required this.timestamp,
+    required this.OrderTime,
     required this.isRefund
   });
 
   // 配置转化Json方法
   Map<String, dynamic> toJson() =>{
-    'id': id,
-    'value': value,
+    'orderid': orderid,
+    'price': price,
     'refundAmount': refundAmount,
-    'timestamp': timestamp,
+    'OrderTime': OrderTime,
     'isRefund': isRefund
   };
 
   // 从Json的转化方法
   factory OrderModel.fromJson(Map<String,dynamic> json){
     return OrderModel(
-      id: json['id'],
-      value: json['value'],
-      refundAmount: json['refundAmount'],
-      timestamp: json['timestamp'],
-      isRefund: json['isRefund']
+      orderid: json['orderid'] as int ? ?? 0,
+      price: json['price'] as double ? ?? 0.0,
+      refundAmount: json['refundamount'] as double ? ?? 0.0,
+      OrderTime: json['date'] as String ? ?? '',
+      isRefund: json['isRefund'] as bool ? ?? false,
     );
   }
 
   // 重写输出方法
   @override
   String toString() {
-    return "订单号：$id，订单价格：$value，返还金额：$refundAmount,订单扫描时间：$timestamp,是否提现:$isRefund";
+    return "订单号：$orderid，订单价格：$price，返还金额：$refundAmount,订单扫描时间：$OrderTime,是否提现:$isRefund";
   }
 }

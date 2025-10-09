@@ -41,7 +41,7 @@ class SettingPage extends StatelessWidget{
                     onTap: () {
                       if(Provider.of<UserProvider>(context,listen: false).isLogin){
                         LogUtil.d("账号", "注销");
-                        Provider.of<UserProvider>(context,listen: false).logOut();
+                        Provider.of<UserProvider>(context,listen: false).logOut(context);
                       }else{
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

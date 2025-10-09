@@ -5,7 +5,7 @@ import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 
-class InitializationModel with ChangeNotifier{
+class InitializationModel with ChangeNotifier {
   InitializationStatus _currentStatus = InitializationStatus.starting;
   bool _isInitial = false;
 
@@ -28,13 +28,15 @@ class InitializationModel with ChangeNotifier{
   }
 
   // 初始化任务
-  Future<void> initializeApp(BuildContext context)async{
+  Future<void> initializeApp(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 1));
     notifyListeners();
     _currentStatus = InitializationStatus.loadingData;
-    Provider.of<OrderProvider>(context,listen: false).getOrders();
-    Provider.of<RefundProvider>(context,listen: false).getRefunds();
-    Provider.of<UserProvider>(context,listen: false).initProvider();
+
+    Provider.of<OrderProvider>(context, listen: false).getOrders(context);
+    Provider.of<RefundProvider>(context, listen: false).getRefunds();
+    Provider.of<UserProvider>(context, listen: false).initProvider(context);
+
     await Future.delayed(const Duration(seconds: 3));
     _isInitial = true;
     notifyListeners();
@@ -43,9 +45,4 @@ class InitializationModel with ChangeNotifier{
 }
 
 // 初始化状态的枚举
-enum InitializationStatus{
-  starting,
-  loadingData,
-  complete,
-  unknown
-}
+enum InitializationStatus { starting, loadingData, complete, unknown }

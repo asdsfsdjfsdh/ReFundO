@@ -4,40 +4,66 @@ class UserModel{
   // 用户账号
   final String userAccount;
   // 用户可返还总金额
-  final double refundAll;
+  final double AmountSum;
   // 用户已返现金额
-  final double refundedAll;
+  final double RefundedAmount;
+
+  final String Email;
+
+  final String CardNumber;
+
+  final String errorMessage;
 
   // 初始化方法
   UserModel({
     required this.username,
     required this.userAccount,
-    required this.refundAll,
-    required this.refundedAll
+    required this.AmountSum,
+    required this.RefundedAmount,
+    required this.Email,
+    required this.CardNumber
+  , this.errorMessage = ''
   });
 
   // 配置转化Json方法
   Map<String, dynamic> toJson() =>{
-    'username': username,
-    'userAccount': userAccount,
-    'refundAll': refundAll,
-    'refundedAll': refundedAll
+    'name': username,
+    'userid': userAccount,
+    'AmountSum': AmountSum,
+    'RefundedAmount': RefundedAmount,
+    'Email': Email,
+    'CardNumber': CardNumber
   };
 
   // 从Json的转化方法
-  factory UserModel.fromJson(Map<String,dynamic> json){
-    return UserModel(
-        username: json['username'],
-        userAccount: json['userAccount'],
-        refundAll: json['refundAll'],
-        refundedAll: json['refundedAll']
-    );
-  }
+  // factory UserModel.fromJson(Map<String,dynamic> json){
+  //   return UserModel(
+  //       username: json['name'],
+  //       userAccount: json['userid'],
+  //       AmountSum: json['AmountSum'],
+  //       RefundedAmount: json['RefundedAmount'],
+  //       Email: json['Email'] as String? ?? '',
+  //       CardNumber: json['CardNumber'] as String? ?? ''
+  //   );
+  // }
+
+  // 从Json的转化方法
+factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''}) {
+  return UserModel(
+      username: json['name'] as String? ?? '',
+      userAccount: (json['uid'] as num?)?.toString() ?? '',
+      AmountSum: (json['amountSum'] as num?)?.toDouble() ?? 0.0,
+      RefundedAmount: (json['refundedAmount'] as num?)?.toDouble() ?? 0.0,
+      Email: json['email'] as String? ?? '',
+      CardNumber: json['cardNumber'] as String? ?? '',
+      errorMessage: errorMessage
+  );
+}
 
   // 重写输出方法
   @override
   String toString() {
-    return "用户：$username,账号:$userAccount,总可返现金额:$refundAll,已经返现金额：$refundedAll";
+    return "用户：$username,账号:$userAccount,总可返现金额:$AmountSum,已经返现金额：$RefundedAmount,邮箱:$Email,银行卡号:$CardNumber";
   }
 
 }

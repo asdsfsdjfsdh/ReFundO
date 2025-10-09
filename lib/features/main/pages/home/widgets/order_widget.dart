@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:refundo/models/order_model.dart';
 
 Widget orderWidget(List<OrderModel> models) {
+  print(models.length);
   return ListView.builder(
     itemCount: models.length,
     itemBuilder: (context, index) {
@@ -20,8 +21,8 @@ Widget orderWidget(List<OrderModel> models) {
             ),
             child: Icon(Icons.receipt, color: Colors.blue[700]),
           ),
-          title: Text('订单号: ${order.id}'),
-          subtitle: Text('时间: ${order.timestamp}'),
+          title: Text('订单号: ${order.orderid}'),
+          subtitle: Text('时间: ${order.OrderTime}'),
           trailing: Text(
             order.refundAmount.toString(),
             style: TextStyle(

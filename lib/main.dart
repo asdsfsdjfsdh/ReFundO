@@ -4,6 +4,7 @@ import 'package:refundo/features/main/main_screen.dart';
 import 'package:refundo/features/main/models/initialization_model.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/features/start/start_screen.dart';
 import 'package:refundo/l10n/app_localizations.dart';
@@ -11,7 +12,12 @@ import 'package:refundo/routes/routes.dart';
 import 'package:provider/provider.dart';
 
 void main() async{
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => DioProvider(), // ✅ 全局提供
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget{
