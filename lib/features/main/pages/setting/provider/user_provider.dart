@@ -53,16 +53,12 @@ class UserProvider with ChangeNotifier {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
       }
-      // print("开始回调第一个函数");
-      // onloginSuccess?.call(_user!.AmountSum);
-      // print("第一个函数回调结束，开始回调第二个函数");
-      // onOrder?.call();
-      // print("第二个函数回调结束");
       Provider.of<OrderProvider>(context, listen: false).getOrders(context);
       return _user!;
     } catch (e) {
       LogUtil.e("登入", e.toString());
-      return UserModel.fromJson({}, errorMessage: e.toString());
+      print(e.toString());
+      return UserModel.fromJson({}, errorMessage: "Error");
     } finally {
       notifyListeners();
     }
@@ -111,6 +107,27 @@ class UserProvider with ChangeNotifier {
 
     } catch (e) {
       LogUtil.e("获取用户信息", e.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateUserInfo(
+    String email,
+    String password,
+    int updateType,
+    BuildContext context
+  ) async {
+    try {
+      UserModel user = await _service.updateUserInfo(email,password, updateType,context);
+      if(user.errorMessage.isEmpty){
+        _user = user;
+      }else{
+        LogUtil.e("更新用户信息", user.errorMessage);
+      }
+      print("_user:" + _user.toString());
+    } catch (e) {
+      LogUtil.e("更新用户信息", e.toString());
     } finally {
       notifyListeners();
     }

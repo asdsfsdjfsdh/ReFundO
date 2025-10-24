@@ -8,12 +8,7 @@ plugins {
 android {
     namespace = "com.refundo.refundo"
     compileSdk = flutter.compileSdkVersion
-<<<<<<< HEAD
     ndkVersion = flutter.ndkVersion
-=======
-    ndkVersion = "29.0.14033849"
->>>>>>> ReFund001/master
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -28,13 +23,10 @@ android {
         applicationId = "com.refundo.refundo"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-<<<<<<< HEAD
+
         minSdkVersion(flutter.minSdkVersion.toString().toInt())
         minSdk = flutter.minSdkVersion
-=======
-        minSdk = 23
-        targetSdk = flutter.targetSdkVersion
->>>>>>> ReFund001/master
+
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
