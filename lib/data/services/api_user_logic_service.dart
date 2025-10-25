@@ -25,11 +25,7 @@ class ApiUserLogicService {
       } else {
         await dioProvider.saveToken(responseData['result']['token']);
 
-//    测试密码加密，后端尚未部署，等待后端部署完密码加密后去除
-      String Salt = PasswordHasher.generateRandomSalt();
-      String Password = PasswordHasher.hashPassword(password, Salt);
       UserModel User = UserModel.fromJson(responseData['result']['user']);
-      User.setPasswordAndSalt(Password, Salt);
       return User;
 // ---------------------------------------------------------
       }

@@ -14,11 +14,7 @@ class UserModel{
 
   final String errorMessage;
 
-
-  // 测试完毕后加上final
-  String password;
-
-  String salt;
+  final String password;
 
   // 初始化方法
   UserModel({
@@ -29,7 +25,6 @@ class UserModel{
     required this.Email,
     required this.CardNumber,
     required this.password,
-    required this.salt
   , this.errorMessage = ''
   });
 
@@ -43,14 +38,6 @@ class UserModel{
     'cardnumber': CardNumber,
     'password':password
   };
-
-// 测试密码加密，后端尚未部署，等待后端部署完密码加密后去除
-  setPasswordAndSalt(String password,String salt){
-    this.password = password;
-    this.salt = salt;
-  }
-
-// ---------------------------------------------------------
 
   // 从Json的转化方法
   // factory UserModel.fromJson(Map<String,dynamic> json){
@@ -74,7 +61,6 @@ factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''})
       Email: json['email'] as String? ?? '',
       CardNumber: json['cardNumber'] as String? ?? '',
       password: json['password'] as String? ?? '',
-      salt: json['salt'] as String? ?? '',
       errorMessage: errorMessage
   );
 }
@@ -82,7 +68,7 @@ factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''})
   // 重写输出方法
   @override
   String toString() {
-    return "用户：$username,账号:$userAccount,总可返现金额:$AmountSum,已经返现金额：$RefundedAmount,邮箱:$Email,银行卡号:$CardNumber,密码:$password,盐值:$salt,错误信息:$errorMessage";
+    return "用户：$username,账号:$userAccount,总可返现金额:$AmountSum,已经返现金额：$RefundedAmount,邮箱:$Email,银行卡号:$CardNumber,错误信息:$errorMessage";
   }
 
 }
