@@ -14,6 +14,7 @@ class UserProvider with ChangeNotifier {
   UserModel? _user;
   final ApiUserLogicService _service = ApiUserLogicService();
   bool _isLogin = false;
+  String _errorMessage = "";
 
   Function(double)? onloginSuccess;
   Function()? onlogout;
@@ -21,6 +22,7 @@ class UserProvider with ChangeNotifier {
 
   UserModel? get user => _user;
   bool get isLogin => _isLogin;
+  String get errorMessage => _errorMessage;
 
   // 初始化用户系统
   Future<void> initProvider(BuildContext context) async {
@@ -45,16 +47,17 @@ class UserProvider with ChangeNotifier {
   // 向后端请求登入
   Future<UserModel> login(String username, String password,BuildContext context) async {
     try {
-      _user = await _service.logic(username, password,context);
-      if (_user!.errorMessage.isNotEmpty) {
+      UserModel User = await _service.logic(username, password,context);
+      if (User!.errorMessage.isNotEmpty) {
         LogUtil.e("登入", _user!.errorMessage);
         _isLogin = false;
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
+        _user = User;
       }
       Provider.of<OrderProvider>(context, listen: false).getOrders(context);
-      return _user!;
+      return User;
     } catch (e) {
       LogUtil.e("登入", e.toString());
       print(e.toString());
@@ -72,10 +75,12 @@ class UserProvider with ChangeNotifier {
     BuildContext context
   ) async {
     try {
-      await _service.register(username, userEmail, password,context);
-      LogUtil.d("注册", "成功注册账号");
+      UserModel User =  await _service.register(username, userEmail, password,context);
+      _errorMessage = User.errorMessage;
+      print(_errorMessage);
     } catch (e) {
       LogUtil.e("注册", e.toString());
+      _errorMessage = "Error";
     } finally {
       notifyListeners();
     }
@@ -100,6 +105,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  // 获取用户信息
   Future<void> Info(BuildContext context) async {
     try {
       _user = await _service.getUserInfo(context);
@@ -112,24 +118,71 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateUserInfo(
-    String email,
-    String password,
+  // 更新用户信息
+  Future<String> updateUserInfo(
+    String Info,
     int updateType,
-    BuildContext context
+    BuildContext context,
+    [String? email]
   ) async {
     try {
-      UserModel user = await _service.updateUserInfo(email,password, updateType,context);
+      UserModel? user = _user;
+
+      switch (updateType) {
+        case 1:
+          user?.username = Info;
+          break;
+        case 2:
+          if(email != null){
+            user?.Email = email;
+          }
+          user?.password = Info;
+          break;
+        case 3:
+          print("email:" + Info);
+          user?.Email = Info;
+          break;
+        case 4:
+          user?.CardNumber = Info;
+          break;
+        default:
+          return "Error";
+      }
+
+      user = await _service.updateUserInfo(user!,updateType,context);
+
       if(user.errorMessage.isEmpty){
         _user = user;
+        return "修改成功";
       }else{
         LogUtil.e("更新用户信息", user.errorMessage);
+        return user.errorMessage;
       }
-      print("_user:" + _user.toString());
     } catch (e) {
       LogUtil.e("更新用户信息", e.toString());
+      return "Error";
     } finally {
       notifyListeners();
     }
   } 
+
+  //验证用户身份
+  Future<bool> verifyUserIdentity(
+    String email,
+    String password,
+    BuildContext context
+  ) async {
+    try {
+      String message = await _service.verifyUserInfo(email,password,context);
+      if(message == "验证通过"){
+        return true;
+      } else {
+        LogUtil.e("验证用户身份", message);
+        return false;
+      }
+    } catch (e) {
+      LogUtil.e("验证用户身份", e.toString());
+      return false;
+    }
+  }
 }

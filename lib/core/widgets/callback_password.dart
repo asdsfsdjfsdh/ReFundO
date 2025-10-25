@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/core/utils/showToast.dart';
 import 'package:refundo/data/services/api_email_service.dart';
 import 'package:refundo/features/main/pages/setting/provider/email_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
@@ -115,6 +116,7 @@ class Callback extends StatefulWidget {
 
 class _CallbackState extends State<Callback> {
   String email = '';
+  
   Color? color = Colors.blue[200];
   final _focusNode = FocusNode();
   late TextEditingController _controller = TextEditingController();
@@ -240,7 +242,7 @@ class _CallbackState extends State<Callback> {
                   if (color == Colors.blue) {
                     print(isValidEmail(email));
                     if (!isValidEmail(email)) {
-                      _showCenterToast(context, "邮箱格式错误");
+                      ShowToast.showCenterToast(context, "邮箱格式错误");
                     } else {
                       print("email$email");
                       Provider.of<EmailProvider>(
@@ -250,7 +252,7 @@ class _CallbackState extends State<Callback> {
                       widget.onNext(email);
                     }
                   } else
-                    _showCenterToast(context, "邮箱不能为空");
+                      ShowToast.showCenterToast(context, "邮箱格式错误");
                 },
 
                 child: Text("下一步"),
@@ -458,11 +460,11 @@ class _CheckCodeState extends State<CheckCode> {
                                               listen: false,
                                             ).sendEmail(email, context);
                                         if (message != "Error") {
-                                          _showCenterToast(context, "验证码已发送");
+                                        ShowToast.showCenterToast(context, "验证码已发送");
                                           sendColor = Colors.grey;
                                           _startCountdown();
                                         } else {
-                                          _showCenterToast(context, "发送失败");
+                                        ShowToast.showCenterToast(context, "发送失败");
                                         }
                                       }
                                     });
@@ -492,10 +494,10 @@ class _CheckCodeState extends State<CheckCode> {
                                             listen: false,
                                           ).sendEmail(email, context);
                                       if (message != "Error") {
-                                        _showCenterToast(context, "验证码已发送");
+                                        ShowToast.showCenterToast(context, "验证码已发送");
                                         _startCountdown();
                                       } else {
-                                        _showCenterToast(context, "发送失败");
+                                        ShowToast.showCenterToast(context, "发送失败");
                                       }
                                     });
                                   },
@@ -527,7 +529,7 @@ class _CheckCodeState extends State<CheckCode> {
                 ),
                 onPressed: () async {
                   if (Code.isEmpty)
-                    _showCenterToast(context, "请先输入验证码");
+                    ShowToast.showCenterToast(context, "请先输入验证码");
                   else {
                     if (isSend) {
                       final message = await Provider.of<EmailProvider>(
@@ -536,13 +538,13 @@ class _CheckCodeState extends State<CheckCode> {
                       ).checkCode(email, Code, context);
                       print(message);
                       if (message != "验证码正确") {
-                        _showCenterToast(context,message);
+                       ShowToast.showCenterToast(context,message);
                       } else {
                         widget.onNext(Code);
-                        _showCenterToast(context, message);
+                        ShowToast.showCenterToast(context, message);
                       }
                     } else {
-                      _showCenterToast(context, "请先获取验证码");
+                      ShowToast.showCenterToast(context, "请先获取验证码");
                     }
                   }
                   print("验证码：" + Code);
@@ -744,13 +746,13 @@ class _SetPasswrodState extends State<SetPasswrod> {
                 ),
                 onPressed: () {
                   if (newPasswrod == confirmPasswrod) {
-                    print("密码设置成功");
+                    ShowToast.showCenterToast(context,"密码设置成功");
 
                     // 在这里调用修改密码的接口
-                    Provider.of<UserProvider>(context, listen: false).updateUserInfo(email,newPasswrod, 2, context);
+                    Provider.of<UserProvider>(context, listen: false).updateUserInfo(newPasswrod, 2, context);
 
                   } else {
-                    print("两次密码输入不一致");
+                    ShowToast.showCenterToast(context,"两次密码输入不一致");
                   }
                   widget.onfinish();
                   print("密码");
