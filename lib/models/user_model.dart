@@ -14,7 +14,7 @@ class UserModel{
 
   final String errorMessage;
 
-  final String password;
+  String password;
 
   // 初始化方法
   UserModel({
@@ -25,7 +25,7 @@ class UserModel{
     required this.Email,
     required this.CardNumber,
     required this.password,
-  , this.errorMessage = ''
+    this.errorMessage = ''
   });
 
   // 配置转化Json方法

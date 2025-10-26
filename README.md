@@ -8,7 +8,6 @@ A new Flutter project.
 # ARB文件生成Dart代码
 flutter gen-l10n
 
-
 # 项目框架
 - asset 资源管理
   - images 图片资源
@@ -18,6 +17,8 @@ flutter gen-l10n
     - permissions 权限管理工具
     - utils 常用工具
       - log_util.dart debug 终端弹幕工具
+      - showToast.dart 消息提示工具
+      - passwordHasher.dart 密码哈希加密工具
     - widgets 全局共享组件
   - data 后端数据类
   - features 页面类

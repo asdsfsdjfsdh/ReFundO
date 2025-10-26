@@ -25,6 +25,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late UserProvider _api_loginc;
   late double _totalAmount = 0.0;
+  bool _isrefunding = false;
+  bool _isPage = true;
   @override
   void initState() {
     super.initState();
@@ -34,11 +36,11 @@ class _HomePageState extends State<HomePage> {
     _api_loginc.onOrder = _loadData;
   }
 
- Future<void> _initAmount(double amount) async {
-  setState(() {
-    _totalAmount = amount;
-  });
- }
+  Future<void> _initAmount(double amount) async {
+    setState(() {
+      _totalAmount = amount;
+    });
+  }
 
   Future<void> _loadData() async {
     try {
@@ -58,6 +60,37 @@ class _HomePageState extends State<HomePage> {
   int _currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
+  void _showDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('提示'),
+          content: Text(message, style: TextStyle(fontSize: 16)),
+          actions: [
+            Container(
+              width: 10000,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Color.fromARGB(255, 220, 220, 220),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text('确定'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(
@@ -73,6 +106,68 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.blue[700],
             foregroundColor: Colors.white,
             automaticallyImplyLeading: false,
+            actions: [
+              _isPage ? !_isrefunding
+                  ? TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isrefunding = true;
+                        });
+                      },
+                      child: const Text(
+                        "管理订单",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    )
+                  : Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _isrefunding = false;
+                            });
+                          },
+                          child: Text(
+                            "取消",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+
+                        TextButton(
+                          onPressed: () async {
+                            if (Provider.of<RefundProvider>(
+                              context,
+                              listen: false,
+                            ).orders!.isEmpty) {
+                              _showDialog(context, "请选中至少一个订单");
+                            } else {
+                              int result = await Provider.of<RefundProvider>(
+                                context,
+                                listen: false,
+                              ).Refund(context);
+                              if(result == 1){
+                                _showDialog(context, "退款成功，请等待审批");
+                                setState(() {
+                                _isrefunding = false;
+                              });
+                              }else if(result == 0){
+                                _showDialog(context, "未知错误");
+                              }else if(result == -1){
+                                _showDialog(context, "服务器异常");
+                              }else{
+                                _showDialog(context, "Error");
+                              }
+                            }
+                          },
+                          child: const Text(
+                            "退款",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    ) 
+                    : SizedBox(),
+            ],
           ),
           body: Container(
             color: Colors.white70,
@@ -89,10 +184,13 @@ class _HomePageState extends State<HomePage> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.yellow, width: 2),
                     ),
-                    child: Center(child: Text((userProvider.user?.AmountSum ?? 0.0).toString() + " \$",
-                      style: TextStyle(
-                        fontSize: 24,
-                      ))),
+                    child: Center(
+                      child: Text(
+                        (userProvider.user?.AmountSum ?? 0.0).toString() +
+                            " \$",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 40),
                   Row(
@@ -124,11 +222,15 @@ class _HomePageState extends State<HomePage> {
                       onPageChanged: (int page) {
                         setState(() {
                           _currentPage = page;
+                          _isPage = !_isPage;
                         });
                       },
                       children: [
                         // 订单页面
-                        orderWidget(value.orders ?? []),
+                        OrderWidget(
+                          models: value.orders ?? [],
+                          isrefunding: _isrefunding,
+                        ),
                         // 提现页面
                         refundWidget(
                           Provider.of<RefundProvider>(
