@@ -107,9 +107,10 @@ class FloatingRegister {
                     });
 
                     try {
-                      await onRegister(context,username, email, password);
-                      setState((){
-                        _errorMessage = "你已注册成功，请登入!";
+                      
+                      setState(()async{
+                        await onRegister(context,username, email, password);
+                        _errorMessage = Provider.of<UserProvider>(context,listen: false).errorMessage;
                       });
                       _isRegister = true;
                       return;
@@ -159,6 +160,13 @@ class FloatingRegister {
                                     icon: const Icon(Icons.close),
                                     onPressed: () {
                                       hide();
+                                      setState(() {
+                                        _errorMessage = null;
+                                        _passwordController.clear();
+                                        _confirmPasswordController.clear();
+                                        _usernameController.clear();
+                                        _emailController.clear();
+                                      },);
                                     },
                                   ),
                                 ],
@@ -285,6 +293,13 @@ class FloatingRegister {
                                     onPressed: () {
                                       hide();
                                       // 这里可以触发跳转到登录界面
+                                      setState(() {
+                                        _errorMessage = null;
+                                        _passwordController.clear();
+                                        _confirmPasswordController.clear();
+                                        _usernameController.clear();
+                                        _emailController.clear();
+                                      });
                                       FloatingLogin.show(context: context);
                                     },
                                     child: const Text('立即登录'),

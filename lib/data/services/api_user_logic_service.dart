@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/core/utils/passwordHasher.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/features/main/pages/home/home_page.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
@@ -23,11 +24,48 @@ class ApiUserLogicService {
         return  UserModel.fromJson({}, errorMessage: message);
       } else {
         await dioProvider.saveToken(responseData['result']['token']);
-        return UserModel.fromJson(responseData['result']['user']);
+
+      UserModel User = UserModel.fromJson(responseData['result']['user']);
+      return User;
+// ---------------------------------------------------------
       }
+    } on DioException catch (e) {
+      String message = '占位错误';
+      Map<String, dynamic> result = {"message": message, "order": null};
+      print("Dio错误详情:");
+      print("请求URL: ${e.requestOptions.uri}");
+      print("请求方法: ${e.requestOptions.method}");
+      print("请求头: ${e.requestOptions.headers}");
+      print("请求体: ${e.requestOptions.data}");
+      print("响应状态码: ${e.response?.statusCode}");
+      print("响应数据: ${e.response?.data}");
+      // 处理Dio相关的异常
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        // 请求超时
+        message = '请求超时: + ${e.message}';
+      } else if (e.type == DioExceptionType.connectionTimeout) {
+        // 服务器不可达或网络连接失败
+        message = '网络连接失败: 无法连接到服务器';
+      } else if (e.response != null) {
+        // 服务器返回错误状态码
+        final statusCode = e.response!.statusCode;
+        if (statusCode == 404) {
+          message = "服务器返回404错误: 请求的资源未找到";
+        } else if (statusCode == 500) {
+          message = '服务器返回500错误: 服务器内部错误';
+        } else {
+          message = '服务器返回错误状态码: $statusCode';
+        }
+      } else {
+        message = '网络请求异常: ${e.message}';
+      }
+      return UserModel.fromJson({}, errorMessage: message);
     } catch (e) {
-      // print(111);
-      return Future.error(e.toString());
+      // 处理其他异常
+      print('未知错误: $e');
+      String message = '未知错误: $e';
+      return UserModel.fromJson({}, errorMessage: message);
     }
     // return UserModel(username: username, userAccount: username, AmountSum: 30,RefundedAmount:100,Email:'',CardNumber:'');
   }
@@ -87,7 +125,7 @@ class ApiUserLogicService {
   }
 
   // 注册
-  Future<void> register(
+  Future<UserModel> register(
     String username,
     String userEmail,
     String password,
@@ -99,11 +137,162 @@ class ApiUserLogicService {
         data: {"name": username, "email": userEmail, "password": password},
       );
       final String responseData = response.data;
-
       print(responseData);
+      return UserModel.fromJson({}, errorMessage: responseData);
+    }  on DioException catch (e) {
+      String message = '占位错误';
+      Map<String, dynamic> result = {"message": message, "order": null};
+      print("Dio错误详情:");
+      print("请求URL: ${e.requestOptions.uri}");
+      print("请求方法: ${e.requestOptions.method}");
+      print("请求头: ${e.requestOptions.headers}");
+      print("请求体: ${e.requestOptions.data}");
+      print("响应状态码: ${e.response?.statusCode}");
+      print("响应数据: ${e.response?.data}");
+      // 处理Dio相关的异常
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        // 请求超时
+        message = '请求超时: + ${e.message}';
+      } else if (e.type == DioExceptionType.connectionTimeout) {
+        // 服务器不可达或网络连接失败
+        message = '网络连接失败: 无法连接到服务器';
+      } else if (e.response != null) {
+        // 服务器返回错误状态码
+        final statusCode = e.response!.statusCode;
+        if (statusCode == 404) {
+          message = "服务器返回404错误: 请求的资源未找到";
+        } else if (statusCode == 500) {
+          message = '服务器返回500错误: 服务器内部错误';
+        } else {
+          message = '服务器返回错误状态码: $statusCode';
+        }
+      } else {
+        message = '网络请求异常: ${e.message}';
+      }
+      return UserModel.fromJson({}, errorMessage: message);
     } catch (e) {
-      return Future.error(e.toString());
+      // 处理其他异常
+      print('未知错误: $e');
+      String message = '未知错误';
+      return UserModel.fromJson({}, errorMessage: message);
     }
-    LogUtil.d("注册", "成功");
+  }
+
+  //修改用户数据
+  Future<UserModel> updateUserInfo(
+    UserModel userModel,
+    int updateType,
+    BuildContext context
+  ) async {
+    try {
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+        "/api/user/update",
+        data: {
+          "user": userModel.toJson(),
+          "updateType": updateType
+        }
+      );
+      Map<String, dynamic> responseData = response.data;
+      String message = responseData['message'];
+      if (responseData['result'] != null) {
+        return UserModel.fromJson(responseData['result']);
+      } else {
+        return UserModel.fromJson({}, errorMessage: message);
+      }
+    }on DioException catch (e) {
+      String message = '占位错误';
+      Map<String, dynamic> result = {"message": message, "order": null};
+      print("Dio错误详情:");
+      print("请求URL: ${e.requestOptions.uri}");
+      print("请求方法: ${e.requestOptions.method}");
+      print("请求头: ${e.requestOptions.headers}");
+      print("请求体: ${e.requestOptions.data}");
+      print("响应状态码: ${e.response?.statusCode}");
+      print("响应数据: ${e.response?.data}");
+      // 处理Dio相关的异常
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        // 请求超时
+        message = '请求超时: + ${e.message}';
+      } else if (e.type == DioExceptionType.connectionTimeout) {
+        // 服务器不可达或网络连接失败
+        message = '网络连接失败: 无法连接到服务器';
+      } else if (e.response != null) {
+        // 服务器返回错误状态码
+        final statusCode = e.response!.statusCode;
+        if (statusCode == 404) {
+          message = "服务器返回404错误: 请求的资源未找到";
+        } else if (statusCode == 500) {
+          message = '服务器返回500错误: 服务器内部错误';
+        } else {
+          message = '服务器返回错误状态码: $statusCode';
+        }
+      } else {
+        message = '网络请求异常: ${e.message}';
+      }
+      return UserModel.fromJson({}, errorMessage: message);
+    } catch (e) {
+      // 处理其他异常
+      print('未知错误: $e');
+      String message = '未知错误: $e';
+      return UserModel.fromJson({}, errorMessage: message);
+    }
+  }
+
+  //用户信息验证
+  Future<String> verifyUserInfo(
+    String email,
+    String password,
+    BuildContext context
+  ) async {
+    try {
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+        "/api/user/check",
+        data: {
+          "email": email,
+          "password": password,
+        }
+      );
+      String message = response.data;
+      return message;
+    } on DioException catch (e) {
+      String message = '占位错误';
+      Map<String, dynamic> result = {"message": message, "order": null};
+      print("Dio错误详情:");
+      print("请求URL: ${e.requestOptions.uri}");
+      print("请求方法: ${e.requestOptions.method}");
+      print("请求头: ${e.requestOptions.headers}");
+      print("请求体: ${e.requestOptions.data}");
+      print("响应状态码: ${e.response?.statusCode}");
+      print("响应数据: ${e.response?.data}");
+      // 处理Dio相关的异常
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        // 请求超时
+        message = '请求超时: + ${e.message}';
+      } else if (e.type == DioExceptionType.connectionTimeout) {
+        // 服务器不可达或网络连接失败
+        message = '网络连接失败: 无法连接到服务器';
+      } else if (e.response != null) {
+        // 服务器返回错误状态码
+        final statusCode = e.response!.statusCode;
+        if (statusCode == 404) {
+          message = "服务器返回404错误: 请求的资源未找到";
+        } else if (statusCode == 500) {
+          message = '服务器返回500错误: 服务器内部错误';
+        } else {
+          message = '服务器返回错误状态码: $statusCode';
+        }
+      } else {
+        message = '网络请求异常: ${e.message}';
+      }
+      return message;
+    } catch (e) {
+      // 处理其他异常
+      print('未知错误: $e');
+      String message = '未知错误: $e';
+      return message;
+    }
   }
 }

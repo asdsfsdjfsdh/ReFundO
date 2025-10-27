@@ -24,8 +24,7 @@ class OrderProvider with ChangeNotifier {
       print(token.isEmpty);
       if (token.isNotEmpty) {
         try {
-          _orders = await _orderService.getOrders(context);
-          notifyListeners();
+          _orders = await _orderService.getOrders(context, false);
         } on DioException catch (e) {
           print(token);
           print("Dio错误详情:");
@@ -39,11 +38,12 @@ class OrderProvider with ChangeNotifier {
         }
       } else {
         _orders = [];
-        notifyListeners();
       }
     } catch (e) {
       print("获取订单失败: $e");
       _orders = [];
+
+    }finally {
       notifyListeners();
     }
   }

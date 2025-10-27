@@ -8,6 +8,7 @@ import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/user_model.dart';
+import 'callback_password.dart';
 
 /// 悬浮窗登录组件
 class FloatingLogin {
@@ -68,8 +69,8 @@ class FloatingLogin {
           // 半透明遮罩，点击可关闭
           GestureDetector(
             onTap: () {
-                _errorMessage = null;
-                _isLoading = false;
+              _errorMessage = null;
+              _isLoading = false;
 
               hide();
             },
@@ -225,8 +226,14 @@ class FloatingLogin {
                                 // 处理忘记密码逻辑
                                 hide();
                                 // 可以在这里跳转到忘记密码页面或显示提示
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('忘记密码功能')),
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   const SnackBar(content: Text('忘记密码功能')),
+                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CallbackPassword(),
+                                  ),
                                 );
                               },
                               child: const Text('忘记密码?'),
