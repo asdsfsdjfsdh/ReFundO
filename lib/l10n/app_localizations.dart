@@ -660,6 +660,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid email format'**
   String get invalid_email_format;
+
+  /// No description provided for @user_registration.
+  ///
+  /// In en, this message translates to:
+  /// **'User Registration'**
+  String get user_registration;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @verification_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification Code'**
+  String get verification_code;
+
+  /// No description provided for @get_verification_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Code'**
+  String get get_verification_code;
+
+  /// No description provided for @countdown_seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s'**
+  String countdown_seconds(Object seconds);
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirm_password;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @already_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get already_have_account;
+
+  /// No description provided for @login_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Now'**
+  String get login_now;
+
+  /// No description provided for @please_enter_username.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter username'**
+  String get please_enter_username;
+
+  /// No description provided for @please_enter_valid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get please_enter_valid_email;
+
+  /// No description provided for @please_enter_verification_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter verification code'**
+  String get please_enter_verification_code;
+
+  /// No description provided for @password_length_at_least_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get password_length_at_least_6;
+
+  /// No description provided for @passwords_do_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwords_do_not_match;
+
+  /// No description provided for @verification_code_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code send failed, please try again'**
+  String get verification_code_send_failed;
+
+  /// No description provided for @user_login.
+  ///
+  /// In en, this message translates to:
+  /// **'User Login'**
+  String get user_login;
+
+  /// No description provided for @username_or_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Username/Email'**
+  String get username_or_email;
+
+  /// No description provided for @remember_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get remember_me;
+
+  /// No description provided for @forgot_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgot_password;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @no_account_register_now.
+  ///
+  /// In en, this message translates to:
+  /// **'No account? Register now'**
+  String get no_account_register_now;
+
+  /// No description provided for @please_enter_username_and_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter username and password'**
+  String get please_enter_username_and_password;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

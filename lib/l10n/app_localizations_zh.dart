@@ -291,4 +291,78 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get invalid_email_format => '邮箱格式不正确';
+
+  @override
+  String get user_registration => '用户注册';
+
+  @override
+  String get username => '用户名';
+
+  @override
+  String get email => '邮箱';
+
+  @override
+  String get verification_code => '验证码';
+
+  @override
+  String get get_verification_code => '获取验证码';
+
+  @override
+  String countdown_seconds(Object seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get password => '密码';
+
+  @override
+  String get confirm_password => '确认密码';
+
+  @override
+  String get register => '注册';
+
+  @override
+  String get already_have_account => '已有账号?';
+
+  @override
+  String get login_now => '立即登录';
+
+  @override
+  String get please_enter_username => '请输入用户名';
+
+  @override
+  String get please_enter_valid_email => '请输入有效的邮箱地址';
+
+  @override
+  String get please_enter_verification_code => '请输入验证码';
+
+  @override
+  String get password_length_at_least_6 => '密码长度至少6位';
+
+  @override
+  String get passwords_do_not_match => '两次输入的密码不一致';
+
+  @override
+  String get verification_code_send_failed => '验证码发送失败，请重试';
+
+  @override
+  String get user_login => '用户登录';
+
+  @override
+  String get username_or_email => '用户名/邮箱';
+
+  @override
+  String get remember_me => '记住我';
+
+  @override
+  String get forgot_password => '忘记密码?';
+
+  @override
+  String get login => '登录';
+
+  @override
+  String get no_account_register_now => '没有账号？点击注册';
+
+  @override
+  String get please_enter_username_and_password => '请输入用户名和密码';
 }

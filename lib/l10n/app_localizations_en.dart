@@ -291,4 +291,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalid_email_format => 'Invalid email format';
+
+  @override
+  String get user_registration => 'User Registration';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get verification_code => 'Verification Code';
+
+  @override
+  String get get_verification_code => 'Get Code';
+
+  @override
+  String countdown_seconds(Object seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirm_password => 'Confirm Password';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get already_have_account => 'Already have an account?';
+
+  @override
+  String get login_now => 'Login Now';
+
+  @override
+  String get please_enter_username => 'Please enter username';
+
+  @override
+  String get please_enter_valid_email => 'Please enter a valid email address';
+
+  @override
+  String get please_enter_verification_code => 'Please enter verification code';
+
+  @override
+  String get password_length_at_least_6 => 'Password must be at least 6 characters';
+
+  @override
+  String get passwords_do_not_match => 'Passwords do not match';
+
+  @override
+  String get verification_code_send_failed => 'Verification code send failed, please try again';
+
+  @override
+  String get user_login => 'User Login';
+
+  @override
+  String get username_or_email => 'Username/Email';
+
+  @override
+  String get remember_me => 'Remember me';
+
+  @override
+  String get forgot_password => 'Forgot Password?';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get no_account_register_now => 'No account? Register now';
+
+  @override
+  String get please_enter_username_and_password => 'Please enter username and password';
 }

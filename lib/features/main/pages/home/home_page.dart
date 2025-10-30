@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/core/utils/app_background_util.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
@@ -8,7 +9,7 @@ import 'package:refundo/features/main/pages/home/widgets/order_widget.dart';
 import 'package:refundo/features/main/pages/home/widgets/refund_widget.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/features/scanner/scanner_page.dart';
-import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持
+import 'package:refundo/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -70,19 +71,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(
-      builder: (context, orderProvider, child) {
-        final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
-        _totalAmount = userProvider.user?.AmountSum ?? 0.0;
-
-        return Scaffold(
-          appBar: _buildAppBar(context, userProvider),
-          body: _buildBody(context, orderProvider),
-          bottomNavigationBar: _buildBottomNavigationBar(context),
-          floatingActionButton: _buildFloatingActionButton(context),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        );
+    return WillPopScope(
+      onWillPop: () async {
+        // 拦截返回键事件，将应用退到后台
+        if (_isRefunding) {
+          // 如果在退款管理状态，先退出该状态
+          setState(() {
+            _isRefunding = false;
+          });
+          return false;
+        } else {
+          return false; // 阻止默认返回行为
+        }
       },
+      child: Consumer<OrderProvider>(
+        builder: (context, orderProvider, child) {
+          final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+          _totalAmount = userProvider.user?.AmountSum ?? 0.0;
+
+          return Scaffold(
+            appBar: _buildAppBar(context, userProvider),
+            body: _buildBody(context, orderProvider),
+            bottomNavigationBar: _buildBottomNavigationBar(context),
+            floatingActionButton: _buildFloatingActionButton(context),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          );
+        },
+      ),
     );
   }
 
@@ -90,7 +105,7 @@ class _HomePageState extends State<HomePage> {
   AppBar _buildAppBar(BuildContext context, UserProvider userProvider) {
     return AppBar(
       title: Text(
-        AppLocalizations.of(context)!.app_name, // 使用多语言应用名称
+        AppLocalizations.of(context)!.app_name,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
@@ -214,8 +229,6 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-                // 订单页面
-
                 Consumer<RefundProvider>(
                   builder: (context, refundProvider, child) {
                     return RefundWidget(
@@ -335,7 +348,7 @@ class _HomePageState extends State<HomePage> {
             );
           });
         },
-        items: _getBottomNavItems(context), // 使用多语言方法
+        items: _getBottomNavItems(context),
         selectedItemColor: Colors.blue.shade700,
         unselectedItemColor: Colors.grey.shade600,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),

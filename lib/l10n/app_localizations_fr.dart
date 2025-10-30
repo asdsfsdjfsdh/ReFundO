@@ -291,4 +291,78 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get invalid_email_format => 'Format d\'email invalide';
+
+  @override
+  String get user_registration => 'Inscription Utilisateur';
+
+  @override
+  String get username => 'Nom d\'utilisateur';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get verification_code => 'Code de vérification';
+
+  @override
+  String get get_verification_code => 'Obtenir le code';
+
+  @override
+  String countdown_seconds(Object seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get confirm_password => 'Confirmer le mot de passe';
+
+  @override
+  String get register => 'S\'inscrire';
+
+  @override
+  String get already_have_account => 'Vous avez déjà un compte?';
+
+  @override
+  String get login_now => 'Se connecter maintenant';
+
+  @override
+  String get please_enter_username => 'Veuillez entrer un nom d\'utilisateur';
+
+  @override
+  String get please_enter_valid_email => 'Veuillez entrer une adresse email valide';
+
+  @override
+  String get please_enter_verification_code => 'Veuillez entrer le code de vérification';
+
+  @override
+  String get password_length_at_least_6 => 'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get passwords_do_not_match => 'Les mots de passe ne correspondent pas';
+
+  @override
+  String get verification_code_send_failed => 'Échec de l\'envoi du code de vérification, veuillez réessayer';
+
+  @override
+  String get user_login => 'Connexion Utilisateur';
+
+  @override
+  String get username_or_email => 'Nom d\'utilisateur/Email';
+
+  @override
+  String get remember_me => 'Se souvenir de moi';
+
+  @override
+  String get forgot_password => 'Mot de passe oublié?';
+
+  @override
+  String get login => 'Se connecter';
+
+  @override
+  String get no_account_register_now => 'Pas de compte? Inscrivez-vous maintenant';
+
+  @override
+  String get please_enter_username_and_password => 'Veuillez saisir le nom d\'utilisateur et le mot de passe';
 }
