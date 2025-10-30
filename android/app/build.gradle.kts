@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.refundo.refundo"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -25,7 +25,8 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
 
         minSdkVersion(flutter.minSdkVersion.toString().toInt())
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
+
 
         versionCode = flutter.versionCode
         versionName = flutter.versionName

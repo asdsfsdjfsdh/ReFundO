@@ -60,7 +60,7 @@ class _ScannerPageState extends State<ScannerPage> {
       context,
       listen: false,
     );
-    String message = await orderProvider.InsertOrder(product, context);
+    String message = await orderProvider.insertOrder(product, context);
     Provider.of<UserProvider>(context, listen: false).Info(context);
     
 

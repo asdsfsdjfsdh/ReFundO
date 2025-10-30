@@ -1,5 +1,6 @@
 // 访问后端订单扫描数据
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
@@ -13,8 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiOrderService {
   bool _isInitialized = false;
-
-  
 
   // 获取订单数
   Future<List<OrderModel>> getOrders(BuildContext context,bool isRefund) async {
@@ -57,7 +56,9 @@ class ApiOrderService {
           "refundPercent": product.RefundPercent,
         },
       );
-      print(response);
+      if (kDebugMode) {
+        print(response);
+      }
       if (response.data['result'] != null) {
         OrderModel order = OrderModel.fromJson(response.data['result']);
         String message = response.data['message'];
@@ -72,13 +73,15 @@ class ApiOrderService {
     } on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
-      print("Dio错误详情:");
-      print("请求URL: ${e.requestOptions.uri}");
-      print("请求方法: ${e.requestOptions.method}");
-      print("请求头: ${e.requestOptions.headers}");
-      print("请求体: ${e.requestOptions.data}");
-      print("响应状态码: ${e.response?.statusCode}");
-      print("响应数据: ${e.response?.data}");
+      if (kDebugMode) {
+        print("Dio错误详情:");
+        print("请求URL: ${e.requestOptions.uri}");
+        print("请求方法: ${e.requestOptions.method}");
+        print("请求头: ${e.requestOptions.headers}");
+        print("请求体: ${e.requestOptions.data}");
+        print("响应状态码: ${e.response?.statusCode}");
+        print("响应数据: ${e.response?.data}");
+      }
       // 处理Dio相关的异常
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
@@ -93,14 +96,22 @@ class ApiOrderService {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          print('服务器返回404错误: 请求的资源未找到');
+          if (kDebugMode) {
+            print('服务器返回404错误: 请求的资源未找到');
+          }
         } else if (statusCode == 500) {
-          print('服务器返回500错误: 服务器内部错误');
+          if (kDebugMode) {
+            print('服务器返回500错误: 服务器内部错误');
+          }
         } else {
-          print('服务器返回错误状态码: $statusCode');
+          if (kDebugMode) {
+            print('服务器返回错误状态码: $statusCode');
+          }
         }
       } else {
-        print('网络请求异常: ${e.message}');
+        if (kDebugMode) {
+          print('网络请求异常: ${e.message}');
+        }
       }
       return result;
     } catch (e) {
@@ -117,7 +128,9 @@ class ApiOrderService {
     DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
     try{
       List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
-      print(ordersJson);
+      if (kDebugMode) {
+        print(ordersJson);
+      }
       Response response = await dioProvider.dio.post(
         "/api/orders/refund",
         data: ordersJson
@@ -129,13 +142,15 @@ class ApiOrderService {
     }on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
-      print("Dio错误详情:");
-      print("请求URL: ${e.requestOptions.uri}");
-      print("请求方法: ${e.requestOptions.method}");
-      print("请求头: ${e.requestOptions.headers}");
-      print("请求体: ${e.requestOptions.data}");
-      print("响应状态码: ${e.response?.statusCode}");
-      print("响应数据: ${e.response?.data}");
+      if (kDebugMode) {
+        print("Dio错误详情:");
+        print("请求URL: ${e.requestOptions.uri}");
+        print("请求方法: ${e.requestOptions.method}");
+        print("请求头: ${e.requestOptions.headers}");
+        print("请求体: ${e.requestOptions.data}");
+        print("响应状态码: ${e.response?.statusCode}");
+        print("响应数据: ${e.response?.data}");
+      }
       // 处理Dio相关的异常
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
@@ -150,19 +165,29 @@ class ApiOrderService {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          print('服务器返回404错误: 请求的资源未找到');
+          if (kDebugMode) {
+            print('服务器返回404错误: 请求的资源未找到');
+          }
         } else if (statusCode == 500) {
-          print('服务器返回500错误: 服务器内部错误');
+          if (kDebugMode) {
+            print('服务器返回500错误: 服务器内部错误');
+          }
         } else {
-          print('服务器返回错误状态码: $statusCode');
+          if (kDebugMode) {
+            print('服务器返回错误状态码: $statusCode');
+          }
         }
       } else {
-        print('网络请求异常: ${e.message}');
+        if (kDebugMode) {
+          print('网络请求异常: ${e.message}');
+        }
       }
       return -1;
     } catch (e) {
       // 处理其他异常
-      print('未知错误: $e');
+      if (kDebugMode) {
+        print('未知错误: $e');
+      }
       String message = '未知错误: $e';
       Map<String, dynamic> result = {"message": message, "order": null};
       return 0;

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_order_service.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
@@ -20,27 +21,33 @@ class OrderProvider with ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('access_token') ?? '';
-      print("token: $token");
-      print(token.isEmpty);
+      if (kDebugMode) {
+        print("token: $token");
+        print(token.isEmpty);
+      }
       if (token.isNotEmpty) {
         try {
           _orders = await _orderService.getOrders(context, false);
         } on DioException catch (e) {
-          print(token);
-          print("Dio错误详情:");
-          print("请求URL: ${e.requestOptions.uri}");
-          print("请求方法: ${e.requestOptions.method}");
-          print("请求头: ${e.requestOptions.headers}");
-          print("请求体: ${e.requestOptions.data}");
-          print("响应状态码: ${e.response?.statusCode}");
-          print("响应数据: ${e.response?.data}");
+          if (kDebugMode) {
+            print(token);
+            print("Dio错误详情:");
+            print("请求URL: ${e.requestOptions.uri}");
+            print("请求方法: ${e.requestOptions.method}");
+            print("请求头: ${e.requestOptions.headers}");
+            print("请求体: ${e.requestOptions.data}");
+            print("响应状态码: ${e.response?.statusCode}");
+            print("响应数据: ${e.response?.data}");
+          }
           rethrow;
         }
       } else {
         _orders = [];
       }
     } catch (e) {
-      print("获取订单失败: $e");
+      if (kDebugMode) {
+        print("获取订单失败: $e");
+      }
       _orders = [];
 
     }finally {
@@ -49,9 +56,11 @@ class OrderProvider with ChangeNotifier {
   }
 
   // 添加订单信息
-  Future<String> InsertOrder(ProductModel product, BuildContext context) async {
+  Future<String> insertOrder(ProductModel product, BuildContext context) async {
     try {
-      print(product);
+      if (kDebugMode) {
+        print(product);
+      }
       //检查产品信息完整性
       if (product.ProductId != '' &&
           product.Hash != '' &&
@@ -61,7 +70,9 @@ class OrderProvider with ChangeNotifier {
         //插入订单
         
         Map<String, dynamic> result = await _orderService.insertOrder(product, context);
-        print(result);
+        if (kDebugMode) {
+          print(result);
+        }
         String message = result['message'];
         OrderModel? order = result['result'];
         if(order != null){

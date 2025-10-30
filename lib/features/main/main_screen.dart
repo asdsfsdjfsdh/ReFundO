@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:refundo/features/main/models/initialization_model.dart';
 import 'package:refundo/features/main/pages/home/home_page.dart';
 import 'package:refundo/features/main/pages/setting/setting_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 

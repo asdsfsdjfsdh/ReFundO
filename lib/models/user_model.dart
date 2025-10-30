@@ -8,6 +8,8 @@ class UserModel{
   // 用户已返现金额
   final double RefundedAmount;
 
+  String? avatarUrl;
+
   String Email;
 
   String CardNumber;
@@ -25,7 +27,7 @@ class UserModel{
     required this.Email,
     required this.CardNumber,
     required this.password,
-    this.errorMessage = ''
+    this.errorMessage = '',
   });
 
   // 配置转化Json方法
