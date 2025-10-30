@@ -14,30 +14,35 @@ class EmailProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<String> sendEmail (String email,BuildContext context) async {
+  Future<int?> sendEmail (String email,BuildContext context,int SendType) async {
     try{
       print(email);
-      String message = await _service.sendEmail(email,context);
+      int? message = 0;
+      if(SendType == 1)
+          message = await _service.sendEmail_findback(email,context);
+      else
+          message = await _service.sendEmail_register(email,context);
       _email = email;
       return message;
     } catch (e) {
       _email = '';
       print(e.toString());
-      return "Error";
+      return -1;
     }finally{
       notifyListeners();
     }
   }
 
-  Future<String> checkCode(String email,String code,BuildContext context) async {
+  Future<int?> checkCode(String email,String code,BuildContext context) async {
     try{
-      String message = await _service.CheckCode(email,code,context);
-      _email = email;
+      final message = await _service.CheckCode(email,code,context);
+      if(message == 200)
+        _email = email;
       return message;
     } catch (e) {
       _email = '';
       print(e.toString());
-      return "Error";
+      return -1;
     }finally{
       notifyListeners();
     }

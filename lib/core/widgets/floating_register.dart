@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/core/utils/showToast.dart';
 import 'package:refundo/core/widgets/floating_login.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/email_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持
 
@@ -14,11 +16,15 @@ class FloatingRegister {
   static OverlayEntry? _overlayEntry;
 
   // 控制器和状态变量
-  static final TextEditingController _usernameController = TextEditingController();
+  static final TextEditingController _usernameController =
+      TextEditingController();
   static final TextEditingController _emailController = TextEditingController();
-  static final TextEditingController _verificationCodeController = TextEditingController();
-  static final TextEditingController _passwordController = TextEditingController();
-  static final TextEditingController _confirmPasswordController = TextEditingController();
+  static final TextEditingController _verificationCodeController =
+      TextEditingController();
+  static final TextEditingController _passwordController =
+      TextEditingController();
+  static final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   static bool _obscurePassword = true;
   static bool _obscureConfirmPassword = true;
@@ -32,12 +38,23 @@ class FloatingRegister {
   static Timer? _countdownTimer;
 
   // 注册逻辑
-  static Future<void> onRegister(BuildContext context, String username, String userEmail, String password) async {
-    Provider.of<UserProvider>(context, listen: false).register(username, userEmail, password, context);
+  static Future<void> onRegister(
+    BuildContext context,
+    String username,
+    String userEmail,
+    String password,
+  ) async {
+    Provider.of<UserProvider>(
+      context,
+      listen: false,
+    ).register(username, userEmail, password, context);
   }
 
   /// 获取验证码按钮点击事件
-  static void _getVerificationCode(StateSetter setState, BuildContext context) async {
+  static void _getVerificationCode(
+    StateSetter setState,
+    BuildContext context,
+  ) async {
     final l10n = AppLocalizations.of(context);
     String mail = _emailController.text;
 
@@ -59,6 +76,21 @@ class FloatingRegister {
     try {
       // TODO: 调用验证码发送接口（此处为占位实现）
       if (kDebugMode) {
+        final message = await Provider.of<EmailProvider>(
+          context,
+          listen: false,
+        ).sendEmail(mail, context, 2);
+        if (message == 200) {
+          ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
+        } else if (message == 411) {
+          ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
+        } else if (message == 412) {
+          ShowToast.showCenterToast(context, "用户信息不唯一，请联系客服处理");
+        } else if (message == 400) {
+          ShowToast.showCenterToast(context, "未找到与该邮箱关联的用户账户");
+        } else {
+          ShowToast.showCenterToast(context, "邮件服务暂时不可用，请稍后重试");
+        }
         print('向邮箱 $mail 发送验证码');
       }
 
@@ -98,10 +130,7 @@ class FloatingRegister {
   }
 
   /// 显示注册悬浮窗
-  static void show({
-    required BuildContext context,
-    Offset? position,
-  }) {
+  static void show({required BuildContext context, Offset? position}) {
     // 先关闭可能已存在的悬浮窗
     hide();
 
@@ -127,16 +156,20 @@ class FloatingRegister {
             StatefulBuilder(
               builder: (context, setState) {
                 // 默认定位
-                final double left = position?.dx ?? MediaQuery.of(context).size.width * 0.1;
-                final double top = position?.dy ?? MediaQuery.of(context).size.height * 0.23;
+                final double left =
+                    position?.dx ?? MediaQuery.of(context).size.width * 0.1;
+                final double top =
+                    position?.dy ?? MediaQuery.of(context).size.height * 0.23;
 
                 // 提交表单
                 Future<void> _submitForm() async {
                   final username = _usernameController.text.trim();
                   final email = _emailController.text.trim();
-                  final verificationCode = _verificationCodeController.text.trim();
+                  final verificationCode = _verificationCodeController.text
+                      .trim();
                   final password = _passwordController.text.trim();
-                  final confirmPassword = _confirmPasswordController.text.trim();
+                  final confirmPassword = _confirmPasswordController.text
+                      .trim();
 
                   // 基本验证
                   if (username.isEmpty) {
@@ -145,22 +178,56 @@ class FloatingRegister {
                     return;
                   }
                   if (email.isEmpty || !email.contains('@')) {
-                    setState(() => _errorMessage = l10n!.please_enter_valid_email);
+                    setState(
+                      () => _errorMessage = l10n!.please_enter_valid_email,
+                    );
                     _isRegister = false;
                     return;
                   }
                   if (verificationCode.isEmpty) {
-                    setState(() => _errorMessage = l10n!.please_enter_verification_code);
+                    setState(
+                      () =>
+                          _errorMessage = l10n!.please_enter_verification_code,
+                    );
                     _isRegister = false;
                     return;
+                  } else {
+                    final message =
+                        await Provider.of<EmailProvider>(
+                          context,
+                          listen: false,
+                        ).checkCode(
+                          email,
+                          _verificationCodeController.text,
+                          context,
+                        );
+                    print(message);
+                    if (message == 410) {
+                      ShowToast.showCenterToast(context, "验证码已过期，请重新获取");
+                      return;
+                    } else if (message == 200) {
+                      ShowToast.showCenterToast(context, "验证码正确");
+                    } else if (message == 411) {
+                      ShowToast.showCenterToast(context, "验证码错误");
+                      return;
+                    } else if (message == 400) {
+                      ShowToast.showCenterToast(context, "请求参数格式不正确");
+                      return;
+                    } else {
+                      ShowToast.showCenterToast(context, "验证码服务暂时不可用，请稍后重试");
+                    }
                   }
                   if (password.isEmpty || password.length < 6) {
-                    setState(() => _errorMessage = l10n!.password_length_at_least_6);
+                    setState(
+                      () => _errorMessage = l10n!.password_length_at_least_6,
+                    );
                     _isRegister = false;
                     return;
                   }
                   if (password != confirmPassword) {
-                    setState(() => _errorMessage = l10n!.passwords_do_not_match);
+                    setState(
+                      () => _errorMessage = l10n!.passwords_do_not_match,
+                    );
                     _isRegister = false;
                     return;
                   }
@@ -172,7 +239,10 @@ class FloatingRegister {
 
                   try {
                     await onRegister(context, username, email, password);
-                    final userProvider = Provider.of<UserProvider>(context, listen: false);
+                    final userProvider = Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    );
                     setState(() {
                       _errorMessage = userProvider.errorMessage;
                     });
@@ -244,7 +314,9 @@ class FloatingRegister {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: _isRegister ? Colors.green[50] : Colors.red[50],
+                                  color: _isRegister
+                                      ? Colors.green[50]
+                                      : Colors.red[50],
                                   borderRadius: BorderRadius.circular(8),
                                   border: _isRegister
                                       ? Border.all(color: Colors.green[200]!)
@@ -296,7 +368,9 @@ class FloatingRegister {
                                     controller: _verificationCodeController,
                                     decoration: InputDecoration(
                                       labelText: l10n.verification_code,
-                                      prefixIcon: const Icon(Icons.verified_user_outlined),
+                                      prefixIcon: const Icon(
+                                        Icons.verified_user_outlined,
+                                      ),
                                       border: const OutlineInputBorder(),
                                     ),
                                     keyboardType: TextInputType.number,
@@ -310,11 +384,18 @@ class FloatingRegister {
                                   child: ElevatedButton(
                                     onPressed: _isButtonDisabled
                                         ? null
-                                        : () => _getVerificationCode(setState, context),
+                                        : () => _getVerificationCode(
+                                            setState,
+                                            context,
+                                          ),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: _isButtonDisabled ? Colors.grey : Colors.blue[600],
+                                      backgroundColor: _isButtonDisabled
+                                          ? Colors.grey
+                                          : Colors.blue[600],
                                       foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -341,9 +422,13 @@ class FloatingRegister {
                                 prefixIcon: const Icon(Icons.lock_outline),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                    _obscurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
                                   ),
-                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                  onPressed: () => setState(
+                                    () => _obscurePassword = !_obscurePassword,
+                                  ),
                                 ),
                                 border: const OutlineInputBorder(),
                               ),
@@ -360,9 +445,14 @@ class FloatingRegister {
                                 prefixIcon: const Icon(Icons.lock_outline),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                                    _obscureConfirmPassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
                                   ),
-                                  onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                                  onPressed: () => setState(
+                                    () => _obscureConfirmPassword =
+                                        !_obscureConfirmPassword,
+                                  ),
                                 ),
                                 border: const OutlineInputBorder(),
                               ),
@@ -377,27 +467,29 @@ class FloatingRegister {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green[600],
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                               child: _isLoading
                                   ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
                                   : Text(
-                                l10n.register,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                                      l10n.register,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                             const SizedBox(height: 10),
                             // 已有账号提示
@@ -429,7 +521,7 @@ class FloatingRegister {
                   ),
                 );
               },
-            )
+            ),
           ],
         );
       },

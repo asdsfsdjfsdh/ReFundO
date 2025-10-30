@@ -61,7 +61,7 @@ factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''})
       AmountSum: (json['amountSum'] as num?)?.toDouble() ?? 0.0,
       RefundedAmount: (json['refundedAmount'] as num?)?.toDouble() ?? 0.0,
       Email: json['email'] as String? ?? '',
-      CardNumber: json['cardNumber'] as String? ?? '',
+      CardNumber: json['cardnumber'] as String? ?? '',
       password: json['password'] as String? ?? '',
       errorMessage: errorMessage
   );

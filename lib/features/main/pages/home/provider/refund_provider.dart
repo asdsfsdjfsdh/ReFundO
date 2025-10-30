@@ -82,4 +82,10 @@ class RefundProvider with ChangeNotifier {
       return -1;
     }
   }
+
+  // 清除退款信息
+  void clearRefunds(){
+    _refunds = [];
+    notifyListeners();
+  }
 }

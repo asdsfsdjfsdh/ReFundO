@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:ffi';
-// import 'dart:ui_web';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
@@ -69,14 +67,6 @@ class _ScannerPageState extends State<ScannerPage> {
       _showDialog(context, _message);
     });
 
-    
-    // _showCenterToast(context, message);
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-
-    //   },
-    // );
   }
 
   void _showDialog(BuildContext context, String message) {
