@@ -15,6 +15,8 @@ class OrderModel{
   final bool isRefund;
   // 退款状态
   final bool refundState;
+// 退款时间
+  final String refundTime;
   
   final String errorMessage;
   
@@ -29,6 +31,7 @@ class OrderModel{
     required this.OrderTime,
     required this.isRefund,
     required this.refundState,
+    required this.refundTime,
     this.errorMessage = '',
   });
 
@@ -42,7 +45,7 @@ class OrderModel{
     'isrefund': isRefund,
     'OrderTime': OrderTime,
     'isRefund': isRefund,
-    'refundStatu': refundState,
+    'refundState': refundState,
   };
 
   // 从Json的转化方法
@@ -55,7 +58,8 @@ class OrderModel{
       refundpercent: json['refundpercent'] as double ? ?? 0.0,
       OrderTime: json['date'] as String ? ?? '',
       isRefund: json['isRefund'] as bool ? ?? false,
-      refundState: json['refundStatu'] as bool ? ?? false,
+      refundState: json['refundState'] as bool ? ?? false,
+      refundTime: json['refundTime'] as String ? ?? '',
       errorMessage: json['errorMessage'] as String ? ?? '',
     );
   }
@@ -63,6 +67,6 @@ class OrderModel{
   // 重写输出方法
   @override
   String toString() {
-    return "订单号：$orderid，订单价格：$price，返还金额：$refundAmount,订单扫描时间：$OrderTime,是否提现:$isRefund,订单状态：$refundState, 错误信息：$errorMessage";
+    return "订单号：$orderid，订单价格：$price，返还金额：$refundAmount,订单扫描时间：$OrderTime,是否提现:$isRefund,订单状态：$refundState, 退款时间：$refundTime,错误信息：$errorMessage";
   }
 }

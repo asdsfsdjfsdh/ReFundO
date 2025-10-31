@@ -206,7 +206,6 @@ class FloatingRegister {
                       ShowToast.showCenterToast(context, "验证码已过期，请重新获取");
                       return;
                     } else if (message == 200) {
-                      ShowToast.showCenterToast(context, "验证码正确");
                     } else if (message == 411) {
                       ShowToast.showCenterToast(context, "验证码错误");
                       return;
@@ -215,6 +214,7 @@ class FloatingRegister {
                       return;
                     } else {
                       ShowToast.showCenterToast(context, "验证码服务暂时不可用，请稍后重试");
+                      return;
                     }
                   }
                   if (password.isEmpty || password.length < 6) {
