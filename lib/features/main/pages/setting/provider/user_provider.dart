@@ -7,6 +7,7 @@ import 'package:refundo/core/utils/storage/setting_storage.dart';
 import 'package:refundo/core/utils/storage/user_storage.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
+import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +58,7 @@ class UserProvider with ChangeNotifier {
         _user = User;
       }
       Provider.of<OrderProvider>(context, listen: false).getOrders(context);
+      Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
       return User;
     } catch (e) {
       LogUtil.e("登入", e.toString());
@@ -96,6 +98,8 @@ class UserProvider with ChangeNotifier {
       await prefs.remove('access_token'); // 移除 key 为 'access_token' 的存储
       //清除订单信息
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      final refundProvider = Provider.of<RefundProvider>(context, listen: false);
+      refundProvider.clearRefunds();
       orderProvider.clearOrders();
       print('Token cleared successfully');
     } catch (e) {

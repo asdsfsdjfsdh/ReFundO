@@ -64,7 +64,8 @@ class RefundProvider with ChangeNotifier {
     _orders!.removeWhere((order) => order.orderid == orderId);
     notifyListeners();
   }
-
+  
+// 退款
   Future<int> Refund(BuildContext context) async {
     try {
       if (_orders!.isNotEmpty) {
@@ -81,5 +82,11 @@ class RefundProvider with ChangeNotifier {
       print("ERROR:" + e.toString());
       return -1;
     }
+  }
+
+  // 清除退款信息
+  void clearRefunds(){
+    _refunds = [];
+    notifyListeners();
   }
 }

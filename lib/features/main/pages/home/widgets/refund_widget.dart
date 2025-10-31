@@ -158,7 +158,7 @@ class _RefundListItem extends StatelessWidget {
 
         // 时间信息
         Text(
-          '${l10n.time}: ${order.OrderTime}',
+          '${l10n.time}: ${order.refundTime}',
           style: TextStyle(
             fontSize: 14,
             color: Colors.grey.shade600,
