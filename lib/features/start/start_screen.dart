@@ -252,9 +252,7 @@ class _StartScreenState extends State<StartScreen> with SingleTickerProviderStat
         return l10n!.unknown_error;
       case InitializationStatus.complete:
         return l10n!.ready;
-      default:
-        return l10n!.initializing;
-    }
+      }
   }
 
   // 构建进度指示器

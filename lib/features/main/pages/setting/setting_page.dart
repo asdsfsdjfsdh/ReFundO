@@ -4,6 +4,7 @@ import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/widgets/callback_password.dart';
 import 'package:refundo/features/main/pages/setting/provider/app_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
+import 'package:refundo/features/main/pages/setting/widgets/audit_page.dart';
 import 'package:refundo/features/main/pages/setting/widgets/user_profile_card.dart';
 import 'package:refundo/features/main/pages/setting/widgets/user_update_cardnumber.dart';
 import 'package:refundo/features/main/pages/setting/widgets/user_update_email.dart';
@@ -17,7 +18,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  // 创建自定义 BottomSheet - 保持原有逻辑不变
   Future<void> _showCustomBottomSheet(BuildContext context, int index) async {
     List<Widget> list = [EmailChangeSheet(), CardChangeSheet()];
     await showModalBottomSheet(
@@ -381,6 +381,30 @@ class _SettingPageState extends State<SettingPage> {
           },
         ),
         const SizedBox(height: 8),
+        _buildAppSettingCard(
+          context: context,
+          title: l10n.audit,
+          subtitle: l10n.audit,
+          icon: Icons.manage_accounts_outlined,
+          iconColor: Colors.yellow.shade600,
+          onTap: () {
+            if(Provider.of<UserProvider>(context, listen: false).isLogin && Provider.of<UserProvider>(context, listen: false).isManager){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AuditPage(),
+                ),
+              );
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.not_manager),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+            }
+          },
+        ),
+        const SizedBox(height: 8),
 
         _buildAppSettingCard(
           context: context,
@@ -414,6 +438,7 @@ class _SettingPageState extends State<SettingPage> {
             );
           },
         ),
+
       ],
     );
   }

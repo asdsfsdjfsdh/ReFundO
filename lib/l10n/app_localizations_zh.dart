@@ -365,4 +365,103 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get please_enter_username_and_password => '请输入用户名和密码';
+
+  @override
+  String get audit => '审核';
+
+  @override
+  String get audit_page => '审核界面';
+
+  @override
+  String get audit_records => '审核记录';
+
+  @override
+  String get detail_info => '详细信息';
+
+  @override
+  String get user_id => '用户ID';
+
+  @override
+  String get nickname => '昵称';
+
+  @override
+  String get refund_time => '返现时间';
+
+  @override
+  String get refund_method => '返现方式';
+
+  @override
+  String get refund_amount => '返现金额';
+
+  @override
+  String get approve => '审批通过';
+
+  @override
+  String get reject => '拒绝审批';
+
+  @override
+  String get approved => '已通过';
+
+  @override
+  String get rejected => '已拒绝';
+
+  @override
+  String get items => '项';
+
+  @override
+  String get no_audit_records => '暂无审核记录';
+
+  @override
+  String get select_record_to_view => '请选择一条记录查看详情';
+
+  @override
+  String get already_approved => '已审批通过';
+
+  @override
+  String get already_rejected => '已拒绝审批';
+
+  @override
+  String get approve_success => '审批通过成功';
+
+  @override
+  String get approve_failed => '审批通过失败';
+
+  @override
+  String get reject_success => '拒绝审批成功';
+
+  @override
+  String get reject_failed => '拒绝审批失败';
+
+  @override
+  String get filter_conditions => '筛选条件';
+
+  @override
+  String get time_range => '时间范围';
+
+  @override
+  String get all => '全部';
+
+  @override
+  String get one_day => '一天内';
+
+  @override
+  String get one_week => '一周内';
+
+  @override
+  String get one_month => '一个月内';
+
+  @override
+  String get approval_status => '审批状态';
+
+  @override
+  String get reset => '重置';
+
+  @override
+  String get no_records_found => '未找到符合条件的记录';
+
+  @override
+  String get adjust_filters => '请尝试调整筛选条件';
+
+  @override
+  String get not_manager => '你不是管理员';
 }

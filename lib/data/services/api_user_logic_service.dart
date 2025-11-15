@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/passwordHasher.dart';
@@ -259,13 +260,15 @@ class ApiUserLogicService {
     } on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
-      print("Dio错误详情:");
-      print("请求URL: ${e.requestOptions.uri}");
-      print("请求方法: ${e.requestOptions.method}");
-      print("请求头: ${e.requestOptions.headers}");
-      print("请求体: ${e.requestOptions.data}");
-      print("响应状态码: ${e.response?.statusCode}");
-      print("响应数据: ${e.response?.data}");
+      if (kDebugMode) {
+        print("Dio错误详情:");
+        print("请求URL: ${e.requestOptions.uri}");
+        print("请求方法: ${e.requestOptions.method}");
+        print("请求头: ${e.requestOptions.headers}");
+        print("请求体: ${e.requestOptions.data}");
+        print("响应状态码: ${e.response?.statusCode}");
+        print("响应数据: ${e.response?.data}");
+      }
       // 处理Dio相关的异常
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
@@ -290,7 +293,9 @@ class ApiUserLogicService {
       return message;
     } catch (e) {
       // 处理其他异常
-      print('未知错误: $e');
+      if (kDebugMode) {
+        print('未知错误: $e');
+      }
       String message = '未知错误: $e';
       return message;
     }

@@ -63,7 +63,7 @@ class _MainScreenState extends State<MainScreen>{
           BottomNavigationBarItem(
               icon: const Icon(Icons.settings),
               label: AppLocalizations.of(context)!.bottom_setting_page
-          )
+          ),
         ],
         // 选择的页面颜色
         selectedItemColor: Colors.blue,
