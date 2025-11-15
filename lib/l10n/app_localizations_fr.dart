@@ -365,4 +365,103 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get please_enter_username_and_password => 'Veuillez saisir le nom d\'utilisateur et le mot de passe';
+
+  @override
+  String get audit => 'Vérification';
+
+  @override
+  String get audit_page => 'Page de vérification';
+
+  @override
+  String get audit_records => 'Enregistrements de vérification';
+
+  @override
+  String get detail_info => 'Informations détaillées';
+
+  @override
+  String get user_id => 'ID utilisateur';
+
+  @override
+  String get nickname => 'Pseudonyme';
+
+  @override
+  String get refund_time => 'Heure de remboursement';
+
+  @override
+  String get refund_method => 'Méthode de remboursement';
+
+  @override
+  String get refund_amount => 'Montant du remboursement';
+
+  @override
+  String get approve => 'Approuver';
+
+  @override
+  String get reject => 'Rejeter';
+
+  @override
+  String get approved => 'Approuvé';
+
+  @override
+  String get rejected => 'Rejeté';
+
+  @override
+  String get items => 'éléments';
+
+  @override
+  String get no_audit_records => 'Aucun enregistrement de vérification';
+
+  @override
+  String get select_record_to_view => 'Sélectionnez un enregistrement pour voir les détails';
+
+  @override
+  String get already_approved => 'Déjà approuvé';
+
+  @override
+  String get already_rejected => 'Déjà rejeté';
+
+  @override
+  String get approve_success => 'Approbation réussie';
+
+  @override
+  String get approve_failed => 'Échec de l\'approbation';
+
+  @override
+  String get reject_success => 'Rejet réussi';
+
+  @override
+  String get reject_failed => 'Échec du rejet';
+
+  @override
+  String get filter_conditions => 'Critères de Filtrage';
+
+  @override
+  String get time_range => 'Période de Temps';
+
+  @override
+  String get all => 'Tous';
+
+  @override
+  String get one_day => 'Dernières 24 Heures';
+
+  @override
+  String get one_week => 'La Semaine Dernière';
+
+  @override
+  String get one_month => 'Le Mois Dernier';
+
+  @override
+  String get approval_status => 'Statut d\'Approba tion';
+
+  @override
+  String get reset => 'Réinitialiser';
+
+  @override
+  String get no_records_found => 'Aucun enregistrement correspondant trouvé';
+
+  @override
+  String get adjust_filters => 'Veuillez essayer d\'ajuster les critères de filtrage';
+
+  @override
+  String get not_manager => 'Vous n\'êtes pas administrateur.';
 }

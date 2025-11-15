@@ -804,6 +804,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter username and password'**
   String get please_enter_username_and_password;
+
+  /// No description provided for @audit.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit'**
+  String get audit;
+
+  /// No description provided for @audit_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit Page'**
+  String get audit_page;
+
+  /// No description provided for @audit_records.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit Records'**
+  String get audit_records;
+
+  /// No description provided for @detail_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Detail Information'**
+  String get detail_info;
+
+  /// No description provided for @user_id.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get user_id;
+
+  /// No description provided for @nickname.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get nickname;
+
+  /// No description provided for @refund_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Time'**
+  String get refund_time;
+
+  /// No description provided for @refund_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Method'**
+  String get refund_method;
+
+  /// No description provided for @refund_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Amount'**
+  String get refund_amount;
+
+  /// No description provided for @approve.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
+  /// No description provided for @reject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
+
+  /// No description provided for @approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approved;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @items.
+  ///
+  /// In en, this message translates to:
+  /// **'items'**
+  String get items;
+
+  /// No description provided for @no_audit_records.
+  ///
+  /// In en, this message translates to:
+  /// **'No audit records'**
+  String get no_audit_records;
+
+  /// No description provided for @select_record_to_view.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a record to view details'**
+  String get select_record_to_view;
+
+  /// No description provided for @already_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Already approved'**
+  String get already_approved;
+
+  /// No description provided for @already_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Already rejected'**
+  String get already_rejected;
+
+  /// No description provided for @approve_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved successfully'**
+  String get approve_success;
+
+  /// No description provided for @approve_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval failed'**
+  String get approve_failed;
+
+  /// No description provided for @reject_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected successfully'**
+  String get reject_success;
+
+  /// No description provided for @reject_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejection failed'**
+  String get reject_failed;
+
+  /// No description provided for @filter_conditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Conditions'**
+  String get filter_conditions;
+
+  /// No description provided for @time_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Range'**
+  String get time_range;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @one_day.
+  ///
+  /// In en, this message translates to:
+  /// **'24 Hours'**
+  String get one_day;
+
+  /// No description provided for @one_week.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Week'**
+  String get one_week;
+
+  /// No description provided for @one_month.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Month'**
+  String get one_month;
+
+  /// No description provided for @approval_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval Status'**
+  String get approval_status;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @no_records_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching records found'**
+  String get no_records_found;
+
+  /// No description provided for @adjust_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try adjusting your filters'**
+  String get adjust_filters;
+
+  /// No description provided for @not_manager.
+  ///
+  /// In en, this message translates to:
+  /// **'you are not a manager'**
+  String get not_manager;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

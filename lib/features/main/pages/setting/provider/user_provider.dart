@@ -1,6 +1,7 @@
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/utils/storage/setting_storage.dart';
@@ -14,6 +15,7 @@ class UserProvider with ChangeNotifier {
   UserModel? _user;
   final ApiUserLogicService _service = ApiUserLogicService();
   bool _isLogin = false;
+  bool _isManager = true;
   String _errorMessage = "";
 
   Function(double)? onloginSuccess;
@@ -23,6 +25,7 @@ class UserProvider with ChangeNotifier {
   UserModel? get user => _user;
   bool get isLogin => _isLogin;
   String get errorMessage => _errorMessage;
+  bool get isManager => _isManager;
 
   // 初始化用户系统
   Future<void> initProvider(BuildContext context) async {
@@ -109,7 +112,9 @@ class UserProvider with ChangeNotifier {
   Future<void> Info(BuildContext context) async {
     try {
       _user = await _service.getUserInfo(context);
-      print("_user:" + _user.toString());
+      if (kDebugMode) {
+        print("_user:$_user");
+      }
 
     } catch (e) {
       LogUtil.e("获取用户信息", e.toString());
@@ -139,7 +144,7 @@ class UserProvider with ChangeNotifier {
           user?.password = Info;
           break;
         case 3:
-          print("email:" + Info);
+          print("email:$Info");
           user?.Email = Info;
           break;
         case 4:

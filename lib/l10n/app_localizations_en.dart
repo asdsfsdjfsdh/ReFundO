@@ -365,4 +365,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_enter_username_and_password => 'Please enter username and password';
+
+  @override
+  String get audit => 'Audit';
+
+  @override
+  String get audit_page => 'Audit Page';
+
+  @override
+  String get audit_records => 'Audit Records';
+
+  @override
+  String get detail_info => 'Detail Information';
+
+  @override
+  String get user_id => 'User ID';
+
+  @override
+  String get nickname => 'Nickname';
+
+  @override
+  String get refund_time => 'Refund Time';
+
+  @override
+  String get refund_method => 'Refund Method';
+
+  @override
+  String get refund_amount => 'Refund Amount';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get reject => 'Reject';
+
+  @override
+  String get approved => 'Approved';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get items => 'items';
+
+  @override
+  String get no_audit_records => 'No audit records';
+
+  @override
+  String get select_record_to_view => 'Select a record to view details';
+
+  @override
+  String get already_approved => 'Already approved';
+
+  @override
+  String get already_rejected => 'Already rejected';
+
+  @override
+  String get approve_success => 'Approved successfully';
+
+  @override
+  String get approve_failed => 'Approval failed';
+
+  @override
+  String get reject_success => 'Rejected successfully';
+
+  @override
+  String get reject_failed => 'Rejection failed';
+
+  @override
+  String get filter_conditions => 'Filter Conditions';
+
+  @override
+  String get time_range => 'Time Range';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get one_day => '24 Hours';
+
+  @override
+  String get one_week => '1 Week';
+
+  @override
+  String get one_month => '1 Month';
+
+  @override
+  String get approval_status => 'Approval Status';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get no_records_found => 'No matching records found';
+
+  @override
+  String get adjust_filters => 'Please try adjusting your filters';
+
+  @override
+  String get not_manager => 'you are not a manager';
 }
