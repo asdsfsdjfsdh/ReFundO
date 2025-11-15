@@ -1,25 +1,26 @@
-class OrderModel{
+import 'package:decimal/decimal.dart';
+
+class OrderModel {
   // 订单号
   final int orderid;
   // 产品id
   final String ProductId;
   // 产品价格
-  final double price;
+  final Decimal price;
   // 返还金额
-  final double refundAmount;
+  final Decimal refundAmount;
   // 返还比例
-  final double refundpercent;
+  final Decimal refundpercent;
   // 扫描时间
   final String OrderTime;
   // 是否提现
   final bool isRefund;
   // 退款状态
   final bool refundState;
-// 退款时间
+  // 退款时间
   final String refundTime;
-  
+
   final String errorMessage;
-  
 
   // 初始化方法
   OrderModel({
@@ -36,12 +37,12 @@ class OrderModel{
   });
 
   // 配置转化Json方法
-  Map<String, dynamic> toJson() =>{
+  Map<String, dynamic> toJson() => {
     'orderid': orderid,
     'productid': ProductId,
     'price': price,
     'refundAmount': refundAmount,
-    'refundpercent':refundpercent,
+    'refundpercent': refundpercent,
     'isrefund': isRefund,
     'OrderTime': OrderTime,
     'isRefund': isRefund,
@@ -49,18 +50,18 @@ class OrderModel{
   };
 
   // 从Json的转化方法
-  factory OrderModel.fromJson(Map<String,dynamic> json){
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
-      orderid: json['orderid'] as int ? ?? 0,
-      ProductId: json['productid'] as String ? ?? '',
-      price: json['price'] as double ? ?? 0.0,
-      refundAmount: json['refundamount'] as double ? ?? 0.0,
-      refundpercent: json['refundpercent'] as double ? ?? 0.0,
-      OrderTime: json['date'] as String ? ?? '',
-      isRefund: json['isRefund'] as bool ? ?? false,
-      refundState: json['refundState'] as bool ? ?? false,
-      refundTime: json['refundTime'] as String ? ?? '',
-      errorMessage: json['errorMessage'] as String ? ?? '',
+      orderid: json['orderid'] as int? ?? 0,
+      ProductId: json['productid'] as String? ?? '',
+      price: Decimal.parse(json['price']?.toString() ?? '0'),
+      refundAmount: Decimal.parse(json['refundamount']?.toString() ?? '0'),
+      refundpercent: Decimal.parse(json['refundpercent']?.toString() ?? '0'),
+      OrderTime: json['date'] as String? ?? '',
+      isRefund: json['isRefund'] as bool? ?? false,
+      refundState: json['refundState'] as bool? ?? false,
+      refundTime: json['refundTime'] as String? ?? '',
+      errorMessage: json['errorMessage'] as String? ?? '',
     );
   }
 
