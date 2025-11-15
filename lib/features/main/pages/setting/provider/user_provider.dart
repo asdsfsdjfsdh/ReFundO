@@ -152,7 +152,7 @@ class UserProvider with ChangeNotifier {
           user?.Email = Info;
           break;
         case 4:
-          user?.CardNumber = Info;
+          user?.phoneNumber = Info;
           break;
         default:
           return "Error";
