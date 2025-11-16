@@ -7,7 +7,7 @@ import 'package:refundo/features/main/pages/setting/provider/user_provider.dart'
 import 'package:refundo/models/order_model.dart';
 import 'package:refundo/models/refund_model.dart';
 
-class ApprovalProvider {
+class ApprovalProvider extends ChangeNotifier {
   ApiApprovalService _apiApprovalService = ApiApprovalService();
 
   Future<int?> Approval(BuildContext context,RefundModel? refund ,bool ApproveType) async {
@@ -18,8 +18,9 @@ class ApprovalProvider {
           refund,
           ApproveType,
         );
+        // 移动getRefunds调用到这里，并等待它完成
         if (message == 200) {
-          Provider.of<RefundProvider>(context, listen: false).getRefunds(context); 
+          await Provider.of<RefundProvider>(context, listen: false).getRefunds(context); 
         }
         return message;
       } else

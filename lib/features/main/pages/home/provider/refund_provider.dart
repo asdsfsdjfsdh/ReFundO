@@ -21,6 +21,33 @@ class RefundProvider with ChangeNotifier {
   List<RefundModel>? get refunds => _refunds;
   Set<OrderModel>? get orders => _orders;
 
+  // 获取今日提交的退款请求数量
+  int get todayRefundCount {
+    if (_refunds == null) return 0;
+    
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    
+    return _refunds!.where((refund) {
+      try {
+        final refundDate = DateTime.parse(refund.timestamp);
+        final refundDay = DateTime(refundDate.year, refundDate.month, refundDate.day);
+        return refundDay.isAtSameMomentAs(today);
+      } catch (e) {
+        return false;
+      }
+    }).length;
+  }
+
+  // 获取未处理的退款请求数量
+  int get pendingRefundCount {
+    if (_refunds == null) return 0;
+    
+    return _refunds!.where((refund) {
+      return refund.refundState == RefundStates.padding;
+    }).length;
+  }
+
   // 获取订单信息
   Future<void> getRefunds(BuildContext context) async {
     try {
@@ -69,10 +96,28 @@ class RefundProvider with ChangeNotifier {
     notifyListeners();
   }
   
+  // 检查退款条件
+  Future<int> checkRefundConditions(BuildContext context) async {
+    try {
+      final statusCode = await _orderService.checkRefundConditions(context,_orders!);
+      return statusCode;
+    } catch (e) {
+      print("检查退款条件失败: $e");
+      return -1;
+    }
+  }
+
 // 退款
   Future<int> Refund(BuildContext context) async {
     try {
       if (_orders!.isNotEmpty) {
+        // 先检查退款条件
+        final statusCode = await checkRefundConditions(context);
+        if (statusCode != 200) {
+          // 条件不满足，返回状态码
+          return statusCode; // 直接返回状态码
+        }
+        
         int message = await _orderService.Refund(context, _orders!);
         if(message == 1){
           Provider.of<OrderProvider>(context,listen: false).getOrders(context);

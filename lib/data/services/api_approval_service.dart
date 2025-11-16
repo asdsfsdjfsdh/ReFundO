@@ -5,20 +5,33 @@ import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/order_model.dart';
 import 'package:refundo/models/refund_model.dart';
 
-class ApiApprovalService { 
-  Future<int?> Approval(BuildContext context,RefundModel? refund,bool ApproveType)async{
-    DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
-    try{
+class ApiApprovalService {
+  Future<int?> Approval(
+    BuildContext context,
+    RefundModel? refund,
+    bool ApproveType,
+  ) async {
+    DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
+    try {
       Response response = await dioProvider.dio.post(
-        '/api/approve',
+        '/api/admin/approve',
         data: {
-          'approve_type': ApproveType,
-          'refund': refund
+          'approveType': ApproveType,
+          'refunds': {
+            "refundId": refund!.recordId,
+            "orderId": refund.orderId,
+            "orderNumber": refund.orderNumber,
+            "uid": refund.userId,
+            "productId": refund.productId,
+            "time": refund.timestamp,
+            "method": refund.refundMethod,
+            "account": refund.account,
+          },
         },
       );
       final statusCode = response.statusCode;
       return statusCode;
-    }on DioException catch (e) {
+    } on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
       print("Dio错误详情:");
@@ -49,7 +62,11 @@ class ApiApprovalService {
       } else {
         message = '网络请求异常: ${e.message}';
       }
-      return e.response!.statusCode;
+      if (e.response != null) {
+        return e.response!.statusCode;
+      } else {
+        return -1;
+      }
     } catch (e) {
       // 处理其他异常
       print('未知错误: $e');

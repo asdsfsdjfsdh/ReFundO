@@ -11,6 +11,9 @@ class RefundModel{
   // 订单编号
   final int orderId;
 
+  // 商品ID
+  final String productId;
+
   // 退款方式
   final int refundMethod;
 
@@ -36,13 +39,14 @@ class RefundModel{
   final String timestamp;
 
   // 提现审批状态
-  final RefundStates refundState;
+  RefundStates refundState;
 
   // 初始化方法
   RefundModel({
     required this.recordId,
     required this.orderId,
     required this.orderNumber,
+    required this.productId,
     required this.refundMethod,
     required this.account,
     required this.phone,
@@ -56,16 +60,25 @@ class RefundModel{
 
   // 配置转化Json方法
   Map<String, dynamic> toJson() =>{
-    'refundAmount': refundAmount,
+    'recordId': recordId,
+    'orderId': orderId,
+    'orderNumber': orderNumber,
+    'refundMethod': refundMethod,
+    'account': account,
+    'phone': phone,
+    'userId': userId,
+    'nickName': nickName,
+    'email': email,
+    'refundAmount': refundAmount.toString(),
     'timestamp': timestamp,
-    'refundState': refundState
+    'refundState': refundState.index
   };
 
   // 从Json的转化方法
   factory RefundModel.fromJson(Map<String,dynamic> json){
     RefundStates state;
     if(json['refund']['state'] != null)
-        state = json['state'] ? RefundStates.approval : RefundStates.success;
+        state = json['refund']['state'] ? RefundStates.success : RefundStates.approval;
     else
         state = RefundStates.padding;
 
@@ -81,6 +94,7 @@ class RefundModel{
         email: json['email'] as String ? ?? '',
         refundAmount: Decimal.parse(json['amount']?.toString() ?? '0' ),
         timestamp: json['refund']['time'] as String ? ?? '',
+        productId: json['refund']['productId'] as String ? ?? '',
         refundState: state
     );
   }

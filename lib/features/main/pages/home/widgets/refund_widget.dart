@@ -221,7 +221,7 @@ class _RefundListItem extends StatelessWidget {
       children: [
         // 金额显示
         Text(
-          '¥${refund.refundAmount?.toStringAsFixed(2) ?? '0.00'}',
+          '${refund.refundAmount?.toStringAsFixed(2) ?? '0.00'} FCFA',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

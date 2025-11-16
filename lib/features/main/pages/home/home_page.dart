@@ -186,7 +186,12 @@ class _HomePageState extends State<HomePage> {
                     _showDialog(context, l10n.unknown_error);
                   } else if (result == -1) {
                     _showDialog(context, l10n.server_error);
-                  } else {
+                  }else if (result == 201){
+                    _showDialog(context, "订单未满5个月");
+                  }else if(result == 202){
+                    _showDialog(context, "订单总金额小于5000");
+                  }
+                   else {
                     _showDialog(context, l10n.error);
                   }
                 }
@@ -242,13 +247,16 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
+      )
     );
   }
 
   // 构建金额显示卡片 - 使用多语言
   Widget _buildAmountCard(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    
+    // 获取退款提供者以访问统计数据
+    final refundProvider = Provider.of<RefundProvider>(context, listen: false);
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -283,7 +291,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                '${_totalAmount.toStringAsFixed(2)} \$',
+                '${_totalAmount.toStringAsFixed(2)} FCFA',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -292,8 +300,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          _buildStatItem(context, l10n.today_orders, "0"),
-          _buildStatItem(context, l10n.processing, "0"),
+          _buildStatItem(context, l10n.today_orders, refundProvider.todayRefundCount.toString()),
+          _buildStatItem(context, l10n.processing, refundProvider.pendingRefundCount.toString()),
         ],
       ),
     );

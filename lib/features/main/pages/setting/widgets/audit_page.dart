@@ -117,6 +117,12 @@ class _AuditPageState extends State<AuditPage> {
     int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,true); 
     if(message == 200){
       ShowToast.showCenterToast(context,"操作成功");
+      // 修改这部分代码以正确刷新页面
+      await Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
+      setState(() {
+        _refunds = Provider.of<RefundProvider>(context, listen: false).refunds;
+        _applyFilters();
+      });
     }else{
       ShowToast.showCenterToast(context,"操作失败");
     }
@@ -129,6 +135,12 @@ class _AuditPageState extends State<AuditPage> {
     int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,false); 
     if(message == 200){
       ShowToast.showCenterToast(context,"操作成功");
+      // 修改这部分代码以正确刷新页面
+      await Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
+      setState(() {
+        _refunds = Provider.of<RefundProvider>(context, listen: false).refunds;
+        _applyFilters();
+      });
     }else{
       ShowToast.showCenterToast(context,"操作失败");
     }
@@ -189,7 +201,7 @@ class _AuditPageState extends State<AuditPage> {
                         _buildDetailItem(l10n.refund_method, refund.refundMethod.toString()),
                         _buildDetailItem(
                           l10n.refund_amount,
-                          '\$${refund.refundAmount.toStringAsFixed(2)}',
+                          '${refund.refundAmount.toStringAsFixed(2)} FCFA',
                           isAmount: true,
                         ),
                       ],
@@ -207,11 +219,11 @@ class _AuditPageState extends State<AuditPage> {
                 else
                   Center(
                     child: Text(
-                      refund.refundState == RefundStates.approval ? l10n.already_approved : l10n.already_rejected,
+                      refund.refundState == RefundStates.success ? l10n.already_approved : l10n.already_rejected,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: refund.refundState == RefundStates.approval ? Colors.green : Colors.red,
+                        color: refund.refundState == RefundStates.success ? Colors.green : Colors.red,
                       ),
                     ),
                   ),
@@ -677,7 +689,7 @@ class _AuditPageState extends State<AuditPage> {
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                   ),
                   Text(
-                    '\$${refund.refundAmount.toStringAsFixed(2)}',
+                    '${refund.refundAmount.toStringAsFixed(2)} FCFA',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -761,9 +773,9 @@ class _AuditPageState extends State<AuditPage> {
 
   String _getStatusString(RefundStates state) {
     switch (state) {
-      case RefundStates.approval:
-        return 'approved';
       case RefundStates.success:
+        return 'approved';
+      case RefundStates.approval:
         return 'rejected';
       default: // RefundStates.padding
         return 'pending';

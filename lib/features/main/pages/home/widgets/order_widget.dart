@@ -439,7 +439,7 @@ class _OrderListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          '¥${order.refundAmount.toStringAsFixed(2)}',
+          '${order.refundAmount.toStringAsFixed(2)} FCFA',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

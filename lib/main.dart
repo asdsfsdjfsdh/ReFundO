@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:refundo/features/main/main_screen.dart';
 import 'package:refundo/features/main/models/initialization_model.dart';
+import 'package:refundo/features/main/pages/home/provider/approval_provider.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/app_provider.dart';
@@ -20,6 +21,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => EmailProvider()),
         ChangeNotifierProvider(create: (_) => DioProvider()),
+        ChangeNotifierProvider(create: (_) => RefundProvider()),
       ],
       child: MyApp(),
     ),
@@ -43,7 +45,10 @@ class _MyAppStatus extends State<MyApp>{
         ChangeNotifierProvider(create: (context)=> OrderProvider()),
         ChangeNotifierProvider(create: (context)=> RefundProvider()),
         ChangeNotifierProvider(create: (context)=> UserProvider()),
-        ChangeNotifierProvider(create: (context) => AppProvider())
+        ChangeNotifierProvider(create: (context) => AppProvider()),
+        ChangeNotifierProvider(create: (context) => EmailProvider()),
+        ChangeNotifierProvider(create: (context) => DioProvider()),
+        ChangeNotifierProvider(create: (context) => ApprovalProvider()),
       ],
       child:Consumer<AppProvider>(
           builder: (context, appProvider, child) {
