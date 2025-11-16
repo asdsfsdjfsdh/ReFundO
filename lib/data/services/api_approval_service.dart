@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/order_model.dart';
+import 'package:refundo/models/refund_model.dart';
 
 class ApiApprovalService { 
-  Future<int?> Approval(BuildContext context,Set<OrderModel> orders,bool ApproveType)async{
+  Future<int?> Approval(BuildContext context,RefundModel? refund,bool ApproveType)async{
     DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
     try{
-       List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
       Response response = await dioProvider.dio.post(
         '/api/approve',
         data: {
           'approve_type': ApproveType,
-          'orders': ordersJson
+          'refund': refund
         },
       );
       final statusCode = response.statusCode;

@@ -8,6 +8,8 @@ class UserModel{
   // 用户已返现金额
   final double RefundedAmount;
 
+  final bool role;
+
   String? avatarUrl;
 
   String Email;
@@ -27,6 +29,7 @@ class UserModel{
     required this.Email,
     required this.phoneNumber,
     required this.password,
+    required this.role,
     this.errorMessage = '',
   });
 
@@ -63,7 +66,8 @@ factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''})
       Email: json['email'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
       password: json['password'] as String? ?? '',
-      errorMessage: errorMessage
+      errorMessage: errorMessage,
+      role: json['role'] as bool? ?? false
   );
 }
 

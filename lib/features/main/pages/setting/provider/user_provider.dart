@@ -154,6 +154,7 @@ class UserProvider with ChangeNotifier {
         case 4:
           user?.phoneNumber = Info;
           break;
+        
         default:
           return "Error";
       }

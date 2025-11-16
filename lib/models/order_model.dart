@@ -3,6 +3,8 @@ import 'package:decimal/decimal.dart';
 class OrderModel {
   // 订单号
   final int orderid;
+  // 订单编号
+  final String orderNumber;
   // 产品id
   final String ProductId;
   // 产品价格
@@ -25,6 +27,7 @@ class OrderModel {
   // 初始化方法
   OrderModel({
     required this.orderid,
+    required this.orderNumber,
     required this.ProductId,
     required this.price,
     required this.refundAmount,
@@ -39,6 +42,7 @@ class OrderModel {
   // 配置转化Json方法
   Map<String, dynamic> toJson() => {
     'orderid': orderid,
+    'orderNumber': orderNumber,
     'productid': ProductId,
     'price': price,
     'refundAmount': refundAmount,
@@ -53,6 +57,7 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
       orderid: json['orderid'] as int? ?? 0,
+      orderNumber: json['orderNumber'] as String? ?? '',
       ProductId: json['productid'] as String? ?? '',
       price: Decimal.parse(json['price']?.toString() ?? '0'),
       refundAmount: Decimal.parse(json['refundamount']?.toString() ?? '0'),
@@ -68,6 +73,6 @@ class OrderModel {
   // 重写输出方法
   @override
   String toString() {
-    return "订单号：$orderid，订单价格：$price，返还金额：$refundAmount,订单扫描时间：$OrderTime,是否提现:$isRefund,订单状态：$refundState, 退款时间：$refundTime,错误信息：$errorMessage";
+    return "订单号：$orderid，订单编号：$orderNumber,产品id：$ProductId,订单价格：$price，返还金额：$refundAmount,订单扫描时间：$OrderTime,是否提现:$isRefund,订单状态：$refundState, 退款时间：$refundTime,错误信息：$errorMessage";
   }
 }

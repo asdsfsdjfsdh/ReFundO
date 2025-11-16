@@ -1,6 +1,11 @@
 // audit/audit_page.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:refundo/core/utils/showToast.dart';
+import 'package:refundo/features/main/pages/home/provider/approval_provider.dart';
+import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart';
+import 'package:refundo/models/refund_model.dart';
 
 class AuditPage extends StatefulWidget {
   const AuditPage({super.key});
@@ -10,8 +15,8 @@ class AuditPage extends StatefulWidget {
 }
 
 class _AuditPageState extends State<AuditPage> {
-  List<Map<String, dynamic>> _auditRecords = [];
-  List<Map<String, dynamic>> _filteredRecords = [];
+  List<RefundModel>? _refunds = [];
+  List<RefundModel> _filteredRecords = [];
   bool _isLoading = false;
 
   // 筛选条件
@@ -27,7 +32,7 @@ class _AuditPageState extends State<AuditPage> {
   };
 
   late final Map<String, String> _statusFilters = {
-    'all': AppLocalizations.of(context)!.approved,
+    'all': AppLocalizations.of(context)!.all,
     'pending': AppLocalizations.of(context)!.pending,
     'approved': AppLocalizations.of(context)!.approve,
     'rejected': AppLocalizations.of(context)!.rejected,
@@ -45,63 +50,7 @@ class _AuditPageState extends State<AuditPage> {
     });
 
     setState(() {
-      _auditRecords = [
-        {
-          'recordId': '1',
-          'orderNumber': 'ORD20231215001',
-          'refundTime': DateTime.now().subtract(const Duration(hours: 2)),
-          'refundMethod': '银行转账',
-          'refundAmount': 25.50,
-          'userId': 'USER001',
-          'nickname': '张三',
-          'email': 'zhangsan@email.com',
-          'status': 'pending',
-        },
-        {
-          'recordId': '2',
-          'orderNumber': 'ORD20231215002',
-          'refundTime': DateTime.now().subtract(const Duration(hours: 5)),
-          'refundMethod': '支付宝',
-          'refundAmount': 18.75,
-          'userId': 'USER002',
-          'nickname': '李四',
-          'email': 'lisi@email.com',
-          'status': 'pending',
-        },
-        {
-          'recordId': '3',
-          'orderNumber': 'ORD20231215003',
-          'refundTime': DateTime.now().subtract(const Duration(days: 3)),
-          'refundMethod': '微信支付',
-          'refundAmount': 42.30,
-          'userId': 'USER003',
-          'nickname': '王五',
-          'email': 'wangwu@email.com',
-          'status': 'approved',
-        },
-        {
-          'recordId': '4',
-          'orderNumber': 'ORD20231210001',
-          'refundTime': DateTime.now().subtract(const Duration(days: 10)),
-          'refundMethod': '银行转账',
-          'refundAmount': 15.20,
-          'userId': 'USER004',
-          'nickname': '赵六',
-          'email': 'zhaoliu@email.com',
-          'status': 'rejected',
-        },
-        {
-          'recordId': '5',
-          'orderNumber': 'ORD20231120001',
-          'refundTime': DateTime.now().subtract(const Duration(days: 25)),
-          'refundMethod': '支付宝',
-          'refundAmount': 33.80,
-          'userId': 'USER005',
-          'nickname': '钱七',
-          'email': 'qianqi@email.com',
-          'status': 'approved',
-        },
-      ];
+      _refunds = Provider.of<RefundProvider>(context, listen: false).refunds ?? [];
       _applyFilters();
       _isLoading = false;
     });
@@ -109,7 +58,7 @@ class _AuditPageState extends State<AuditPage> {
 
   // 应用筛选条件
   void _applyFilters() {
-    List<Map<String, dynamic>> filtered = List.from(_auditRecords);
+    List<RefundModel> filtered = List.from(_refunds ?? []);
 
     // 时间筛选
     if (_selectedTimeFilter != 'all') {
@@ -130,15 +79,21 @@ class _AuditPageState extends State<AuditPage> {
           filterDate = now;
       }
 
-      filtered = filtered.where((record) {
-        return record['refundTime'].isAfter(filterDate);
+      filtered = filtered.where((refund) {
+        try {
+          DateTime refundTime = DateTime.parse(refund.timestamp);
+          return refundTime.isAfter(filterDate);
+        } catch (e) {
+          return false;
+        }
       }).toList();
     }
 
     // 状态筛选
     if (_selectedStatusFilter != 'all') {
-      filtered = filtered.where((record) {
-        return record['status'] == _selectedStatusFilter;
+      filtered = filtered.where((refund) {
+        String statusString = _getStatusString(refund.refundState);
+        return statusString == _selectedStatusFilter;
       }).toList();
     }
 
@@ -156,34 +111,31 @@ class _AuditPageState extends State<AuditPage> {
     });
   }
 
-  Future<void> _approveRefund(String recordId) async {
+  Future<void> _approveRefund(RefundModel? refund_approval ) async {
     // TODO: 实现审批通过的实际API调用
-    print('审批通过: $recordId');
-
-    setState(() {
-      final index = _auditRecords.indexWhere((record) => record['recordId'] == recordId);
-      if (index != -1) {
-        _auditRecords[index]['status'] = 'approved';
-        _applyFilters(); // 重新应用筛选
-      }
-    });
+    // print('审批通过: $recordId');
+    int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,true); 
+    if(message == 200){
+      ShowToast.showCenterToast(context,"操作成功");
+    }else{
+      ShowToast.showCenterToast(context,"操作失败");
+    }
   }
 
-  Future<void> _rejectRefund(String recordId) async {
+  Future<void> _rejectRefund(RefundModel refund_approval) async {
     // TODO: 实现拒绝审批的实际API调用
-    print('拒绝审批: $recordId');
+    // print('拒绝审批: $recordId');
 
-    setState(() {
-      final index = _auditRecords.indexWhere((record) => record['recordId'] == recordId);
-      if (index != -1) {
-        _auditRecords[index]['status'] = 'rejected';
-        _applyFilters(); // 重新应用筛选
-      }
-    });
+    int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,false); 
+    if(message == 200){
+      ShowToast.showCenterToast(context,"操作成功");
+    }else{
+      ShowToast.showCenterToast(context,"操作失败");
+    }
   }
 
   // 显示详细信息悬浮窗
-  void _showDetailDialog(BuildContext context, Map<String, dynamic> record) {
+  void _showDetailDialog(BuildContext context, RefundModel refund) {
     final l10n = AppLocalizations.of(context);
 
     showDialog(
@@ -229,15 +181,15 @@ class _AuditPageState extends State<AuditPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildDetailItem(l10n.user_id, record['userId']),
-                        _buildDetailItem(l10n.nickname, record['nickname']),
-                        _buildDetailItem(l10n.email, record['email']),
-                        _buildDetailItem(l10n.order_number, record['orderNumber']),
-                        _buildDetailItem(l10n.refund_time, _formatDateTime(record['refundTime'])),
-                        _buildDetailItem(l10n.refund_method, record['refundMethod']),
+                        _buildDetailItem(l10n.user_id, refund.userId.toString()),
+                        _buildDetailItem(l10n.nickname, refund.nickName),
+                        _buildDetailItem(l10n.email, refund.email),
+                        _buildDetailItem(l10n.order_number, refund.orderNumber),
+                        _buildDetailItem(l10n.refund_time, refund.timestamp),
+                        _buildDetailItem(l10n.refund_method, refund.refundMethod.toString()),
                         _buildDetailItem(
                           l10n.refund_amount,
-                          '\$${record['refundAmount'].toStringAsFixed(2)}',
+                          '\$${refund.refundAmount.toStringAsFixed(2)}',
                           isAmount: true,
                         ),
                       ],
@@ -250,16 +202,16 @@ class _AuditPageState extends State<AuditPage> {
                 const SizedBox(height: 16),
 
                 // 操作按钮（仅待审批记录显示）
-                if (record['status'] == 'pending')
-                  _buildActionButtons(context, record)
+                if (refund.refundState == RefundStates.padding)
+                  _buildActionButtons(context, refund)
                 else
                   Center(
                     child: Text(
-                      record['status'] == 'approved' ? l10n.already_approved : l10n.already_rejected,
+                      refund.refundState == RefundStates.approval ? l10n.already_approved : l10n.already_rejected,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: record['status'] == 'approved' ? Colors.green : Colors.red,
+                        color: refund.refundState == RefundStates.approval ? Colors.green : Colors.red,
                       ),
                     ),
                   ),
@@ -305,14 +257,14 @@ class _AuditPageState extends State<AuditPage> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, Map<String, dynamic> record) {
+  Widget _buildActionButtons(BuildContext context, RefundModel refund) {
     final l10n = AppLocalizations.of(context);
 
     return Row(
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () => _handleApprove(context, record),
+            onPressed: () => _handleApprove(context, refund),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green.shade600,
               foregroundColor: Colors.white,
@@ -330,7 +282,7 @@ class _AuditPageState extends State<AuditPage> {
         const SizedBox(width: 16),
         Expanded(
           child: OutlinedButton(
-            onPressed: () => _handleReject(context, record),
+            onPressed: () => _handleReject(context, refund),
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.red.shade600,
               side: BorderSide(color: Colors.red.shade600, width: 2),
@@ -349,11 +301,11 @@ class _AuditPageState extends State<AuditPage> {
     );
   }
 
-  Future<void> _handleApprove(BuildContext context, Map<String, dynamic> record) async {
+  Future<void> _handleApprove(BuildContext context, RefundModel refund) async {
     final l10n = AppLocalizations.of(context);
 
     try {
-      await _approveRefund(record['recordId']);
+      await _approveRefund(refund);
       Navigator.of(context).pop(); // 关闭对话框
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -371,11 +323,11 @@ class _AuditPageState extends State<AuditPage> {
     }
   }
 
-  Future<void> _handleReject(BuildContext context, Map<String, dynamic> record) async {
+  Future<void> _handleReject(BuildContext context, RefundModel refund) async {
     final l10n = AppLocalizations.of(context);
 
     try {
-      await _rejectRefund(record['recordId']);
+      await _rejectRefund(refund);
       Navigator.of(context).pop(); // 关闭对话框
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -650,30 +602,30 @@ class _AuditPageState extends State<AuditPage> {
       itemCount: _filteredRecords.length,
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
-        final record = _filteredRecords[index];
-        return _buildAuditListItem(context, record);
+        final refund = _filteredRecords[index];
+        return _buildAuditListItem(context, refund);
       },
     );
   }
 
-  Widget _buildAuditListItem(BuildContext context, Map<String, dynamic> record) {
+  Widget _buildAuditListItem(BuildContext context, RefundModel refund) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        leading: _buildStatusIcon(record['status']),
+        leading: _buildStatusIcon(_getStatusString(refund.refundState)),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              record['orderNumber'],
+              refund.orderId.toString(),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
               ),
             ),
-            _buildStatusBadge(record['status']),
+            _buildStatusBadge(_getStatusString(refund.refundState)),
           ],
         ),
         subtitle: Padding(
@@ -686,14 +638,14 @@ class _AuditPageState extends State<AuditPage> {
                   Icon(Icons.person, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    record['nickname'],
+                    refund.nickName,
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                   const SizedBox(width: 16),
                   Icon(Icons.email, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    record['email'],
+                    refund.email,
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                 ],
@@ -704,14 +656,14 @@ class _AuditPageState extends State<AuditPage> {
                   Icon(Icons.access_time, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    _formatDateTime(record['refundTime']),
+                    refund.timestamp,
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                   const SizedBox(width: 16),
                   Icon(Icons.payment, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    record['refundMethod'],
+                    refund.refundMethod.toString(),
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                 ],
@@ -725,7 +677,7 @@ class _AuditPageState extends State<AuditPage> {
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                   ),
                   Text(
-                    '\$${record['refundAmount'].toStringAsFixed(2)}',
+                    '\$${refund.refundAmount.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -737,7 +689,7 @@ class _AuditPageState extends State<AuditPage> {
             ],
           ),
         ),
-        onTap: () => _showDetailDialog(context, record),
+        onTap: () => _showDetailDialog(context, refund),
       ),
     );
   }
@@ -807,7 +759,14 @@ class _AuditPageState extends State<AuditPage> {
     );
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  String _getStatusString(RefundStates state) {
+    switch (state) {
+      case RefundStates.approval:
+        return 'approved';
+      case RefundStates.success:
+        return 'rejected';
+      default: // RefundStates.padding
+        return 'pending';
+    }
   }
 }

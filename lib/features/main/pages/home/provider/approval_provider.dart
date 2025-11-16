@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_approval_service.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
+import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/order_model.dart';
+import 'package:refundo/models/refund_model.dart';
 
 class ApprovalProvider {
-  Set<OrderModel>? _orders = <OrderModel>{};
   ApiApprovalService _apiApprovalService = ApiApprovalService();
 
-  Future<int?> Approval(BuildContext context, bool ApproveType) async {
+  Future<int?> Approval(BuildContext context,RefundModel? refund ,bool ApproveType) async {
     try {
-      if (_orders!.isNotEmpty) {
+      if (refund != null) {
         final message = await _apiApprovalService.Approval(
           context,
-          _orders!,
+          refund,
           ApproveType,
         );
-        if (message == 1) {
-          Provider.of<OrderProvider>(context, listen: false).getOrders(context);
-          this.getRefunds(context);
+        if (message == 200) {
+          Provider.of<RefundProvider>(context, listen: false).getRefunds(context); 
         }
         return message;
       } else
@@ -30,5 +30,4 @@ class ApprovalProvider {
     }
   }
 
-  void getRefunds(BuildContext context) {}
 }

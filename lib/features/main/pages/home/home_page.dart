@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Consumer<RefundProvider>(
                   builder: (context, refundProvider, child) {
-                    return RefundWidget(models: refundProvider.refunds ?? []);
+                    return RefundWidget(refunds: refundProvider.refunds ?? []);
                   },
                 ),
               ],

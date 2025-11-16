@@ -9,6 +9,7 @@ import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/Product_model.dart';
 import 'package:refundo/models/order_model.dart';
+import 'package:refundo/models/refund_model.dart';
 import 'package:refundo/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -132,8 +133,12 @@ class ApiOrderService {
         print(ordersJson);
       }
       Response response = await dioProvider.dio.post(
-        "/api/orders/refund",
-        data: ordersJson
+        "/api/refund/insert",
+        data: {
+          "orders" : ordersJson,
+          "refundMethod" : 1
+        }
+
       );
       String message = response.data['message'];
       // UserModel user = response.data['result'];

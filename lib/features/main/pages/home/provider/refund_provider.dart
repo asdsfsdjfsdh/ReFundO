@@ -13,24 +13,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 // 订单的provider方法
 class RefundProvider with ChangeNotifier {
   // List<RefundModel>? _refunds;
-  List<OrderModel>? _refunds;
+  List<RefundModel>? _refunds;
   Set<OrderModel>? _orders = <OrderModel>{};
   ApiRefundService refundService = ApiRefundService();
   ApiOrderService _orderService = ApiOrderService();
 
-  List<OrderModel>? get refunds => _refunds;
+  List<RefundModel>? get refunds => _refunds;
   Set<OrderModel>? get orders => _orders;
 
   // 获取订单信息
   Future<void> getRefunds(BuildContext context) async {
     try {
+      bool isAdmin = Provider.of<UserProvider>(context,listen: false).user!.role;
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('access_token') ?? '';
       print("token: $token");
       print(token.isEmpty);
       if (token.isNotEmpty) {
         try {
-          _refunds = await _orderService.getOrders(context, true);
+          if(!isAdmin)
+            _refunds = await refundService.getRefunds(context);
+          else
+            _refunds = await refundService.getAllRefunds(context);
         } on DioException catch (e) {
           print(token);
           print("Dio错误详情:");
