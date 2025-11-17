@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:ffi';
-// import 'dart:ui_web';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
@@ -69,14 +67,6 @@ class _ScannerPageState extends State<ScannerPage> {
       _showDialog(context, _message);
     });
 
-    
-    // _showCenterToast(context, message);
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-
-    //   },
-    // );
   }
 
   void _showDialog(BuildContext context, String message) {
@@ -102,59 +92,17 @@ class _ScannerPageState extends State<ScannerPage> {
     );
   }
 
-  // Widget? _showCenterToast(BuildContext context, String message) {
-  //   if (message == '') {
-  //     return null;
-  //   }
-  //   return Center(
-  //     child: Column(
-  //       children: [
-  //         Text(message, style: TextStyle(fontSize: 16)),
-  //         //调整按钮位置在右下角
-  //         SizedBox(height: 10),
-
-  //         ElevatedButton(
-  //           onPressed: () {
-  //             Navigator.of(context).pop();
-  //             setState(() {
-  //               _isScanning = true;
-  //             });
-  //           },
-  //           child: Text('确定'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   //解析二维码数据
   Map<String, dynamic> _parseKeyValueFormat(String text) {
-    Map<String, dynamic> data = {};
-    List<String> lines = text.split('\n');
-
-    for (String line in lines) {
-      if (line.contains(':')) {
-        List<String> parts = line.split(':');
-        if (parts.length >= 2) {
-          String key = parts[0].trim();
-          String value = parts.sublist(1).join(':').trim(); // 处理值中可能包含冒号的情况
-
-          // 尝试转换数字类型
-          if (key == 'price' ||
-              key == 'RefundPercent' ||
-              key == 'RefundAmount') {
-            try {
-              data[key] = double.parse(value);
-            } catch (e) {
-              data[key] = value;
-            }
-          } else {
-            data[key] = value;
-          }
-        }
-      }
-    }
-
-    return data;
+     try {
+    // 尝试解析为 JSON
+    final Map<String, dynamic> jsonData = json.decode(text);
+    return jsonData;
+  } on FormatException catch (e) {
+    // 如果不是合法 JSON，返回空 map 或抛出异常
+    _showDialog(context, '二维码内容非法');
+    throw Exception('二维码内容不是有效的 JSON 格式');
+  }
   }
 }

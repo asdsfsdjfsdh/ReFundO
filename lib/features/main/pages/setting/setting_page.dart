@@ -137,7 +137,7 @@ class _SettingPageState extends State<SettingPage> {
         _buildInfoCard(
           context: context,
           title: l10n!.email_address,
-          subtitle: 'project_test@qq.com',
+          subtitle: Provider.of<UserProvider>(context,listen: false).user!.Email,
           icon: Icons.email_outlined,
           iconColor: Colors.orange.shade600,
           actionText: l10n.modify_login_email,
@@ -172,7 +172,8 @@ class _SettingPageState extends State<SettingPage> {
         _buildInfoCard(
           context: context,
           title: l10n.bank_card_number,
-          subtitle: l10n.bank_card_tail_number,
+          subtitle: Provider.of<UserProvider>(context,listen: false).user!.phoneNumber,
+          // l10n.bank_card_tail_number
           icon: Icons.credit_card_rounded,
           iconColor: Colors.green.shade600,
           actionText: l10n.manage_payment_info,

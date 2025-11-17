@@ -9,6 +9,7 @@ import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/Product_model.dart';
 import 'package:refundo/models/order_model.dart';
+import 'package:refundo/models/refund_model.dart';
 import 'package:refundo/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -123,6 +124,42 @@ class ApiOrderService {
     }
   }
 
+  // 检查退款条件
+  Future<int> checkRefundConditions(BuildContext context, Set<OrderModel> orders) async {
+    DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
+    try {
+      List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
+      Response response = await dioProvider.dio.post('/api/orders/check',
+        data: {
+          "orders" : ordersJson
+        }
+      );
+      return response.statusCode ?? -1;
+    } on DioException catch (e) {
+      if (kDebugMode) {
+        print("Dio错误详情:");
+        print("请求URL: ${e.requestOptions.uri}");
+        print("请求方法: ${e.requestOptions.method}");
+        print("请求头: ${e.requestOptions.headers}");
+        print("请求体: ${e.requestOptions.data}");
+        print("响应状态码: ${e.response?.statusCode}");
+        print("响应数据: ${e.response?.data}");
+      }
+      
+      if (e.response != null) {
+        return e.response!.statusCode ?? -1;
+      } else {
+        return -1;
+      }
+    } catch (e) {
+      // 处理其他异常
+      if (kDebugMode) {
+        print('未知错误: $e');
+      }
+      return -1;
+    }
+  }
+
   // 退款功能
   Future<int> Refund(BuildContext context,Set<OrderModel> orders) async{
     DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
@@ -132,8 +169,12 @@ class ApiOrderService {
         print(ordersJson);
       }
       Response response = await dioProvider.dio.post(
-        "/api/orders/refund",
-        data: ordersJson
+        "/api/refund/insert",
+        data: {
+          "orders" : ordersJson,
+          "refundMethod" : 1
+        }
+
       );
       String message = response.data['message'];
       // UserModel user = response.data['result'];

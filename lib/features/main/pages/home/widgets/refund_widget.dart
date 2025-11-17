@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持
 import 'package:refundo/models/order_model.dart';
+import 'package:refundo/models/refund_model.dart';
 
 class RefundWidget extends StatelessWidget {
-  final List<OrderModel> models;
+  final List<RefundModel> refunds;
 
   const RefundWidget( {
     super.key,
-    required this.models,
+    required this.refunds,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (models.isEmpty) {
+    if (refunds.isEmpty) {
       return _buildEmptyState(context); // 添加context参数
     }
 
     return ListView.builder(
-      itemCount: models.length,
+      itemCount: refunds.length,
       cacheExtent: 300.0,
       itemBuilder: (context, index) {
-        final order = models[index];
-        return _RefundListItem(order: order);
+        final refund = refunds[index];
+        return _RefundListItem(refunds: refund);
       },
     );
   }
@@ -63,10 +64,10 @@ class RefundWidget extends StatelessWidget {
 }
 
 class _RefundListItem extends StatelessWidget {
-  final OrderModel order;
+  final RefundModel refunds;
 
   const _RefundListItem({
-    required this.order,
+    required this.refunds,
   });
 
   @override
@@ -82,23 +83,23 @@ class _RefundListItem extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () {
-            _showRefundDetails(context, order);
+            _showRefundDetails(context, refunds);
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 // 状态图标
-                _buildStatusIcon(order),
+                _buildStatusIcon(refunds),
                 const SizedBox(width: 16),
 
                 // 主要信息
                 Expanded(
-                  child: _buildMainInfo(context, order), // 添加context参数
+                  child: _buildMainInfo(context, refunds), // 添加context参数
                 ),
 
                 // 金额和操作
-                _buildAmountAndActions(context, order), // 添加context参数
+                _buildAmountAndActions(context, refunds), // 添加context参数
               ],
             ),
           ),
@@ -107,20 +108,24 @@ class _RefundListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusIcon(OrderModel order) {
+  Widget _buildStatusIcon(RefundModel refund) {
     final IconData icon;
     final Color color;
 
     // 根据退款状态显示不同图标
-    switch (order.refundState) {
-      case true:
+    switch (refund.refundState) {
+      case RefundStates.success:
         icon = Icons.check_circle_outline_rounded;
         color = Colors.green.shade600;
         break;
-      case false:
+      case RefundStates.approval:
         icon = Icons.error_outline_rounded;
         color = Colors.red.shade600;
         break;
+        case RefundStates.padding:
+          icon = Icons.info_outline_rounded;
+          color = Colors.orange.shade600;
+          break;
     }
 
     return Container(
@@ -139,7 +144,7 @@ class _RefundListItem extends StatelessWidget {
   }
 
   // 构建主要信息 - 添加多语言支持
-  Widget _buildMainInfo(BuildContext context, OrderModel order) {
+  Widget _buildMainInfo(BuildContext context, RefundModel refund) {
     final l10n = AppLocalizations.of(context);
 
     return Column(
@@ -158,7 +163,7 @@ class _RefundListItem extends StatelessWidget {
 
         // 时间信息
         Text(
-          '${l10n.time}: ${order.OrderTime}',
+          '${l10n.time}: ${refund.timestamp}',
           style: TextStyle(
             fontSize: 14,
             color: Colors.grey.shade600,
@@ -167,7 +172,7 @@ class _RefundListItem extends StatelessWidget {
         const SizedBox(height: 2),
 
         // 状态标签
-        _buildStatusBadge(context, order.refundState), // 添加context参数
+        _buildStatusBadge(context, refund.refundState == RefundStates.success), // 添加context参数
       ],
     );
   }
@@ -210,17 +215,17 @@ class _RefundListItem extends StatelessWidget {
   }
 
   // 构建金额和操作 - 添加多语言支持
-  Widget _buildAmountAndActions(BuildContext context, OrderModel order) {
+  Widget _buildAmountAndActions(BuildContext context, RefundModel refund) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         // 金额显示
         Text(
-          '¥${order.refundAmount?.toStringAsFixed(2) ?? '0.00'}',
+          '${refund.refundAmount?.toStringAsFixed(2) ?? '0.00'} FCFA',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: _getAmountColor(order.refundState),
+            color: _getAmountColor(refund.refundState == RefundStates.success),
           ),
         ),
         const SizedBox(height: 8),
@@ -237,12 +242,12 @@ class _RefundListItem extends StatelessWidget {
     }
   }
 
-  void _showRefundDetails(BuildContext context, OrderModel order) {
+  void _showRefundDetails(BuildContext context, RefundModel refund) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _RefundDetailSheet(order: order),
+      builder: (context) => _RefundDetailSheet(refund: refund),
     );
   }
 
@@ -253,9 +258,9 @@ class _RefundListItem extends StatelessWidget {
 
 // 提现详情底部表单 - 添加多语言支持
 class _RefundDetailSheet extends StatelessWidget {
-  final OrderModel order;
+  final RefundModel refund;
 
-  const _RefundDetailSheet({required this.order});
+  const _RefundDetailSheet({required this.refund});
 
   @override
   Widget build(BuildContext context) {
@@ -295,10 +300,10 @@ class _RefundDetailSheet extends StatelessWidget {
             const SizedBox(height: 20),
 
             // 详情信息
-            _buildDetailItem(context, l10n.order_number, order.orderid.toString()),
-            _buildDetailItem(context, l10n.withdrawal_amount, '¥${order.refundAmount?.toStringAsFixed(2)}'),
-            _buildDetailItem(context, l10n.application_time, order.OrderTime),
-            _buildDetailItem(context, l10n.processing_status, order.refundState ? l10n.completed : l10n.pending),
+            _buildDetailItem(context, l10n.order_number, refund.orderNumber),
+            _buildDetailItem(context, l10n.withdrawal_amount, '¥${refund.refundAmount?.toStringAsFixed(2)}'),
+            _buildDetailItem(context, l10n.application_time, refund.timestamp.toString()),
+            _buildDetailItem(context, l10n.processing_status, refund.refundState == RefundStates.success ? l10n.completed : l10n.pending),
             _buildDetailItem(context, l10n.payment_method, l10n.bank_card),
 
             const SizedBox(height: 30),

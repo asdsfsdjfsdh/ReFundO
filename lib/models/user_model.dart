@@ -8,11 +8,13 @@ class UserModel{
   // 用户已返现金额
   final double RefundedAmount;
 
+  final bool role;
+
   String? avatarUrl;
 
   String Email;
 
-  String CardNumber;
+  String phoneNumber;
 
   final String errorMessage;
 
@@ -25,8 +27,9 @@ class UserModel{
     required this.AmountSum,
     required this.RefundedAmount,
     required this.Email,
-    required this.CardNumber,
+    required this.phoneNumber,
     required this.password,
+    required this.role,
     this.errorMessage = '',
   });
 
@@ -37,7 +40,7 @@ class UserModel{
     'amountSum': AmountSum,
     'refundedAmount': RefundedAmount,
     'email': Email,
-    'cardnumber': CardNumber,
+    'phoneNumber': phoneNumber,
     'password':password
   };
 
@@ -61,16 +64,17 @@ factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''})
       AmountSum: (json['amountSum'] as num?)?.toDouble() ?? 0.0,
       RefundedAmount: (json['refundedAmount'] as num?)?.toDouble() ?? 0.0,
       Email: json['email'] as String? ?? '',
-      CardNumber: json['cardNumber'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? '',
       password: json['password'] as String? ?? '',
-      errorMessage: errorMessage
+      errorMessage: errorMessage,
+      role: json['role'] as bool? ?? false
   );
 }
 
   // 重写输出方法
   @override
   String toString() {
-    return "用户：$username,账号:$userAccount,总可返现金额:$AmountSum,已经返现金额：$RefundedAmount,邮箱:$Email,银行卡号:$CardNumber,错误信息:$errorMessage";
+    return "用户：$username,账号:$userAccount,总可返现金额:$AmountSum,已经返现金额：$RefundedAmount,邮箱:$Email,银行卡号:$phoneNumber,错误信息:$errorMessage";
   }
 
 }

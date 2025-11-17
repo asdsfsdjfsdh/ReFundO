@@ -413,22 +413,28 @@ class _CheckCodeState extends State<CheckCode> {
                                 child: TextButton(
                                   key: ValueKey('resend'),
                                   onPressed: () {
-                                    setState(() {
                                       if (sendColor == Colors.blue) {
                                         final message =
                                             Provider.of<EmailProvider>(
                                               context,
                                               listen: false,
-                                            ).sendEmail(email, context);
-                                        if (message != "Error") {
-                                        ShowToast.showCenterToast(context, "验证码已发送");
+                                            ).sendEmail(email, context,1);
+                                        if (message == 200) {
+                                        ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
+                                        setState(() {
                                           sendColor = Colors.grey;
                                           _startCountdown();
-                                        } else {
-                                        ShowToast.showCenterToast(context, "发送失败");
+                                        });
+                                        } else if(message == 411) {
+                                        ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
+                                        }else if(message == 412){
+                                          ShowToast.showCenterToast(context, "用户信息不唯一，请联系客服处理");
+                                        }else if(message == 400){
+                                          ShowToast.showCenterToast(context, "未找到与该邮箱关联的用户账户");
+                                        }else{
+                                          ShowToast.showCenterToast(context, "邮件服务暂时不可用，请稍后重试");
                                         }
                                       }
-                                    });
                                   },
                                   child: Text(
                                     _countdown != 0
@@ -453,7 +459,7 @@ class _CheckCodeState extends State<CheckCode> {
                                           Provider.of<EmailProvider>(
                                             context,
                                             listen: false,
-                                          ).sendEmail(email, context);
+                                          ).sendEmail(email, context,1);
                                       if (message != "Error") {
                                         ShowToast.showCenterToast(context, "验证码已发送");
                                         _startCountdown();
@@ -498,11 +504,17 @@ class _CheckCodeState extends State<CheckCode> {
                         listen: false,
                       ).checkCode(email, Code, context);
                       print(message);
-                      if (message != "验证码正确") {
-                       ShowToast.showCenterToast(context,message);
-                      } else {
+                       if (message == 410) {
+                       ShowToast.showCenterToast(context,"验证码已过期，请重新获取");
+                      }else if(message == 200){
                         widget.onNext(Code);
-                        ShowToast.showCenterToast(context, message);
+                        ShowToast.showCenterToast(context,"验证码正确");
+                      }else if(message == 411){
+                        ShowToast.showCenterToast(context,"验证码错误");
+                      }else if(message == 400){
+                        ShowToast.showCenterToast(context,"请求参数格式不正确");
+                      }else{
+                        ShowToast.showCenterToast(context,"验证码服务暂时不可用，请稍后重试");
                       }
                     } else {
                       ShowToast.showCenterToast(context, "请先获取验证码");

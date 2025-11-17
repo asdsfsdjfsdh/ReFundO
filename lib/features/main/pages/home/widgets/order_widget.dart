@@ -410,7 +410,7 @@ class _OrderListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${l10n!.order_number}: ${order.orderid}',
+          '${l10n!.order_number}: ${order.orderNumber}',
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -439,7 +439,7 @@ class _OrderListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          '¥${order.refundAmount.toStringAsFixed(2)}',
+          '${order.refundAmount.toStringAsFixed(2)} FCFA',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

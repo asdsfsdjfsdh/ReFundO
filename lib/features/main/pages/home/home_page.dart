@@ -87,7 +87,10 @@ class _HomePageState extends State<HomePage> {
       },
       child: Consumer<OrderProvider>(
         builder: (context, orderProvider, child) {
-          final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+          final UserProvider userProvider = Provider.of<UserProvider>(
+            context,
+            listen: false,
+          );
           _totalAmount = userProvider.user?.AmountSum ?? 0.0;
 
           return Scaffold(
@@ -95,7 +98,8 @@ class _HomePageState extends State<HomePage> {
             body: _buildBody(context, orderProvider),
             bottomNavigationBar: _buildBottomNavigationBar(context),
             floatingActionButton: _buildFloatingActionButton(context),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
           );
         },
       ),
@@ -107,10 +111,7 @@ class _HomePageState extends State<HomePage> {
     return AppBar(
       title: Text(
         AppLocalizations.of(context)!.app_name,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
       backgroundColor: Colors.blue.shade700,
       foregroundColor: Colors.white,
@@ -165,14 +166,16 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(width: 8),
             TextButton(
               onPressed: () async {
-                final RefundProvider refundProvider = Provider.of<RefundProvider>(
-                  context,
-                  listen: false,
-                );
+                final RefundProvider refundProvider =
+                    Provider.of<RefundProvider>(context, listen: false);
 
                 if (refundProvider.orders!.isEmpty) {
                   _showDialog(context, l10n.select_at_least_one_order);
                 } else {
+                  final UserProvider userProvider = Provider.of<UserProvider>(
+                    context,
+                    listen: false,
+                  );
                   final int result = await refundProvider.Refund(context);
                   if (result == 1) {
                     _showDialog(context, l10n.refund_success_waiting_approval);
@@ -183,7 +186,12 @@ class _HomePageState extends State<HomePage> {
                     _showDialog(context, l10n.unknown_error);
                   } else if (result == -1) {
                     _showDialog(context, l10n.server_error);
-                  } else {
+                  }else if (result == 201){
+                    _showDialog(context, "订单未满5个月");
+                  }else if(result == 202){
+                    _showDialog(context, "订单总金额小于5000");
+                  }
+                   else {
                     _showDialog(context, l10n.error);
                   }
                 }
@@ -232,22 +240,23 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Consumer<RefundProvider>(
                   builder: (context, refundProvider, child) {
-                    return RefundWidget(
-                      models: refundProvider.refunds ?? [],
-                    );
+                    return RefundWidget(refunds: refundProvider.refunds ?? []);
                   },
                 ),
               ],
             ),
           ),
         ],
-      ),
+      )
     );
   }
 
   // 构建金额显示卡片 - 使用多语言
   Widget _buildAmountCard(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    
+    // 获取退款提供者以访问统计数据
+    final refundProvider = Provider.of<RefundProvider>(context, listen: false);
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -256,10 +265,7 @@ class _HomePageState extends State<HomePage> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.blue.shade600,
-            Colors.purple.shade500,
-          ],
+          colors: [Colors.blue.shade600, Colors.purple.shade500],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
@@ -285,7 +291,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                '${_totalAmount.toStringAsFixed(2)} \$',
+                '${_totalAmount.toStringAsFixed(2)} FCFA',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -294,8 +300,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          _buildStatItem(context, l10n.today_orders, "0"),
-          _buildStatItem(context, l10n.processing, "0"),
+          _buildStatItem(context, l10n.today_orders, refundProvider.todayRefundCount.toString()),
+          _buildStatItem(context, l10n.processing, refundProvider.pendingRefundCount.toString()),
         ],
       ),
     );
@@ -307,10 +313,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           title,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
         ),
         const SizedBox(height: 4),
         Text(
@@ -381,10 +384,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.blue.shade700,
         foregroundColor: Colors.white,
         elevation: 0,
-        child: const Icon(
-          Icons.qr_code_scanner_rounded,
-          size: 28,
-        ),
+        child: const Icon(Icons.qr_code_scanner_rounded, size: 28),
       ),
     );
   }
@@ -407,11 +407,9 @@ class _HomePageState extends State<HomePage> {
 
   // 跳转到扫描页面
   void _navigateToScanner(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const ScannerPage(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const ScannerPage()));
   }
 
   // 显示权限被拒绝的对话框 - 使用多语言
@@ -455,10 +453,7 @@ class _HomePageState extends State<HomePage> {
             l10n!.notification,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          content: Text(
-            message,
-            style: const TextStyle(fontSize: 16),
-          ),
+          content: Text(message, style: const TextStyle(fontSize: 16)),
           actions: [
             SizedBox(
               width: double.infinity,
@@ -474,10 +469,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
-                  l10n.confirm,
-                  style: const TextStyle(fontSize: 16),
-                ),
+                child: Text(l10n.confirm, style: const TextStyle(fontSize: 16)),
               ),
             ),
           ],
