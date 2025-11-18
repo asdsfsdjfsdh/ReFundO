@@ -388,7 +388,7 @@ class _SettingPageState extends State<SettingPage> {
           icon: Icons.manage_accounts_outlined,
           iconColor: Colors.yellow.shade600,
           onTap: () {
-            if(Provider.of<UserProvider>(context, listen: false).isLogin && Provider.of<UserProvider>(context, listen: false).isManager){
+            if(Provider.of<UserProvider>(context, listen: false).isLogin || Provider.of<UserProvider>(context, listen: false).isManager){
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const AuditPage(),

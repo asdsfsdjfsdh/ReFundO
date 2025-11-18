@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/models/Product_model.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -23,7 +24,7 @@ class _ScannerPageState extends State<ScannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('扫描二维码'),
+        title: Text(AppLocalizations.of(context)!.scan_the_QR),
       ),
       body: ReaderWidget(
         cropPercent: 1.0,

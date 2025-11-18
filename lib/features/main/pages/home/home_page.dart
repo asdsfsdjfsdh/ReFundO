@@ -1,12 +1,13 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/core/utils/app_background_util.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
 import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
 import 'package:refundo/features/main/pages/home/widgets/order_widget.dart';
 import 'package:refundo/features/main/pages/home/widgets/refund_widget.dart';
+import 'package:refundo/features/main/pages/home/widgets/refund_confirmation_dialog.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/features/scanner/scanner_page.dart';
 import 'package:refundo/l10n/app_localizations.dart';
@@ -167,33 +168,25 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               onPressed: () async {
                 final RefundProvider refundProvider =
-                    Provider.of<RefundProvider>(context, listen: false);
+                Provider.of<RefundProvider>(context, listen: false);
 
                 if (refundProvider.orders!.isEmpty) {
                   _showDialog(context, l10n.select_at_least_one_order);
                 } else {
-                  final UserProvider userProvider = Provider.of<UserProvider>(
-                    context,
-                    listen: false,
+                  // 计算总金额
+                  final Decimal totalAmount = refundProvider.allAmount();
+
+                  // 显示退款确认悬浮窗
+                  _showRefundConfirmationOverlay(
+                    context: context,
+                    totalAmount: totalAmount,
+                    selectedCount: refundProvider.orders!.length,
+                    onConfirm: () async {
+                      // 执行退款逻辑
+                      final int result = await refundProvider.Refund(context);
+                      _handleRefundResult(result, l10n);
+                    },
                   );
-                  final int result = await refundProvider.Refund(context);
-                  if (result == 1) {
-                    _showDialog(context, l10n.refund_success_waiting_approval);
-                    setState(() {
-                      _isRefunding = false;
-                    });
-                  } else if (result == 0) {
-                    _showDialog(context, l10n.unknown_error);
-                  } else if (result == -1) {
-                    _showDialog(context, l10n.server_error);
-                  }else if (result == 201){
-                    _showDialog(context, "订单未满5个月");
-                  }else if(result == 202){
-                    _showDialog(context, "订单总金额小于5000");
-                  }
-                   else {
-                    _showDialog(context, l10n.error);
-                  }
                 }
               },
               child: Text(
@@ -209,6 +202,62 @@ class _HomePageState extends State<HomePage> {
         ),
     ];
   }
+
+// 显示退款确认悬浮窗
+  void _showRefundConfirmationOverlay({
+    required BuildContext context,
+    required Decimal totalAmount,
+    required int selectedCount,
+    required VoidCallback onConfirm,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => RefundConfirmationDialog(
+        totalAmount: totalAmount,
+        selectedCount: selectedCount,
+        onConfirm: onConfirm,
+        onCancel: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+// 处理退款结果
+  void _handleRefundResult(int result, AppLocalizations l10n) {
+    String message;
+    bool shouldResetState = false;
+
+    switch (result) {
+      case 1:
+        message = l10n.refund_success_waiting_approval;
+        shouldResetState = true;
+        break;
+      case 0:
+        message = l10n.unknown_error;
+        break;
+      case -1:
+        message = l10n.server_error;
+        break;
+      case 201:
+        message = l10n.order_less_than_5_months;
+        break;
+      case 202:
+        message = l10n.total_amount_less_than_5000;
+        break;
+      default:
+        message = l10n.error;
+    }
+
+    if (shouldResetState) {
+      setState(() {
+        _isRefunding = false;
+      });
+    }
+
+    _showDialog(context, message);
+  }
+
 
   // 构建主体内容
   Widget _buildBody(BuildContext context, OrderProvider orderProvider) {
@@ -307,6 +356,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
+
   // 构建统计项目 - 使用多语言
   Widget _buildStatItem(BuildContext context, String title, String value) {
     return Column(
@@ -393,16 +444,21 @@ class _HomePageState extends State<HomePage> {
   Future<void> _handleScanPressed() async {
     final PermissionStatus status = await Permission.camera.status;
 
-    if (status.isGranted) {
-      _navigateToScanner(context);
-    } else {
-      final PermissionStatus result = await Permission.camera.request();
-      if (result.isGranted) {
+    if (Provider.of<UserProvider>(context, listen: false).isLogin){
+      if (status.isGranted) {
         _navigateToScanner(context);
       } else {
-        _showPermissionDeniedDialog(context);
+        final PermissionStatus result = await Permission.camera.request();
+        if (result.isGranted) {
+          _navigateToScanner(context);
+        } else {
+          _showPermissionDeniedDialog(context);
+        }
       }
+    }else{
+      _showDialog(context,AppLocalizations.of(context)!.please_login_to_view_profile);
     }
+
   }
 
   // 跳转到扫描页面

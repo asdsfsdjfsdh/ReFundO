@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/core/utils/passwordHasher.dart';
 import 'package:refundo/core/utils/showToast.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持

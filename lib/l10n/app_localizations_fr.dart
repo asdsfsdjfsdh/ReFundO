@@ -464,4 +464,149 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get not_manager => 'Vous n\'êtes pas administrateur.';
+
+  @override
+  String get refund_confirmation => 'Confirmation de remboursement';
+
+  @override
+  String total_amount_orders(Object selectedCount, Object totalAmount) {
+    return 'Total: $totalAmount FCFA | $selectedCount commandes';
+  }
+
+  @override
+  String get select_payment_method => 'Sélectionner le mode de paiement';
+
+  @override
+  String get phone_payment => 'Paiement par téléphone';
+
+  @override
+  String get sanke_money => 'Argent Sank';
+
+  @override
+  String get wave_payment => 'Paiement WAVE';
+
+  @override
+  String get enter_phone_number => 'Entrez le numéro de téléphone';
+
+  @override
+  String get invalid_phone_format => 'Format de numéro de téléphone invalide';
+
+  @override
+  String get enter_sanke_account => 'Entrez le compte Sank Money';
+
+  @override
+  String get account_length_at_least_6 => 'Le compte doit contenir au moins 6 caractères';
+
+  @override
+  String get enter_wave_account => 'Entrez l\'ID du compte WAVE';
+
+  @override
+  String get wave_account_start_with_wave => 'L\'ID du compte WAVE doit commencer par WAVE';
+
+  @override
+  String get confirm_phone_number => 'Confirmer le numéro de téléphone';
+
+  @override
+  String get confirm_refund => 'Confirmer le remboursement';
+
+  @override
+  String get scan_the_QR => 'Scannez le QR code';
+
+  @override
+  String get order_less_than_5_months => 'La commande a moins de 5 mois.';
+
+  @override
+  String get total_amount_less_than_5000 => 'Le montant total de la commande est inférieur à 5 000.';
+
+  @override
+  String get change_name => 'Changer le nom';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get new_name => 'Nouveau nom';
+
+  @override
+  String get please_enter_name => 'Veuillez entrer un nom';
+
+  @override
+  String get update_success => 'Modification réussie';
+
+  @override
+  String get callback_password => 'Récupérer le mot de passe';
+
+  @override
+  String get hint_enter_email => 'Veuillez entrer l\'e-mail';
+
+  @override
+  String get next_step => 'Suivant';
+
+  @override
+  String get hint_enter_verification_code => 'Veuillez entrer le code de vérification';
+
+  @override
+  String get resend_verification_code => 'Renvoyer';
+
+  @override
+  String resend_with_countdown(Object count) {
+    return 'Renvoyer ($count)';
+  }
+
+  @override
+  String get please_enter_code_first => 'Veuillez d\'abord entrer le code de vérification';
+
+  @override
+  String get verification_code_expired => 'Code de vérification expiré, veuillez renvoyer';
+
+  @override
+  String get verification_code_correct => 'Code de vérification correct';
+
+  @override
+  String get verification_code_incorrect => 'Code de vérification incorrect';
+
+  @override
+  String get invalid_request_format => 'Format de requête invalide';
+
+  @override
+  String get verification_service_unavailable => 'Service de vérification temporairement indisponible, veuillez réessayer plus tard';
+
+  @override
+  String get please_get_code_first => 'Veuillez d\'abord obtenir le code de vérification';
+
+  @override
+  String get verification_code_sent => 'Le code de vérification a été envoyé à votre e-mail';
+
+  @override
+  String get verification_code_sent_success => 'Code de vérification envoyé avec succès';
+
+  @override
+  String get email_send_failed => 'Échec de l\'envoi de l\'e-mail, veuillez vérifier l\'adresse e-mail ou réessayer plus tard';
+
+  @override
+  String get user_info_not_unique => 'Informations utilisateur non uniques, veuillez contacter le service client';
+
+  @override
+  String get no_user_found_for_email => 'Aucun compte utilisateur trouvé associé à cet e-mail';
+
+  @override
+  String get email_service_unavailable => 'Service e-mail temporairement indisponible, veuillez réessayer plus tard';
+
+  @override
+  String get send_failed => 'Échec de l\'envoi';
+
+  @override
+  String get set_new_password => 'Définir un nouveau mot de passe';
+
+  @override
+  String get new_password => 'Nouveau mot de passe';
+
+  @override
+  String get hint_enter_new_password => 'Veuillez entrer le nouveau mot de passe';
+
+  @override
+  String get hint_confirm_new_password => 'Veuillez entrer à nouveau le nouveau mot de passe';
+
+  @override
+  String get password_set_success => 'Mot de passe défini avec succès';
 }

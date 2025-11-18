@@ -29,7 +29,7 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 确保在任何屏幕下保持1:1比例[4](@ref)
+    // 确保在任何屏幕下保持1:1比例
     return SizedBox(
       width: size,
       height: size,

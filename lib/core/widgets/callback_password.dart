@@ -1,4 +1,3 @@
-// 找回密码Widget
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:refundo/data/services/api_email_service.dart';
 import 'package:refundo/features/main/pages/setting/provider/email_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/models/user_model.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 
 class CallbackPassword extends StatefulWidget {
   const CallbackPassword({super.key});
@@ -42,20 +42,19 @@ class _CallbackPasswordState extends State<CallbackPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text("callbackPassword"),
+        title: Text(l10n!.callback_password),
         backgroundColor: Colors.grey[200],
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // 根据当前页面位置决定返回逻辑
             if (_pageController.page == 0 || _pageController.page == 2) {
-              // 当前在第一个页面，直接关闭整个流程
               Navigator.pop(context);
             } else {
-              // 在其他页面，调用 onBack 回调
               _pageController.previousPage(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
@@ -103,8 +102,6 @@ class _CallbackPasswordState extends State<CallbackPassword> {
   }
 }
 
-// 找回密码输入绑定邮箱
-
 class Callback extends StatefulWidget {
   final Function(String) onNext;
   final Function() onBack;
@@ -116,7 +113,6 @@ class Callback extends StatefulWidget {
 
 class _CallbackState extends State<Callback> {
   String email = '';
-  
   Color? color = Colors.blue[200];
   final _focusNode = FocusNode();
   late TextEditingController _controller = TextEditingController();
@@ -137,19 +133,18 @@ class _CallbackState extends State<Callback> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
-    final screenWidth = size.width; // 屏幕宽度
-    final screenHeight = size.height; // 屏幕高度
+    final screenWidth = size.width;
+    final screenHeight = size.height;
 
     return GestureDetector(
       onTap: () {
-        // 点空白处失去焦点
         if (_focusNode.hasFocus) {
           _focusNode.unfocus();
         }
       },
-      behavior: HitTestBehavior.opaque, // 添加此行，确保整个区域都能响应点击
-
+      behavior: HitTestBehavior.opaque,
       child: Container(
         child: Column(
           children: [
@@ -159,7 +154,6 @@ class _CallbackState extends State<Callback> {
               child: TextField(
                 focusNode: _focusNode,
                 controller: _controller,
-                // 监控输入
                 onChanged: (value) {
                   setState(() {
                     email = value;
@@ -175,7 +169,7 @@ class _CallbackState extends State<Callback> {
                   prefixIcon: Icon(Icons.email),
                   filled: true,
                   fillColor: Colors.white,
-                  hintText: "请输入邮箱",
+                  hintText: l10n!.hint_enter_email,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide.none,
@@ -183,40 +177,34 @@ class _CallbackState extends State<Callback> {
                 ),
               ),
             ),
-
             SizedBox(height: screenHeight * 0.01),
-
             Container(
               width: screenWidth * 0.75,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: color,
                   foregroundColor: Color.fromARGB(255, 220, 220, 220),
-
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
                 onPressed: () async {
-                  print(email);
                   if (color == Colors.blue) {
-                    print(isValidEmail(email));
                     if (!isValidEmail(email)) {
-                      ShowToast.showCenterToast(context, "邮箱格式错误");
+                      ShowToast.showCenterToast(context, l10n.invalid_email_format);
                     } else {
-                      print("email$email");
                       Provider.of<EmailProvider>(
                         context,
                         listen: false,
                       ).setEmail(email);
                       widget.onNext(email);
                     }
-                  } else
-                      ShowToast.showCenterToast(context, "邮箱格式错误");
+                  } else {
+                    ShowToast.showCenterToast(context, l10n.invalid_email_format);
+                  }
                 },
-
-                child: Text("下一步"),
+                child: Text(l10n.next_step),
               ),
             ),
           ],
@@ -235,8 +223,6 @@ class CheckCode extends StatefulWidget {
   State<CheckCode> createState() => _CheckCodeState();
 }
 
-// 验证码发送与验证
-
 class _CheckCodeState extends State<CheckCode> {
   bool isSend = false;
   Color? sendColor = Colors.blue;
@@ -251,7 +237,6 @@ class _CheckCodeState extends State<CheckCode> {
 
   void _startCountdown() {
     _timer?.cancel();
-
     setState(() {
       _countdown = 5;
       isSend = true;
@@ -271,45 +256,6 @@ class _CheckCodeState extends State<CheckCode> {
     });
   }
 
-  void _showCenterToast(BuildContext context, String message) {
-    _overlayEntry?.remove();
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              message,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                decoration: TextDecoration.none,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-
-    Future.delayed(Duration(seconds: 2), () {
-      if (_overlayEntry != null) {
-        _overlayEntry!.remove();
-        _overlayEntry = null;
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -326,11 +272,11 @@ class _CheckCodeState extends State<CheckCode> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final email = Provider.of<EmailProvider>(context, listen: false).Email;
 
     return GestureDetector(
       onTap: () {
-        // 点空白处失去焦点
         if (_focusNode.hasFocus) {
           _focusNode.unfocus();
         }
@@ -347,14 +293,13 @@ class _CheckCodeState extends State<CheckCode> {
                 children: [
                   Container(
                     width: 70,
-                    child: const Text("验证码:", style: TextStyle(fontSize: 20.0)),
+                    child: Text(l10n!.verification_code, style: TextStyle(fontSize: 20.0)),
                   ),
                   Expanded(
                     flex: 4,
                     child: TextField(
                       controller: _controller,
                       maxLength: 6,
-                      // 监控输入
                       onChanged: (value) {
                         setState(() {
                           color = value.length == 6
@@ -365,7 +310,7 @@ class _CheckCodeState extends State<CheckCode> {
                       },
                       focusNode: _focusNode,
                       decoration: InputDecoration(
-                        hintText: "请输入验证码",
+                        hintText: l10n.hint_enter_verification_code,
                         hintStyle: TextStyle(
                           color: Color.fromARGB(255, 200, 200, 200),
                         ),
@@ -373,9 +318,6 @@ class _CheckCodeState extends State<CheckCode> {
                         counterText: "",
                       ),
                       style: TextStyle(fontSize: 20.0),
-                      onSubmitted: (value) {
-                        print("验证码：" + value);
-                      },
                     ),
                   ),
                   Expanded(
@@ -409,121 +351,116 @@ class _CheckCodeState extends State<CheckCode> {
                         ),
                         isSend
                             ? Expanded(
-                                flex: 7,
-                                child: TextButton(
-                                  key: ValueKey('resend'),
-                                  onPressed: () {
-                                      if (sendColor == Colors.blue) {
-                                        final message =
-                                            Provider.of<EmailProvider>(
-                                              context,
-                                              listen: false,
-                                            ).sendEmail(email, context,1);
-                                        if (message == 200) {
-                                        ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
-                                        setState(() {
-                                          sendColor = Colors.grey;
-                                          _startCountdown();
-                                        });
-                                        } else if(message == 411) {
-                                        ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
-                                        }else if(message == 412){
-                                          ShowToast.showCenterToast(context, "用户信息不唯一，请联系客服处理");
-                                        }else if(message == 400){
-                                          ShowToast.showCenterToast(context, "未找到与该邮箱关联的用户账户");
-                                        }else{
-                                          ShowToast.showCenterToast(context, "邮件服务暂时不可用，请稍后重试");
-                                        }
-                                      }
-                                  },
-                                  child: Text(
-                                    _countdown != 0
-                                        ? "重新获取($_countdown)"
-                                        : "重新获取",
-                                    style: TextStyle(
-                                      color: sendColor,
-                                      fontSize: 15.0,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Expanded(
-                                flex: 7,
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isSend = true;
-                                      button_flex = 6;
-                                      sendColor = Colors.grey;
-                                      final message =
-                                          Provider.of<EmailProvider>(
-                                            context,
-                                            listen: false,
-                                          ).sendEmail(email, context,1);
-                                      if (message != "Error") {
-                                        ShowToast.showCenterToast(context, "验证码已发送");
-                                        _startCountdown();
-                                      } else {
-                                        ShowToast.showCenterToast(context, "发送失败");
-                                      }
-                                    });
-                                  },
-                                  child: Text(
-                                    "获取验证码",
-                                    style: TextStyle(
-                                      color: sendColor,
-                                      fontSize: 15.0,
-                                    ),
-                                  ),
-                                ),
+                          flex: 7,
+                          child: TextButton(
+                            key: ValueKey('resend'),
+                            onPressed: () {
+                              if (sendColor == Colors.blue) {
+                                final message =
+                                Provider.of<EmailProvider>(
+                                  context,
+                                  listen: false,
+                                ).sendEmail(email, context,1);
+                                if (message == 200) {
+                                  ShowToast.showCenterToast(context, l10n.verification_code_sent);
+                                  setState(() {
+                                    sendColor = Colors.grey;
+                                    _startCountdown();
+                                  });
+                                } else if(message == 411) {
+                                  ShowToast.showCenterToast(context, l10n.email_send_failed);
+                                }else if(message == 412){
+                                  ShowToast.showCenterToast(context, l10n.user_info_not_unique);
+                                }else if(message == 400){
+                                  ShowToast.showCenterToast(context, l10n.no_user_found_for_email);
+                                }else{
+                                  ShowToast.showCenterToast(context, l10n.email_service_unavailable);
+                                }
+                              }
+                            },
+                            child: Text(
+                              _countdown != 0
+                                  ? l10n.resend_with_countdown(_countdown)
+                                  : l10n.resend_verification_code,
+                              style: TextStyle(
+                                color: sendColor,
+                                fontSize: 15.0,
                               ),
+                            ),
+                          ),
+                        )
+                            : Expanded(
+                          flex: 7,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                isSend = true;
+                                button_flex = 6;
+                                sendColor = Colors.grey;
+                                final message =
+                                Provider.of<EmailProvider>(
+                                  context,
+                                  listen: false,
+                                ).sendEmail(email, context,1);
+                                if (message != "Error") {
+                                  ShowToast.showCenterToast(context, l10n.verification_code_sent_success);
+                                  _startCountdown();
+                                } else {
+                                  ShowToast.showCenterToast(context, l10n.send_failed);
+                                }
+                              });
+                            },
+                            child: Text(
+                              l10n.get_verification_code,
+                              style: TextStyle(
+                                color: sendColor,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-
             SizedBox(height: 20.0),
-
             Container(
               width: 500.0,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  // 背景颜色
                   backgroundColor: color,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 onPressed: () async {
                   if (Code.isEmpty)
-                    ShowToast.showCenterToast(context, "请先输入验证码");
+                    ShowToast.showCenterToast(context, l10n.please_enter_code_first);
                   else {
                     if (isSend) {
                       final message = await Provider.of<EmailProvider>(
                         context,
                         listen: false,
                       ).checkCode(email, Code, context);
-                      print(message);
-                       if (message == 410) {
-                       ShowToast.showCenterToast(context,"验证码已过期，请重新获取");
+                      if (message == 410) {
+                        ShowToast.showCenterToast(context, l10n.verification_code_expired);
                       }else if(message == 200){
                         widget.onNext(Code);
-                        ShowToast.showCenterToast(context,"验证码正确");
+                        ShowToast.showCenterToast(context, l10n.verification_code_correct);
                       }else if(message == 411){
-                        ShowToast.showCenterToast(context,"验证码错误");
+                        ShowToast.showCenterToast(context, l10n.verification_code_incorrect);
                       }else if(message == 400){
-                        ShowToast.showCenterToast(context,"请求参数格式不正确");
+                        ShowToast.showCenterToast(context, l10n.invalid_request_format);
                       }else{
-                        ShowToast.showCenterToast(context,"验证码服务暂时不可用，请稍后重试");
+                        ShowToast.showCenterToast(context, l10n.verification_service_unavailable);
                       }
                     } else {
-                      ShowToast.showCenterToast(context, "请先获取验证码");
+                      ShowToast.showCenterToast(context, l10n.please_get_code_first);
                     }
                   }
-                  print("验证码：" + Code);
                 },
                 child: Text(
-                  "下一步",
+                  l10n.next_step,
                   style: TextStyle(color: Color.fromARGB(255, 220, 220, 220)),
                 ),
               ),
@@ -534,8 +471,6 @@ class _CheckCodeState extends State<CheckCode> {
     );
   }
 }
-
-//重新设置密码
 
 class SetPasswrod extends StatefulWidget {
   final Function() onBack;
@@ -577,42 +512,37 @@ class _SetPasswrodState extends State<SetPasswrod> {
 
   @override
   Widget build(BuildContext context) {
-    final String email = Provider.of<EmailProvider>(context, listen: false).Email;
-
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
-    final screenWidth = size.width; // 屏幕宽度
-    final screenHeight = size.height; // 屏幕高度
+    final screenWidth = size.width;
+    final screenHeight = size.height;
+
     return GestureDetector(
       onTap: () {
         if (_focusNode1.hasFocus) _focusNode1.unfocus();
         if (_focusNode2.hasFocus) _focusNode2.unfocus();
       },
       behavior: HitTestBehavior.opaque,
-
       child: Container(
         decoration: BoxDecoration(color: Colors.white),
         alignment: Alignment.topLeft,
         child: Column(
           children: [
             Container(
-              // 标题,置于左上角
               alignment: Alignment.topLeft,
               child: Text(
-                "设置新密码",
+                l10n!.set_new_password,
                 style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
               ),
             ),
-
             SizedBox(height: 20.0),
-
             Container(
               decoration: BoxDecoration(color: Colors.white),
-              // 输入框
               child: Row(
                 children: [
                   Container(
                     width: 100.0,
-                    child: Text("新密码", style: TextStyle(fontSize: 20.0)),
+                    child: Text(l10n.new_password, style: TextStyle(fontSize: 20.0)),
                   ),
                   Expanded(
                     flex: 4,
@@ -620,7 +550,7 @@ class _SetPasswrodState extends State<SetPasswrod> {
                       controller: _controller1,
                       focusNode: _focusNode1,
                       decoration: InputDecoration(
-                        hintText: "请输入新密码",
+                        hintText: l10n.hint_enter_new_password,
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {
@@ -654,17 +584,14 @@ class _SetPasswrodState extends State<SetPasswrod> {
                 ],
               ),
             ),
-            // 横线组件
             Divider(color: Colors.grey[200]),
-
             Container(
               decoration: BoxDecoration(color: Colors.white),
-              // 输入框
               child: Row(
                 children: [
                   Container(
                     width: 100.0,
-                    child: Text("确认密码", style: TextStyle(fontSize: 20.0)),
+                    child: Text(l10n.confirm_password, style: TextStyle(fontSize: 20.0)),
                   ),
                   Expanded(
                     flex: 4,
@@ -672,7 +599,7 @@ class _SetPasswrodState extends State<SetPasswrod> {
                       controller: _controller2,
                       focusNode: _focusNode2,
                       decoration: InputDecoration(
-                        hintText: "请再次输入新密码",
+                        hintText: l10n.hint_confirm_new_password,
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {
@@ -706,32 +633,25 @@ class _SetPasswrodState extends State<SetPasswrod> {
                 ],
               ),
             ),
-
             Divider(color: Colors.grey[200]),
-
             Container(
               width: 500.0,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  // 背景颜色
                   backgroundColor: color,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 onPressed: () {
                   if (newPasswrod == confirmPasswrod) {
-                    ShowToast.showCenterToast(context,"密码设置成功");
-
-                    // 在这里调用修改密码的接口
+                    ShowToast.showCenterToast(context, l10n.password_set_success);
                     Provider.of<UserProvider>(context, listen: false).updateUserInfo(newPasswrod, 2, context);
-
                   } else {
-                    ShowToast.showCenterToast(context,"两次密码输入不一致");
+                    ShowToast.showCenterToast(context, l10n.passwords_do_not_match);
                   }
                   widget.onfinish();
-                  print("密码");
                 },
                 child: Text(
-                  "确认",
+                  l10n.confirm,
                   style: TextStyle(color: Color.fromARGB(255, 220, 220, 220)),
                 ),
               ),

@@ -1002,6 +1002,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'you are not a manager'**
   String get not_manager;
+
+  /// No description provided for @refund_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Confirmation'**
+  String get refund_confirmation;
+
+  /// No description provided for @total_amount_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {totalAmount} FCFA | {selectedCount} orders'**
+  String total_amount_orders(Object selectedCount, Object totalAmount);
+
+  /// No description provided for @select_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Payment Method'**
+  String get select_payment_method;
+
+  /// No description provided for @phone_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone_payment;
+
+  /// No description provided for @sanke_money.
+  ///
+  /// In en, this message translates to:
+  /// **'Sanke'**
+  String get sanke_money;
+
+  /// No description provided for @wave_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'WAVE'**
+  String get wave_payment;
+
+  /// No description provided for @enter_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number'**
+  String get enter_phone_number;
+
+  /// No description provided for @invalid_phone_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number format'**
+  String get invalid_phone_format;
+
+  /// No description provided for @enter_sanke_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Sanke Money account'**
+  String get enter_sanke_account;
+
+  /// No description provided for @account_length_at_least_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Account length at least 6 digits'**
+  String get account_length_at_least_6;
+
+  /// No description provided for @enter_wave_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter WAVE account ID'**
+  String get enter_wave_account;
+
+  /// No description provided for @wave_account_start_with_wave.
+  ///
+  /// In en, this message translates to:
+  /// **'WAVE account ID should start with WAVE'**
+  String get wave_account_start_with_wave;
+
+  /// No description provided for @confirm_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm phone number'**
+  String get confirm_phone_number;
+
+  /// No description provided for @confirm_refund.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Refund'**
+  String get confirm_refund;
+
+  /// No description provided for @scan_the_QR.
+  ///
+  /// In en, this message translates to:
+  /// **'Please scan the QR code'**
+  String get scan_the_QR;
+
+  /// No description provided for @order_less_than_5_months.
+  ///
+  /// In en, this message translates to:
+  /// **'The order is less than 5 months old.'**
+  String get order_less_than_5_months;
+
+  /// No description provided for @total_amount_less_than_5000.
+  ///
+  /// In en, this message translates to:
+  /// **'The total order amount is less than 5,000,.'**
+  String get total_amount_less_than_5000;
+
+  /// No description provided for @change_name.
+  ///
+  /// In en, this message translates to:
+  /// **'to change your name'**
+  String get change_name;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @new_name.
+  ///
+  /// In en, this message translates to:
+  /// **'New Name'**
+  String get new_name;
+
+  /// No description provided for @please_enter_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get please_enter_name;
+
+  /// No description provided for @update_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Update successful'**
+  String get update_success;
+
+  /// No description provided for @callback_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Retrieve Password'**
+  String get callback_password;
+
+  /// No description provided for @hint_enter_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get hint_enter_email;
+
+  /// No description provided for @next_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next_step;
+
+  /// No description provided for @hint_enter_verification_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter verification code'**
+  String get hint_enter_verification_code;
+
+  /// No description provided for @resend_verification_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend'**
+  String get resend_verification_code;
+
+  /// No description provided for @resend_with_countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend ({count})'**
+  String resend_with_countdown(Object count);
+
+  /// No description provided for @please_enter_code_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter verification code first'**
+  String get please_enter_code_first;
+
+  /// No description provided for @verification_code_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code expired, please resend'**
+  String get verification_code_expired;
+
+  /// No description provided for @verification_code_correct.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code correct'**
+  String get verification_code_correct;
+
+  /// No description provided for @verification_code_incorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code incorrect'**
+  String get verification_code_incorrect;
+
+  /// No description provided for @invalid_request_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid request format'**
+  String get invalid_request_format;
+
+  /// No description provided for @verification_service_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification service temporarily unavailable, please try again later'**
+  String get verification_service_unavailable;
+
+  /// No description provided for @please_get_code_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please get verification code first'**
+  String get please_get_code_first;
+
+  /// No description provided for @verification_code_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code has been sent to your email'**
+  String get verification_code_sent;
+
+  /// No description provided for @verification_code_sent_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code sent successfully'**
+  String get verification_code_sent_success;
+
+  /// No description provided for @email_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sending failed, please check email address or try again later'**
+  String get email_send_failed;
+
+  /// No description provided for @user_info_not_unique.
+  ///
+  /// In en, this message translates to:
+  /// **'User information not unique, please contact customer service'**
+  String get user_info_not_unique;
+
+  /// No description provided for @no_user_found_for_email.
+  ///
+  /// In en, this message translates to:
+  /// **'No user account found associated with this email'**
+  String get no_user_found_for_email;
+
+  /// No description provided for @email_service_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Email service temporarily unavailable, please try again later'**
+  String get email_service_unavailable;
+
+  /// No description provided for @send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Send failed'**
+  String get send_failed;
+
+  /// No description provided for @set_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Set New Password'**
+  String get set_new_password;
+
+  /// No description provided for @new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get new_password;
+
+  /// No description provided for @hint_enter_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter new password'**
+  String get hint_enter_new_password;
+
+  /// No description provided for @hint_confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter new password again'**
+  String get hint_confirm_new_password;
+
+  /// No description provided for @password_set_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Password set successfully'**
+  String get password_set_success;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

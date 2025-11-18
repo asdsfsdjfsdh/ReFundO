@@ -464,4 +464,149 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get not_manager => 'you are not a manager';
+
+  @override
+  String get refund_confirmation => 'Refund Confirmation';
+
+  @override
+  String total_amount_orders(Object selectedCount, Object totalAmount) {
+    return 'Total: $totalAmount FCFA | $selectedCount orders';
+  }
+
+  @override
+  String get select_payment_method => 'Select Payment Method';
+
+  @override
+  String get phone_payment => 'Phone';
+
+  @override
+  String get sanke_money => 'Sanke';
+
+  @override
+  String get wave_payment => 'WAVE';
+
+  @override
+  String get enter_phone_number => 'Enter phone number';
+
+  @override
+  String get invalid_phone_format => 'Invalid phone number format';
+
+  @override
+  String get enter_sanke_account => 'Enter Sanke Money account';
+
+  @override
+  String get account_length_at_least_6 => 'Account length at least 6 digits';
+
+  @override
+  String get enter_wave_account => 'Enter WAVE account ID';
+
+  @override
+  String get wave_account_start_with_wave => 'WAVE account ID should start with WAVE';
+
+  @override
+  String get confirm_phone_number => 'Confirm phone number';
+
+  @override
+  String get confirm_refund => 'Confirm Refund';
+
+  @override
+  String get scan_the_QR => 'Please scan the QR code';
+
+  @override
+  String get order_less_than_5_months => 'The order is less than 5 months old.';
+
+  @override
+  String get total_amount_less_than_5000 => 'The total order amount is less than 5,000,.';
+
+  @override
+  String get change_name => 'to change your name';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get new_name => 'New Name';
+
+  @override
+  String get please_enter_name => 'Please enter a name';
+
+  @override
+  String get update_success => 'Update successful';
+
+  @override
+  String get callback_password => 'Retrieve Password';
+
+  @override
+  String get hint_enter_email => 'Please enter email';
+
+  @override
+  String get next_step => 'Next';
+
+  @override
+  String get hint_enter_verification_code => 'Please enter verification code';
+
+  @override
+  String get resend_verification_code => 'Resend';
+
+  @override
+  String resend_with_countdown(Object count) {
+    return 'Resend ($count)';
+  }
+
+  @override
+  String get please_enter_code_first => 'Please enter verification code first';
+
+  @override
+  String get verification_code_expired => 'Verification code expired, please resend';
+
+  @override
+  String get verification_code_correct => 'Verification code correct';
+
+  @override
+  String get verification_code_incorrect => 'Verification code incorrect';
+
+  @override
+  String get invalid_request_format => 'Invalid request format';
+
+  @override
+  String get verification_service_unavailable => 'Verification service temporarily unavailable, please try again later';
+
+  @override
+  String get please_get_code_first => 'Please get verification code first';
+
+  @override
+  String get verification_code_sent => 'Verification code has been sent to your email';
+
+  @override
+  String get verification_code_sent_success => 'Verification code sent successfully';
+
+  @override
+  String get email_send_failed => 'Email sending failed, please check email address or try again later';
+
+  @override
+  String get user_info_not_unique => 'User information not unique, please contact customer service';
+
+  @override
+  String get no_user_found_for_email => 'No user account found associated with this email';
+
+  @override
+  String get email_service_unavailable => 'Email service temporarily unavailable, please try again later';
+
+  @override
+  String get send_failed => 'Send failed';
+
+  @override
+  String get set_new_password => 'Set New Password';
+
+  @override
+  String get new_password => 'New Password';
+
+  @override
+  String get hint_enter_new_password => 'Please enter new password';
+
+  @override
+  String get hint_confirm_new_password => 'Please enter new password again';
+
+  @override
+  String get password_set_success => 'Password set successfully';
 }

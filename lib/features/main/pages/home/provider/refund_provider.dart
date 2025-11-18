@@ -1,5 +1,7 @@
+import 'package:decimal/decimal.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_order_service.dart';
 import 'package:refundo/data/services/api_refund_service.dart';
@@ -54,30 +56,37 @@ class RefundProvider with ChangeNotifier {
       bool isAdmin = Provider.of<UserProvider>(context,listen: false).user!.role;
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('access_token') ?? '';
-      print("token: $token");
-      print(token.isEmpty);
+      if (kDebugMode) {
+        print("token: $token");
+        print(token.isEmpty);
+      }
       if (token.isNotEmpty) {
         try {
-          if(!isAdmin)
+          if(!isAdmin) {
             _refunds = await refundService.getRefunds(context);
-          else
+          } else {
             _refunds = await refundService.getAllRefunds(context);
+          }
         } on DioException catch (e) {
-          print(token);
-          print("Dio错误详情:");
-          print("请求URL: ${e.requestOptions.uri}");
-          print("请求方法: ${e.requestOptions.method}");
-          print("请求头: ${e.requestOptions.headers}");
-          print("请求体: ${e.requestOptions.data}");
-          print("响应状态码: ${e.response?.statusCode}");
-          print("响应数据: ${e.response?.data}");
+          if (kDebugMode) {
+            print(token);
+            print("Dio错误详情:");
+            print("请求URL: ${e.requestOptions.uri}");
+            print("请求方法: ${e.requestOptions.method}");
+            print("请求头: ${e.requestOptions.headers}");
+            print("请求体: ${e.requestOptions.data}");
+            print("响应状态码: ${e.response?.statusCode}");
+            print("响应数据: ${e.response?.data}");
+          }
           rethrow;
         }
       } else {
         _refunds = [];
       }
     } catch (e) {
-      print("获取订单失败: $e");
+      if (kDebugMode) {
+        print("获取订单失败: $e");
+      }
       _refunds = [];
     } finally {
       notifyListeners();
@@ -88,6 +97,16 @@ class RefundProvider with ChangeNotifier {
     _orders ??= <OrderModel>{};
     _orders!.add(order);
     notifyListeners();
+  }
+
+  Decimal allAmount(){
+    Decimal all = Decimal.fromInt(0);
+    _orders?.forEach((value){
+      all += value.refundAmount;
+      print(all.toString());
+    });
+    print(all.toString());
+    return all;
   }
 
   void removeOrder(int orderId) {
@@ -102,7 +121,9 @@ class RefundProvider with ChangeNotifier {
       final statusCode = await _orderService.checkRefundConditions(context,_orders!);
       return statusCode;
     } catch (e) {
-      print("检查退款条件失败: $e");
+      if (kDebugMode) {
+        print("检查退款条件失败: $e");
+      }
       return -1;
     }
   }
@@ -125,10 +146,13 @@ class RefundProvider with ChangeNotifier {
           Provider.of<UserProvider>(context,listen: false).Info(context);
         }
         return message;
-      } else
+      } else {
         return 10086;
+      }
     } catch (e) {
-      print("ERROR:" + e.toString());
+      if (kDebugMode) {
+        print("ERROR:$e");
+      }
       return -1;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_approval_service.dart';
@@ -26,7 +27,9 @@ class ApprovalProvider extends ChangeNotifier {
       } else
         return 10086;
     } catch (e) {
-      print("ERROR:" + e.toString());
+      if (kDebugMode) {
+        print("ERROR:$e");
+      }
       return -1;
     }
   }

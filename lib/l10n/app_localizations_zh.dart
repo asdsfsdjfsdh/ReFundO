@@ -464,4 +464,149 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get not_manager => '你不是管理员';
+
+  @override
+  String get refund_confirmation => '退款确认';
+
+  @override
+  String total_amount_orders(Object selectedCount, Object totalAmount) {
+    return '总计: $totalAmount FCFA | $selectedCount 个订单';
+  }
+
+  @override
+  String get select_payment_method => '选择支付方式';
+
+  @override
+  String get phone_payment => '手机号支付';
+
+  @override
+  String get sanke_money => '桑克钱';
+
+  @override
+  String get wave_payment => 'WAVE支付';
+
+  @override
+  String get enter_phone_number => '请输入手机号码';
+
+  @override
+  String get invalid_phone_format => '手机号码格式不正确';
+
+  @override
+  String get enter_sanke_account => '请输入桑克钱账户';
+
+  @override
+  String get account_length_at_least_6 => '账户长度至少6位';
+
+  @override
+  String get enter_wave_account => '请输入WAVE账户ID';
+
+  @override
+  String get wave_account_start_with_wave => 'WAVE账户ID应以WAVE开头';
+
+  @override
+  String get confirm_phone_number => '确认手机号码';
+
+  @override
+  String get confirm_refund => '确认退款';
+
+  @override
+  String get scan_the_QR => '扫描二维码';
+
+  @override
+  String get order_less_than_5_months => '订单未满5个月';
+
+  @override
+  String get total_amount_less_than_5000 => '订单总金额小于5000';
+
+  @override
+  String get change_name => '修改昵称';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get new_name => '新名称';
+
+  @override
+  String get please_enter_name => '没有输入名称，请重新填写';
+
+  @override
+  String get update_success => '修改成功';
+
+  @override
+  String get callback_password => '找回密码';
+
+  @override
+  String get hint_enter_email => '请输入邮箱';
+
+  @override
+  String get next_step => '下一步';
+
+  @override
+  String get hint_enter_verification_code => '请输入验证码';
+
+  @override
+  String get resend_verification_code => '重新获取';
+
+  @override
+  String resend_with_countdown(Object count) {
+    return '重新获取($count)';
+  }
+
+  @override
+  String get please_enter_code_first => '请先输入验证码';
+
+  @override
+  String get verification_code_expired => '验证码已过期，请重新获取';
+
+  @override
+  String get verification_code_correct => '验证码正确';
+
+  @override
+  String get verification_code_incorrect => '验证码错误';
+
+  @override
+  String get invalid_request_format => '请求参数格式不正确';
+
+  @override
+  String get verification_service_unavailable => '验证码服务暂时不可用，请稍后重试';
+
+  @override
+  String get please_get_code_first => '请先获取验证码';
+
+  @override
+  String get verification_code_sent => '验证码已发送至您的邮箱，请查收';
+
+  @override
+  String get verification_code_sent_success => '验证码已发送';
+
+  @override
+  String get email_send_failed => '邮件发送失败，请检查邮箱地址或稍后重试';
+
+  @override
+  String get user_info_not_unique => '用户信息不唯一，请联系客服处理';
+
+  @override
+  String get no_user_found_for_email => '未找到与该邮箱关联的用户账户';
+
+  @override
+  String get email_service_unavailable => '邮件服务暂时不可用，请稍后重试';
+
+  @override
+  String get send_failed => '发送失败';
+
+  @override
+  String get set_new_password => '设置新密码';
+
+  @override
+  String get new_password => '新密码';
+
+  @override
+  String get hint_enter_new_password => '请输入新密码';
+
+  @override
+  String get hint_confirm_new_password => '请再次输入新密码';
+
+  @override
+  String get password_set_success => '密码设置成功';
 }
