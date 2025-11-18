@@ -129,17 +129,17 @@ class RefundProvider with ChangeNotifier {
   }
 
 // 退款
-  Future<int> Refund(BuildContext context) async {
+  Future<int> Refund(BuildContext context,int refundType,String refundAccount) async {
     try {
       if (_orders!.isNotEmpty) {
         // 先检查退款条件
-        final statusCode = await checkRefundConditions(context);
-        if (statusCode != 200) {
-          // 条件不满足，返回状态码
-          return statusCode; // 直接返回状态码
-        }
+        // final statusCode = await checkRefundConditions(context);
+        // if (statusCode != 200) {
+        //   // 条件不满足，返回状态码
+        //   return statusCode; // 直接返回状态码
+        // }
         
-        int message = await _orderService.Refund(context, _orders!);
+        int message = await _orderService.Refund(context, _orders!,refundType,refundAccount);
         if(message == 1){
           Provider.of<OrderProvider>(context,listen: false).getOrders(context);
           this.getRefunds(context);

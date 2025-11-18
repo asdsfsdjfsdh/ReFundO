@@ -175,15 +175,19 @@ class _HomePageState extends State<HomePage> {
                 } else {
                   // 计算总金额
                   final Decimal totalAmount = refundProvider.allAmount();
-
+                  final int checkState = await refundProvider.checkRefundConditions(context);
+                  if(checkState != 200){
+                    _handleRefundResult(checkState, l10n);
+                    return;
+                  }
                   // 显示退款确认悬浮窗
                   _showRefundConfirmationOverlay(
                     context: context,
                     totalAmount: totalAmount,
                     selectedCount: refundProvider.orders!.length,
-                    onConfirm: () async {
+                    onConfirm: (refundType,refundAccount) async {
                       // 执行退款逻辑
-                      final int result = await refundProvider.Refund(context);
+                      final int result = await refundProvider.Refund(context,refundType,refundAccount);
                       _handleRefundResult(result, l10n);
                     },
                   );
@@ -208,7 +212,7 @@ class _HomePageState extends State<HomePage> {
     required BuildContext context,
     required Decimal totalAmount,
     required int selectedCount,
-    required VoidCallback onConfirm,
+    required Function(int,String) onConfirm,
   }) {
     showModalBottomSheet(
       context: context,
@@ -343,7 +347,7 @@ class _HomePageState extends State<HomePage> {
                 '${_totalAmount.toStringAsFixed(2)} FCFA',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),

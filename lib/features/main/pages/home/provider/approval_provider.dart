@@ -20,9 +20,9 @@ class ApprovalProvider extends ChangeNotifier {
           ApproveType,
         );
         // 移动getRefunds调用到这里，并等待它完成
-        if (message == 200) {
-          await Provider.of<RefundProvider>(context, listen: false).getRefunds(context); 
-        }
+        // if (message == 200) {
+        //   await Provider.of<RefundProvider>(context, listen: false).getRefunds(context); 
+        // }
         return message;
       } else
         return 10086;
