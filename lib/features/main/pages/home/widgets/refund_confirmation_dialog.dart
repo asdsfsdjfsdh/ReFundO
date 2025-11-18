@@ -6,7 +6,8 @@ import 'package:refundo/l10n/app_localizations.dart';
 class RefundConfirmationDialog extends StatefulWidget {
   final Decimal totalAmount;
   final int selectedCount;
-  final VoidCallback onConfirm;
+  // final VoidCallback onConfirm;
+  final Function(int,String) onConfirm;
   final VoidCallback onCancel;
 
   const RefundConfirmationDialog({
@@ -25,6 +26,28 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
   PaymentMethod _selectedMethod = PaymentMethod.phone;
   final TextEditingController _accountController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // 添加监听器以实时验证输入
+    _accountController.addListener(_onInputChanged);
+    _phoneController.addListener(_onInputChanged);
+  }
+
+  @override
+  void dispose() {
+    _accountController.removeListener(_onInputChanged);
+    _phoneController.removeListener(_onInputChanged);
+    _accountController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _onInputChanged() {
+    // 输入变化时触发重建以更新按钮状态
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +283,7 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
     switch (_selectedMethod) {
       case PaymentMethod.phone:
         return (value) {
-          if (value == null || value.isEmpty) return l10n.enter_phone_number;
+          if (value == null || value.isEmpty || _accountController != _phoneController) return l10n.enter_phone_number;
           if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) return l10n.invalid_phone_format;
           return null;
         };
@@ -323,18 +346,24 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
     return validator?.call(_accountController.text) == null;
   }
 
+  int _getRefundType() {
+  switch (_selectedMethod) {
+    case PaymentMethod.phone:
+    
+      return 1;
+    case PaymentMethod.sankeMoney:
+      return 2;
+    case PaymentMethod.wave:
+      return 3;
+  }
+}
+
   void _handleConfirmation() {
+    final refundType = _getRefundType();
     // 关闭对话框
     Navigator.of(context).pop();
     // 执行确认回调
-    widget.onConfirm();
-  }
-
-  @override
-  void dispose() {
-    _accountController.dispose();
-    _phoneController.dispose();
-    super.dispose();
+    widget.onConfirm(refundType, _accountController.text);
   }
 }
 

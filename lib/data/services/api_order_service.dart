@@ -161,7 +161,7 @@ class ApiOrderService {
   }
 
   // 退款功能
-  Future<int> Refund(BuildContext context,Set<OrderModel> orders) async{
+  Future<int> Refund(BuildContext context,Set<OrderModel> orders,int refundType,String refundAccount) async{
     DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
     try{
       List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
@@ -172,7 +172,8 @@ class ApiOrderService {
         "/api/refund/insert",
         data: {
           "orders" : ordersJson,
-          "refundMethod" : 1
+          "refundMethod" : refundType,
+          "account": refundAccount,
         }
 
       );
