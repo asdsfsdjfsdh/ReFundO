@@ -2,17 +2,18 @@ name: Flutter iOS CI/CD
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master ] # 当代码推送到 main 或 master 分支时触发
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master ] # 当向 main 或 master 分支提 PR 时也触发
 
 env:
-  FLUTTER_VERSION: '3.38.0'
+  FLUTTER_VERSION: '3.38.0' # 建议指定一个稳定的版本，与你的项目匹配
 
 jobs:
+
   build-ios:
     name: Build iOS IPA
-    runs-on: macos-latest
+    runs-on: macos-latest # 关键：使用 GitHub 提供的 macOS 最新版本运行器
     steps:
       # 1. 获取代码
       - name: Checkout code
@@ -24,45 +25,16 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
-      # 2.1 检查Flutter环境
-      - name: Verify Flutter
-        run: flutter doctor
-
       # 3. 安装项目依赖
       - name: Install dependencies
         run: flutter pub get
 
-      # 3.1 安装iOS依赖（关键步骤！）
-      - name: Install iOS dependencies
-        run: |
-          cd ios
-          pod install --repo-update
-
-      # 4. 检查项目结构
-      - name: Check project structure
-        run: |
-          echo "项目结构:"
-          find . -name "*.xcodeproj" -o -name "pubspec.yaml" | head -10
-
-      # 5. 构建 iOS IPA 文件（添加详细日志）
+      # 4. 构建 iOS IPA 文件（无需代码签名）
       - name: Build IPA without code signing
-        run: flutter build ipa --release --no-codesign --verbose
-
-      # 6. 检查生成的文件
-      - name: Check build results
-        run: |
-          echo "查找IPA文件:"
-          find . -name "*.ipa" -type f 2>/dev/null || echo "未找到IPA文件"
-          echo "构建目录内容:"
-          ls -la build/ios/ || echo "无ios构建目录"
-
-      # 7. 上传 IPA 文件（使用更灵活的路径）
+        run: flutter build ipa --release --no-codesign
+      # 5. 上传 IPA 文件作为构建产物
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ios-ipa
-          path: |
-            build/ios/ipa/*.ipa
-            build/ios/*.ipa
-            *.ipa
-          if-no-files-found: warn  # 如果没有文件，警告而不是失败
+         name: ios-ipa
+         path: build/ios/ipa/*.ipa
