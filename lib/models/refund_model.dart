@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 
 class RefundModel{
 
@@ -57,6 +59,16 @@ class RefundModel{
     required this.timestamp,
     required this.refundState
   });
+
+  String get_refundMethod(BuildContext context){
+    if (refundMethod == 1){
+      return AppLocalizations.of(context)!.phone_payment;
+    }else if(refundMethod == 2){
+      return AppLocalizations.of(context)!.sanke_money;
+    }else{
+      return AppLocalizations.of(context)!.wave_payment;
+    }
+  }
 
   // 配置转化Json方法
   Map<String, dynamic> toJson() =>{

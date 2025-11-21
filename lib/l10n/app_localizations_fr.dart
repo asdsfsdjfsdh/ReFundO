@@ -153,7 +153,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get total_amount => 'Montant total';
 
   @override
-  String get today_orders => 'Commandes du jour';
+  String get today_orders => 'jour';
 
   @override
   String get processing => 'En traitement';
@@ -355,7 +355,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get remember_me => 'Se souvenir de moi';
 
   @override
-  String get forgot_password => 'Mot de passe oublié?';
+  String get forgot_password => 'Mot oublié?';
 
   @override
   String get login => 'Se connecter';
@@ -391,7 +391,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get refund_method => 'Méthode de remboursement';
 
   @override
-  String get refund_amount => 'Montant du remboursement';
+  String get refund_amount => 'Montant';
 
   @override
   String get approve => 'Approuver';

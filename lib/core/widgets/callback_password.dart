@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/showToast.dart';
-import 'package:refundo/data/services/api_email_service.dart';
 import 'package:refundo/features/main/pages/setting/provider/email_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
-import 'package:refundo/models/user_model.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 
 class CallbackPassword extends StatefulWidget {

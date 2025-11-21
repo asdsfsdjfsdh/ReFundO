@@ -116,7 +116,7 @@ class _AuditPageState extends State<AuditPage> {
     // print('审批通过: $recordId');
     int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,true); 
     if(message == 200){
-      ShowToast.showCenterToast(context,"操作成功");
+      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_success);
       // 修改这部分代码以正确刷新页面
       await Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
       setState(() {
@@ -124,7 +124,7 @@ class _AuditPageState extends State<AuditPage> {
         _applyFilters();
       });
     }else{
-      ShowToast.showCenterToast(context,"操作失败");
+      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_failed);
     }
   }
 
@@ -134,7 +134,7 @@ class _AuditPageState extends State<AuditPage> {
 
     int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,false); 
     if(message == 200){
-      ShowToast.showCenterToast(context,"操作成功");
+      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_success);
       // 修改这部分代码以正确刷新页面
       await Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
       setState(() {
@@ -142,7 +142,7 @@ class _AuditPageState extends State<AuditPage> {
         _applyFilters();
       });
     }else{
-      ShowToast.showCenterToast(context,"操作失败");
+      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_failed);
     }
   }
 
@@ -198,7 +198,7 @@ class _AuditPageState extends State<AuditPage> {
                         _buildDetailItem(l10n.email, refund.email),
                         _buildDetailItem(l10n.order_number, refund.orderNumber),
                         _buildDetailItem(l10n.refund_time, refund.timestamp),
-                        _buildDetailItem(l10n.refund_method, refund.refundMethod.toString()),
+                        _buildDetailItem(l10n.refund_method, refund.get_refundMethod(context)),
                         _buildDetailItem(
                           l10n.refund_amount,
                           '${refund.refundAmount.toStringAsFixed(2)} FCFA',
@@ -653,7 +653,11 @@ class _AuditPageState extends State<AuditPage> {
                     refund.nickName,
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
-                  const SizedBox(width: 16),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
                   Icon(Icons.email, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
@@ -685,13 +689,13 @@ class _AuditPageState extends State<AuditPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.refund_amount,
+                    refund.get_refundMethod(context),
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                   ),
                   Text(
                     '${refund.refundAmount.toStringAsFixed(2)} FCFA',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.green.shade700,
                     ),

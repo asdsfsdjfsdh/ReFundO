@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
@@ -69,7 +70,9 @@ class ApiApprovalService {
       }
     } catch (e) {
       // 处理其他异常
-      print('未知错误: $e');
+      if (kDebugMode) {
+        print('未知错误: $e');
+      }
       String message = '未知错误: $e';
       return -1;
     }

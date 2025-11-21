@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/showToast.dart';
 import 'package:refundo/core/widgets/floating_login.dart';
-import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/email_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持

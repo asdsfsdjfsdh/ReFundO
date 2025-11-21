@@ -123,6 +123,89 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  // 构建信息卡片（三行显示版本）
+  Widget _buildInfoCard({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color iconColor,
+    required String actionText,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 2, // 卡片阴影效果[2](@ref)
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4), // 卡片外边距
+      child: InkWell(
+        onTap: onTap, // 点击事件
+        borderRadius: BorderRadius.circular(8), // 圆角效果
+        child: Container(
+          padding: EdgeInsets.all(16), // 内边距
+          child: Row(
+            children: [
+              // 左侧图标
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.1), // 图标背景色
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: iconColor, size: 24),
+              ),
+              SizedBox(width: 16), // 图标与内容间距
+
+              // 右侧文本内容（三行布局）
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 第一行：标题
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    SizedBox(height: 4), // 行间距
+
+                    // 第二行：当前设置信息
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                      maxLines: 1, // 单行显示
+                      overflow: TextOverflow.ellipsis, // 超出显示省略号
+                    ),
+                    SizedBox(height: 4), // 行间距
+
+                    // 第三行：操作提示
+                    Text(
+                      actionText,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.blue, // 使用蓝色提示操作
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // 右侧箭头指示器
+              Icon(Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey[400]),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // 构建账户信息卡片组 - 使用国际化文本
   Widget _buildAccountInfoCards(BuildContext context, bool isLogin) {
     if (!isLogin) {
@@ -133,14 +216,14 @@ class _SettingPageState extends State<SettingPage> {
 
     return Column(
       children: [
-        // 邮箱设置卡片
+        // 邮箱设置卡片（三行显示）
         _buildInfoCard(
           context: context,
           title: l10n!.email_address,
-          subtitle: Provider.of<UserProvider>(context,listen: false).user!.Email,
+          subtitle: Provider.of<UserProvider>(context, listen: false).user!.Email,
           icon: Icons.email_outlined,
           iconColor: Colors.orange.shade600,
-          actionText: l10n.modify_login_email,
+          actionText: l10n.modify_login_email, // 第三行提示文本
           onTap: () {
             LogUtil.d("设置页", "修改资料--邮箱");
             _showCustomBottomSheet(context, 0);
@@ -148,14 +231,14 @@ class _SettingPageState extends State<SettingPage> {
         ),
         const SizedBox(height: 12),
 
-        // 登录密码卡片
+        // 登录密码卡片（三行显示）
         _buildInfoCard(
           context: context,
           title: l10n.login_password,
-          subtitle: '********',
+          subtitle: '********', // 密码隐藏显示
           icon: Icons.lock_outline_rounded,
           iconColor: Colors.blue.shade600,
-          actionText: l10n.modify_account_password,
+          actionText: l10n.modify_account_password, // 第三行提示文本
           onTap: () {
             LogUtil.d("设置页", "修改资料--密码");
             Navigator.push(
@@ -168,15 +251,14 @@ class _SettingPageState extends State<SettingPage> {
         ),
         const SizedBox(height: 12),
 
-        // 银行卡号卡片
+        // 银行卡号卡片（三行显示）
         _buildInfoCard(
           context: context,
           title: l10n.bank_card_number,
-          subtitle: Provider.of<UserProvider>(context,listen: false).user!.phoneNumber,
-          // l10n.bank_card_tail_number
+          subtitle: Provider.of<UserProvider>(context, listen: false).user!.phoneNumber,
           icon: Icons.credit_card_rounded,
           iconColor: Colors.green.shade600,
-          actionText: l10n.manage_payment_info,
+          actionText: l10n.manage_payment_info, // 第三行提示文本
           onTap: () {
             LogUtil.d("设置页", "修改资料--银行卡");
             _showCustomBottomSheet(context, 1);
@@ -186,114 +268,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  // 构建信息卡片
-  Widget _buildInfoCard({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Color iconColor,
-    required String actionText,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-          ),
-        ],
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                // 左侧图标区域
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    icon,
-                    color: iconColor,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
 
-                // 中间信息区域
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // 右侧操作区域
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      actionText,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.blue.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.grey.shade400,
-                      size: 14,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   // 构建登录提示卡片 - 使用国际化文本
   Widget _buildLoginPromptCard(BuildContext context) {

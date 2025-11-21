@@ -1,0 +1,40 @@
+name: Flutter iOS CI/CD
+
+on:
+  push:
+    branches: [ main, master ] # 当代码推送到 main 或 master 分支时触发
+  pull_request:
+    branches: [ main, master ] # 当向 main 或 master 分支提 PR 时也触发
+
+env:
+  FLUTTER_VERSION: '3.38.0' # 建议指定一个稳定的版本，与你的项目匹配
+
+jobs:
+
+  build-ios:
+    name: Build iOS IPA
+    runs-on: macos-latest # 关键：使用 GitHub 提供的 macOS 最新版本运行器
+    steps:
+      # 1. 获取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 设置 Flutter 环境
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      # 3. 安装项目依赖
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. 构建 iOS IPA 文件（无需代码签名）
+      - name: Build IPA without code signing
+        run: flutter build ipa --release --no-codesign
+      # 5. 上传 IPA 文件作为构建产物
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+         name: ios-ipa
+         path: build/ios/ipa/*.ipa

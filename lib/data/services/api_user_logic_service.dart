@@ -1,13 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/core/utils/passwordHasher.dart';
-import 'package:refundo/core/utils/log_util.dart';
-import 'package:refundo/features/main/pages/home/home_page.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/user_model.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiUserLogicService {
   // 登入
