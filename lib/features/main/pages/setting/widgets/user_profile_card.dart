@@ -152,7 +152,7 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
       ),
       child: Center(
         child: Text(
-          provider.user!.username.isNotEmpty ? provider.user!.username[0].toUpperCase() : 'U',
+          provider.user!.userName.isNotEmpty ? provider.user!.userName[0].toUpperCase() : 'U',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -187,7 +187,7 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
               ),
             ),
             child: Text(
-              provider.user!.username,
+              provider.user!.userName,
               style: TextStyle(
                 fontSize: 22,
                 color: Colors.white.withOpacity(0.9),
@@ -204,7 +204,7 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
     final l10n = AppLocalizations.of(context);
 
     return Text(
-      '${l10n!.uid_label}:${provider.user!.userAccount}',
+      '${l10n!.uid_label}:${provider.user!.userId}',
       style: TextStyle(
         fontSize: 16,
         color: Colors.white.withOpacity(0.8),
@@ -328,6 +328,132 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAvatarAndNameSection(
+      BuildContext context, AppLocalizations l10n, UserProvider provider) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // 头像
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.grey.shade300,
+            child: Text(
+              // 使用userName代替username
+              provider.user?.userName.isNotEmpty == true
+                  ? provider.user!.userName[0].toUpperCase()
+                  : 'U',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          // 用户名和邮箱
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 使用userName代替username
+                Text(
+                  provider.user?.userName ?? '',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  // 使用email代替userAccount
+                  provider.user?.email ?? '',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserInfoSection(BuildContext context, AppLocalizations l10n) {
+    final provider = Provider.of<UserProvider>(context);
+    
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.account_settings,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildInfoRow(Icons.person, 
+              // 使用新的userId替代userAccount
+              '${l10n.uid_label}:${provider.user?.userId ?? ''}', context),
+          const Divider(),
+          _buildInfoRow(Icons.email, 
+              '${l10n.email_address}:${provider.user?.email ?? ''}', context),
+          const Divider(),
+          _buildInfoRow(Icons.phone, 
+              '${l10n.phone_payment}:${provider.user?.phoneNumber ?? ''}', context),
+          const Divider(),
+          _buildInfoRow(Icons.account_balance_wallet, 
+              // 使用新的userName替代以前的用户名显示
+              '${l10n.username}:${provider.user?.userName ?? ''}', context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon),
+        const SizedBox(width: 16),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ],
     );
   }
 

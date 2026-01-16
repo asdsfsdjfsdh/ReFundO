@@ -13,18 +13,22 @@ class ApiUserLogicService {
       DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
       Response response = await dioProvider.dio.post(
         "/api/user/login",
-        data: {"name": username, "password": password, "email": username},
+        data: {"userName": username, "password": password},
       );
       final Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] == null) {
-        return  UserModel.fromJson({}, errorMessage: message);
+      
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理
+        UserModel user = UserModel.fromJson(responseData);
+        if (user.token != null) {
+          await dioProvider.saveToken(user.token!);
+        }
+        return user;
       } else {
-        await dioProvider.saveToken(responseData['result']['token']);
-
-      UserModel User = UserModel.fromJson(responseData['result']['user']);
-      return User;
-// ---------------------------------------------------------
+        // 如果不是新格式，返回错误信息
+        String message = responseData['message'] ?? '未知错误';
+        return UserModel.fromJson({}, errorMessage: message);
       }
     } on DioException catch (e) {
       String message = '占位错误';
@@ -75,10 +79,13 @@ class ApiUserLogicService {
         "/api/user/info",
       );
       Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] != null) {
-        return UserModel.fromJson(responseData['result']);
+      
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理
+        return UserModel.fromJson(responseData);
       } else {
+        String message = responseData['message'] ?? '获取用户信息失败';
         return UserModel.fromJson({}, errorMessage: message);
       }
     }  on DioException catch (e) {
@@ -133,9 +140,21 @@ class ApiUserLogicService {
         "/api/user/register",
         data: {"name": username, "email": userEmail, "password": password},
       );
-      final String responseData = response.data;
-      print(responseData);
-      return UserModel.fromJson({}, errorMessage: responseData);
+      final Map<String, dynamic> responseData = response.data;
+      
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理
+        UserModel user = UserModel.fromJson(responseData);
+        if (user.token != null) {
+          await Provider.of<DioProvider>(context, listen: false).saveToken(user.token!);
+        }
+        return user;
+      } else {
+        // 如果不是新格式，返回错误信息
+        String message = responseData['message'] ?? '注册失败';
+        return UserModel.fromJson({}, errorMessage: message);
+      }
     }  on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
@@ -179,22 +198,21 @@ class ApiUserLogicService {
   //修改用户数据
   Future<UserModel> updateUserInfo(
     UserModel userModel,
-    int updateType,
     BuildContext context
   ) async {
     try {
-      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
-        "/api/user/update",
-        data: {
-          "user": userModel.toJson(),
-          "updateType": updateType
-        }
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.put(
+        "/api/user",
+        data: userModel.toJson(),
       );
       Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] != null) {
-        return UserModel.fromJson(responseData['result']);
+      
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理
+        return UserModel.fromJson(responseData);
       } else {
+        String message = responseData['message'] ?? '更新用户信息失败';
         return UserModel.fromJson({}, errorMessage: message);
       }
     }on DioException catch (e) {
@@ -251,7 +269,7 @@ class ApiUserLogicService {
           "password": password,
         }
       );
-      String message = response.data;
+      String message = response.data["code"].toString();
       return message;
     } on DioException catch (e) {
       String message = '占位错误';

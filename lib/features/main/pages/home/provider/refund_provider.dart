@@ -52,7 +52,6 @@ class RefundProvider with ChangeNotifier {
   // 获取订单信息
   Future<void> getRefunds(BuildContext context) async {
     try {
-      bool isAdmin = Provider.of<UserProvider>(context,listen: false).user!.role;
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('access_token') ?? '';
       if (kDebugMode) {
@@ -61,11 +60,7 @@ class RefundProvider with ChangeNotifier {
       }
       if (token.isNotEmpty) {
         try {
-          if(!isAdmin) {
             _refunds = await refundService.getRefunds(context);
-          } else {
-            _refunds = await refundService.getAllRefunds(context);
-          }
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);

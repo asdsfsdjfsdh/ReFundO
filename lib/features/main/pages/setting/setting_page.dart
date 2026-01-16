@@ -220,7 +220,7 @@ class _SettingPageState extends State<SettingPage> {
         _buildInfoCard(
           context: context,
           title: l10n!.email_address,
-          subtitle: Provider.of<UserProvider>(context, listen: false).user!.Email,
+          subtitle: Provider.of<UserProvider>(context, listen: false).user!.email,
           icon: Icons.email_outlined,
           iconColor: Colors.orange.shade600,
           actionText: l10n.modify_login_email, // 第三行提示文本
@@ -251,19 +251,19 @@ class _SettingPageState extends State<SettingPage> {
         ),
         const SizedBox(height: 12),
 
-        // 银行卡号卡片（三行显示）
-        _buildInfoCard(
-          context: context,
-          title: l10n.bank_card_number,
-          subtitle: Provider.of<UserProvider>(context, listen: false).user!.phoneNumber,
-          icon: Icons.credit_card_rounded,
-          iconColor: Colors.green.shade600,
-          actionText: l10n.manage_payment_info, // 第三行提示文本
-          onTap: () {
-            LogUtil.d("设置页", "修改资料--银行卡");
-            _showCustomBottomSheet(context, 1);
-          },
-        ),
+        // sho号卡片（三行显示）
+        // _buildInfoCard(
+        //   context: context,
+        //   title: l10n.bank_card_number,
+        //   subtitle: Provider.of<UserProvider>(context, listen: false).user!.phoneNumber,
+        //   icon: Icons.credit_card_rounded,
+        //   iconColor: Colors.green.shade600,
+        //   actionText: l10n.manage_payment_info, // 第三行提示文本
+        //   onTap: () {
+        //     LogUtil.d("设置页", "修改资料--银行卡");
+        //     _showCustomBottomSheet(context, 1);
+        //   },
+        // ),
       ],
     );
   }

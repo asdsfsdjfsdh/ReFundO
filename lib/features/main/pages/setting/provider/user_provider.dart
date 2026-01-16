@@ -51,18 +51,18 @@ class UserProvider with ChangeNotifier {
   // 向后端请求登入
   Future<UserModel> login(String username, String password,BuildContext context) async {
     try {
-      UserModel User = await _service.logic(username, password,context);
-      if (User!.errorMessage.isNotEmpty) {
-        LogUtil.e("登入", _user!.errorMessage);
+      UserModel user = await _service.logic(username, password,context);
+      if (user.errorMessage.isNotEmpty) {
+        LogUtil.e("登入", user.errorMessage);
         _isLogin = false;
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
-        _user = User;
+        _user = user;
       }
       Provider.of<OrderProvider>(context, listen: false).getOrders(context);
       Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
-      return User;
+      return user;
     } catch (e) {
       LogUtil.e("登入", e.toString());
       print(e.toString());
@@ -80,8 +80,8 @@ class UserProvider with ChangeNotifier {
     BuildContext context
   ) async {
     try {
-      UserModel User =  await _service.register(username, userEmail, password,context);
-      _errorMessage = User.errorMessage;
+      UserModel user =  await _service.register(username, userEmail, password,context);
+      _errorMessage = user.errorMessage;
       print(_errorMessage);
     } catch (e) {
       LogUtil.e("注册", e.toString());
@@ -129,7 +129,7 @@ class UserProvider with ChangeNotifier {
 
   // 更新用户信息
   Future<String> updateUserInfo(
-    String Info,
+    String info,
     int updateType,
     BuildContext context,
     [String? email]
@@ -139,32 +139,33 @@ class UserProvider with ChangeNotifier {
 
       switch (updateType) {
         case 1:
-          user?.username = Info;
+          user?.userName = info;
           break;
         case 2:
           if(email != null){
-            user?.Email = email;
+            user?.email = email;
           }
-          user?.password = Info;
+          // 注意：密码字段在此处未直接更新，因为用户模型没有password字段
+          // 如果需要密码更新，可能需要额外处理
           break;
         case 3:
-          print("email:$Info");
-          user?.Email = Info;
+          print("email:$info");
+          user?.email = info;
           break;
         case 4:
-          user?.phoneNumber = Info;
+          user?.phoneNumber = info;
           break;
         
         default:
           return "Error";
       }
 
-      user = await _service.updateUserInfo(user!,updateType,context);
+      user = await _service.updateUserInfo(user!, context);
 
       if(user.errorMessage.isEmpty){
         _user = user;
         return "修改成功";
-      }else{
+      } else{
         LogUtil.e("更新用户信息", user.errorMessage);
         return user.errorMessage;
       }
@@ -183,8 +184,9 @@ class UserProvider with ChangeNotifier {
     BuildContext context
   ) async {
     try {
-      String message = await _service.verifyUserInfo(email,password,context);
-      if(message == "验证通过"){
+      String message = await _service.verifyUserInfo(email, password, context);
+      print(message=="1");
+      if(message == "1"){
         return true;
       } else {
         LogUtil.e("验证用户身份", message);

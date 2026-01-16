@@ -22,6 +22,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late UserProvider _apiLoginc;
   late double _totalAmount = 0.0;
+  late double _processedAmount = 0.0;
+  late int _pendingApprovalCount = 0;
   bool _isRefunding = false;
   int _currentIndex = 0;
 
@@ -92,7 +94,6 @@ class _HomePageState extends State<HomePage> {
             context,
             listen: false,
           );
-          _totalAmount = userProvider.user?.AmountSum ?? 0.0;
 
           return Scaffold(
             appBar: _buildAppBar(context, userProvider),
@@ -310,6 +311,10 @@ class _HomePageState extends State<HomePage> {
     
     // 获取退款提供者以访问统计数据
     final refundProvider = Provider.of<RefundProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
+    // 使用新的用户模型字段
+    final double balance = userProvider.user?.balance ?? 0.0;
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -344,7 +349,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                '${_totalAmount.toStringAsFixed(2)} FCFA',
+                '${balance.toStringAsFixed(2)} FCFA',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -531,6 +536,41 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Text(l10n.confirm, style: const TextStyle(fontSize: 16)),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateTotals() {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    // 使用新的balance属性替代AmountSum
+    _totalAmount = provider.user?.balance ?? 0.0;
+    _processedAmount = 0.0; // 重新计算已处理金额
+    _pendingApprovalCount = 0; // 重新计算待审批数量
+    setState(() {});
+  }
+
+  void _showUserBalanceDialog() {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    // 使用新的balance属性
+    final double balance = provider.user?.balance ?? 0.0;
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.account_settings),
+          content: Text(
+            '${AppLocalizations.of(context)!.total_amount}: ${balance.toStringAsFixed(2)}',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.confirm),
             ),
           ],
         );

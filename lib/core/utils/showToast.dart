@@ -4,7 +4,19 @@ class ShowToast {
   static OverlayEntry? _overlayEntry;
 
    static void showCenterToast(BuildContext context, String message) {
-    _overlayEntry?.remove();
+    // 安全地移除现有的 overlay entry
+    if (_overlayEntry != null) {
+      try {
+        // 检查 OverlayEntry 是否仍然挂载
+        if (_overlayEntry!.mounted) {
+          _overlayEntry!.remove();
+        }
+      } catch (e) {
+        // 忽略已经移除的 entry 引发的错误
+        debugPrint('OverlayEntry may have already been removed: $e');
+      }
+      _overlayEntry = null;
+    }
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
