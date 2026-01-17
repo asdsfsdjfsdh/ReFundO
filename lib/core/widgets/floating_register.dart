@@ -78,7 +78,7 @@ class FloatingRegister {
           context,
           listen: false,
         ).sendEmail(mail, context, 2);
-        if (message == 200) {
+        if (message == 1) {
           ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
         } else if (message == 411) {
           ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");

@@ -189,7 +189,10 @@ class _CallbackState extends State<Callback> {
                 onPressed: () async {
                   if (color == Colors.blue) {
                     if (!isValidEmail(email)) {
-                      ShowToast.showCenterToast(context, l10n.invalid_email_format);
+                      ShowToast.showCenterToast(
+                        context,
+                        l10n.invalid_email_format,
+                      );
                     } else {
                       Provider.of<EmailProvider>(
                         context,
@@ -198,7 +201,10 @@ class _CallbackState extends State<Callback> {
                       widget.onNext(email);
                     }
                   } else {
-                    ShowToast.showCenterToast(context, l10n.invalid_email_format);
+                    ShowToast.showCenterToast(
+                      context,
+                      l10n.invalid_email_format,
+                    );
                   }
                 },
                 child: Text(l10n.next_step),
@@ -290,7 +296,10 @@ class _CheckCodeState extends State<CheckCode> {
                 children: [
                   Container(
                     width: 70,
-                    child: Text(l10n!.verification_code, style: TextStyle(fontSize: 20.0)),
+                    child: Text(
+                      l10n!.verification_code,
+                      style: TextStyle(fontSize: 20.0),
+                    ),
                   ),
                   Expanded(
                     flex: 4,
@@ -348,74 +357,100 @@ class _CheckCodeState extends State<CheckCode> {
                         ),
                         isSend
                             ? Expanded(
-                          flex: 7,
-                          child: TextButton(
-                            key: ValueKey('resend'),
-                            onPressed: () {
-                              if (sendColor == Colors.blue) {
-                                final message =
-                                Provider.of<EmailProvider>(
-                                  context,
-                                  listen: false,
-                                ).sendEmail(email, context,1);
-                                if (message == 200) {
-                                  ShowToast.showCenterToast(context, l10n.verification_code_sent);
-                                  setState(() {
-                                    sendColor = Colors.grey;
-                                    _startCountdown();
-                                  });
-                                } else if(message == 411) {
-                                  ShowToast.showCenterToast(context, l10n.email_send_failed);
-                                }else if(message == 412){
-                                  ShowToast.showCenterToast(context, l10n.user_info_not_unique);
-                                }else if(message == 400){
-                                  ShowToast.showCenterToast(context, l10n.no_user_found_for_email);
-                                }else{
-                                  ShowToast.showCenterToast(context, l10n.email_service_unavailable);
-                                }
-                              }
-                            },
-                            child: Text(
-                              _countdown != 0
-                                  ? l10n.resend_with_countdown(_countdown)
-                                  : l10n.resend_verification_code,
-                              style: TextStyle(
-                                color: sendColor,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        )
+                                flex: 7,
+                                child: TextButton(
+                                  key: ValueKey('resend'),
+                                  onPressed: () async {
+                                    if (sendColor == Colors.blue) {
+                                      final message =
+                                          await Provider.of<EmailProvider>(
+                                            context,
+                                            listen: false,
+                                          ).sendEmail(email, context, 1);
+                                      if (message == 1) {
+                                        ShowToast.showCenterToast(
+                                          context,
+                                          l10n.verification_code_sent,
+                                        );
+                                        if (mounted) {
+                                          setState(() {
+                                            sendColor = Colors.grey;
+                                            _startCountdown();
+                                          });
+                                        }
+                                      } else if (message == 0) {
+                                        ShowToast.showCenterToast(
+                                          context,
+                                          l10n.email_send_failed,
+                                        );
+                                      } else if (message == 412) {
+                                        ShowToast.showCenterToast(
+                                          context,
+                                          l10n.user_info_not_unique,
+                                        );
+                                      } else if (message == 400) {
+                                        ShowToast.showCenterToast(
+                                          context,
+                                          l10n.no_user_found_for_email,
+                                        );
+                                      } else {
+                                        ShowToast.showCenterToast(
+                                          context,
+                                          l10n.email_service_unavailable,
+                                        );
+                                      }
+                                    }
+                                  },
+                                  child: Text(
+                                    _countdown != 0
+                                        ? l10n.resend_with_countdown(_countdown)
+                                        : l10n.resend_verification_code,
+                                    style: TextStyle(
+                                      color: sendColor,
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                ),
+                              )
                             : Expanded(
-                          flex: 7,
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                isSend = true;
-                                button_flex = 6;
-                                sendColor = Colors.grey;
-                                final message =
-                                Provider.of<EmailProvider>(
-                                  context,
-                                  listen: false,
-                                ).sendEmail(email, context,1);
-                                if (message != "Error") {
-                                  ShowToast.showCenterToast(context, l10n.verification_code_sent_success);
-                                  _startCountdown();
-                                } else {
-                                  ShowToast.showCenterToast(context, l10n.send_failed);
-                                }
-                              });
-                            },
-                            child: Text(
-                              l10n.get_verification_code,
-                              style: TextStyle(
-                                color: sendColor,
-                                fontSize: 15.0,
+                                flex: 7,
+                                child: TextButton(
+                                  onPressed: () async {
+                                    final int? message =
+                                        await Provider.of<EmailProvider>(
+                                          context,
+                                          listen: false,
+                                        ).sendEmail(email, context, 1);
+
+                                    if (message == 1) {
+                                      ShowToast.showCenterToast(
+                                        context,
+                                        l10n.verification_code_sent_success,
+                                      );
+                                      _startCountdown();
+                                    } else {
+                                      ShowToast.showCenterToast(
+                                        context,
+                                        l10n.send_failed,
+                                      );
+                                    }
+                                    if (mounted) {
+                                      setState(() {
+                                        isSend = true;
+                                        button_flex = 6;
+                                        sendColor = Colors.grey;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    l10n.get_verification_code,
+                                    style: TextStyle(
+                                      color: sendColor,
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -432,7 +467,10 @@ class _CheckCodeState extends State<CheckCode> {
                 ),
                 onPressed: () async {
                   if (Code.isEmpty)
-                    ShowToast.showCenterToast(context, l10n.please_enter_code_first);
+                    ShowToast.showCenterToast(
+                      context,
+                      l10n.please_enter_code_first,
+                    );
                   else {
                     if (isSend) {
                       final message = await Provider.of<EmailProvider>(
@@ -440,19 +478,37 @@ class _CheckCodeState extends State<CheckCode> {
                         listen: false,
                       ).checkCode(email, Code, context);
                       if (message == 410) {
-                        ShowToast.showCenterToast(context, l10n.verification_code_expired);
-                      }else if(message == 200){
+                        ShowToast.showCenterToast(
+                          context,
+                          l10n.verification_code_expired,
+                        );
+                      } else if (message == 200) {
                         widget.onNext(Code);
-                        ShowToast.showCenterToast(context, l10n.verification_code_correct);
-                      }else if(message == 411){
-                        ShowToast.showCenterToast(context, l10n.verification_code_incorrect);
-                      }else if(message == 400){
-                        ShowToast.showCenterToast(context, l10n.invalid_request_format);
-                      }else{
-                        ShowToast.showCenterToast(context, l10n.verification_service_unavailable);
+                        ShowToast.showCenterToast(
+                          context,
+                          l10n.verification_code_correct,
+                        );
+                      } else if (message == 411) {
+                        ShowToast.showCenterToast(
+                          context,
+                          l10n.verification_code_incorrect,
+                        );
+                      } else if (message == 400) {
+                        ShowToast.showCenterToast(
+                          context,
+                          l10n.invalid_request_format,
+                        );
+                      } else {
+                        ShowToast.showCenterToast(
+                          context,
+                          l10n.verification_service_unavailable,
+                        );
                       }
                     } else {
-                      ShowToast.showCenterToast(context, l10n.please_get_code_first);
+                      ShowToast.showCenterToast(
+                        context,
+                        l10n.please_get_code_first,
+                      );
                     }
                   }
                 },
@@ -472,11 +528,7 @@ class _CheckCodeState extends State<CheckCode> {
 class SetPasswrod extends StatefulWidget {
   final Function() onBack;
   final Function() onfinish;
-  const SetPasswrod({
-    super.key,
-    required this.onBack,
-    required this.onfinish,
-  });
+  const SetPasswrod({super.key, required this.onBack, required this.onfinish});
 
   @override
   State<SetPasswrod> createState() => _SetPasswrodState();
@@ -539,7 +591,10 @@ class _SetPasswrodState extends State<SetPasswrod> {
                 children: [
                   Container(
                     width: 100.0,
-                    child: Text(l10n.new_password, style: TextStyle(fontSize: 20.0)),
+                    child: Text(
+                      l10n.new_password,
+                      style: TextStyle(fontSize: 20.0),
+                    ),
                   ),
                   Expanded(
                     flex: 4,
@@ -588,7 +643,10 @@ class _SetPasswrodState extends State<SetPasswrod> {
                 children: [
                   Container(
                     width: 100.0,
-                    child: Text(l10n.confirm_password, style: TextStyle(fontSize: 20.0)),
+                    child: Text(
+                      l10n.confirm_password,
+                      style: TextStyle(fontSize: 20.0),
+                    ),
                   ),
                   Expanded(
                     flex: 4,
@@ -640,10 +698,19 @@ class _SetPasswrodState extends State<SetPasswrod> {
                 ),
                 onPressed: () {
                   if (newPasswrod == confirmPasswrod) {
-                    ShowToast.showCenterToast(context, l10n.password_set_success);
-                    Provider.of<UserProvider>(context, listen: false).updateUserInfo(newPasswrod, 2, context);
+                    ShowToast.showCenterToast(
+                      context,
+                      l10n.password_set_success,
+                    );
+                    Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    ).updateUserInfo(newPasswrod, 2, context);
                   } else {
-                    ShowToast.showCenterToast(context, l10n.passwords_do_not_match);
+                    ShowToast.showCenterToast(
+                      context,
+                      l10n.passwords_do_not_match,
+                    );
                   }
                   widget.onfinish();
                 },

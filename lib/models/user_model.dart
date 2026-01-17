@@ -3,6 +3,8 @@ class UserModel {
   final int userId;
   // 用户名 - 改为可变的，以便更新
   String userName;
+  // 密码 - 改为可变的，以便更新
+  String? password;
   // 余额
   final double balance;
   // 邮箱 - 改为可变的，以便更新
@@ -25,6 +27,7 @@ class UserModel {
     required this.userName,
     required this.balance,
     required this.email,
+    this.password,
     this.phoneNumber,
     this.token,
     this.sangke,
@@ -37,6 +40,7 @@ class UserModel {
   Map<String, dynamic> toJson() => {
         'userId': userId,
         'userName': userName,
+        'password': password,
         'balance': balance,
         'email': email,
         'phoneNumber': phoneNumber,
@@ -52,6 +56,7 @@ class UserModel {
       return UserModel(
         userId: 0,
         userName: '',
+        password: null,
         balance: 0.0,
         email: '',
         phoneNumber: null,

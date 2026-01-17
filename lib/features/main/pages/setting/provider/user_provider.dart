@@ -142,9 +142,7 @@ class UserProvider with ChangeNotifier {
           user?.userName = info;
           break;
         case 2:
-          if(email != null){
-            user?.email = email;
-          }
+          user?.password = info;
           // 注意：密码字段在此处未直接更新，因为用户模型没有password字段
           // 如果需要密码更新，可能需要额外处理
           break;
