@@ -17,10 +17,10 @@ class ApiRefundService {
       );
       List<RefundModel> refunds = [];
 
-      Response response = await dioProvider.dio.post('/api/refund/get');
+      Response response = await dioProvider.dio.get('/api/refund-request/list');
       // print(response);
-      String message = response.data['message'];
-      List<dynamic> ordersRequest = response.data['result'];
+      // String message = response.data['message'];
+      List<dynamic> ordersRequest = response.data['data'];
       for (var i = 0; i < ordersRequest.length; i++) {
         Map<String, dynamic> ordersresult = ordersRequest[i];
         RefundModel refund = RefundModel.fromJson(ordersresult);

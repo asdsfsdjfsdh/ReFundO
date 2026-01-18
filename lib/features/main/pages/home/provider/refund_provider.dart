@@ -31,7 +31,7 @@ class RefundProvider with ChangeNotifier {
     
     return _refunds!.where((refund) {
       try {
-        final refundDate = DateTime.parse(refund.timestamp);
+        final refundDate = DateTime.parse(refund.createTime);
         final refundDay = DateTime(refundDate.year, refundDate.month, refundDate.day);
         return refundDay.isAtSameMomentAs(today);
       } catch (e) {
@@ -45,7 +45,7 @@ class RefundProvider with ChangeNotifier {
     if (_refunds == null) return 0;
     
     return _refunds!.where((refund) {
-      return refund.refundState == RefundStates.padding;
+      return refund.requestStatus != 2;
     }).length;
   }
 
@@ -96,7 +96,8 @@ class RefundProvider with ChangeNotifier {
   Decimal allAmount(){
     Decimal all = Decimal.fromInt(0);
     _orders?.forEach((value){
-      all += value.refundAmount;
+      // 使用value字段代替原来的refundAmount字段
+      all += Decimal.parse(value.value.toString());
       print(all.toString());
     });
     print(all.toString());
@@ -105,7 +106,7 @@ class RefundProvider with ChangeNotifier {
 
   void removeOrder(int orderId) {
     _orders ??= <OrderModel>{};
-    _orders!.removeWhere((order) => order.orderid == orderId);
+    _orders!.removeWhere((order) => order.scanId == orderId);
     notifyListeners();
   }
   

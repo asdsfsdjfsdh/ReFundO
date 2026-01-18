@@ -113,19 +113,19 @@ class _RefundListItem extends StatelessWidget {
     final Color color;
 
     // 根据退款状态显示不同图标
-    switch (refund.refundState) {
-      case RefundStates.success:
+    switch (refund.requestStatus) {
+      case 2: // 成功状态
         icon = Icons.check_circle_outline_rounded;
         color = Colors.green.shade600;
         break;
-      case RefundStates.approval:
+      case 1: // 审批中
         icon = Icons.error_outline_rounded;
         color = Colors.red.shade600;
         break;
-        case RefundStates.padding:
-          icon = Icons.info_outline_rounded;
-          color = Colors.orange.shade600;
-          break;
+      default: // 其他状态
+        icon = Icons.info_outline_rounded;
+        color = Colors.orange.shade600;
+        break;
     }
 
     return Container(
@@ -163,7 +163,7 @@ class _RefundListItem extends StatelessWidget {
 
         // 时间信息
         Text(
-          '${l10n.time}: ${refund.timestamp}',
+          '${l10n.time}: ${refund.createTime}',
           style: TextStyle(
             fontSize: 14,
             color: Colors.grey.shade600,
@@ -172,7 +172,7 @@ class _RefundListItem extends StatelessWidget {
         const SizedBox(height: 2),
 
         // 状态标签
-        _buildStatusBadge(context, refund.refundState == RefundStates.success), // 添加context参数
+        _buildStatusBadge(context, refund.requestStatus == 2), // 使用requestStatus代替refundState
       ],
     );
   }
@@ -221,11 +221,11 @@ class _RefundListItem extends StatelessWidget {
       children: [
         // 金额显示
         Text(
-          '${refund.refundAmount?.toStringAsFixed(2) ?? '0.00'} FCFA',
+          '${refund.amount.toStringAsFixed(2)} FCFA',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: _getAmountColor(refund.refundState == RefundStates.success),
+            color: _getAmountColor(refund.requestStatus == 2), // 使用requestStatus代替refundState
           ),
         ),
         const SizedBox(height: 8),
@@ -300,11 +300,11 @@ class _RefundDetailSheet extends StatelessWidget {
             const SizedBox(height: 20),
 
             // 详情信息
-            _buildDetailItem(context, l10n.order_number, refund.orderNumber),
-            _buildDetailItem(context, l10n.withdrawal_amount, '¥${refund.refundAmount?.toStringAsFixed(2)}'),
-            _buildDetailItem(context, l10n.application_time, refund.timestamp.toString()),
-            _buildDetailItem(context, l10n.processing_status, refund.refundState == RefundStates.success ? l10n.completed : l10n.pending),
-            _buildDetailItem(context, l10n.payment_method, l10n.bank_card),
+            _buildDetailItem(context, l10n.order_number, refund.requestNumber), // 使用paymentNumber代替orderNumber
+            _buildDetailItem(context, l10n.withdrawal_amount, '¥${refund.amount.toStringAsFixed(2)}'), // 使用amount代替refundAmount
+            _buildDetailItem(context, l10n.application_time, refund.createTime.toString()), // 使用createTime代替timestamp
+            _buildDetailItem(context, l10n.processing_status, refund.requestStatus == 2 ? l10n.completed : l10n.pending), // 使用requestStatus代替refundState
+            _buildDetailItem(context, l10n.payment_method, refund.get_refundMethod(context)), // 使用get_refundMethod方法获取支付方式
 
             const SizedBox(height: 30),
             // 操作按钮

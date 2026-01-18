@@ -21,24 +21,30 @@ class ApiOrderService {
     DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
     List<OrderModel> _orders = [];
 
-    Response response = await dioProvider.dio.post('/api/orders/init',
-    data: {
-      "isRefund": isRefund
-    });
-    // print(response);
-    String message = response.data['message'];
-    List<dynamic> ordersRequest = response.data['result'];
-    for (var i = 0; i < ordersRequest.length; i++) {
-      Map<String, dynamic> ordersresult = ordersRequest[i];
-      OrderModel order = OrderModel.fromJson(ordersresult);
-      _orders.add(order);
+    Response response = await dioProvider.dio.get('/api/scan/records');
+
+    // 解析新的响应结构
+    String? message = response.data['message'];
+    int code = response.data['code'] as int? ?? 0;
+    
+    if (code == 1 && response.data['data'] != null) {
+      List<dynamic> ordersRequest = response.data['data'];
+      for (var i = 0; i < ordersRequest.length; i++) {
+        Map<String, dynamic> ordersresult = ordersRequest[i];
+        OrderModel order = OrderModel.fromJson(ordersresult);
+        _orders.add(order);
+      }
+    } else {
+      if (kDebugMode) {
+        print('获取订单失败: $message');
+      }
     }
-    // print(_orders);
+
     return _orders;
   }
 
   // 添加订单
-  Future<Map<String, dynamic>> insertOrder(
+  Future<String> insertOrder(
     ProductModel product,
     BuildContext context,
   ) async {
@@ -48,32 +54,25 @@ class ApiOrderService {
         listen: false,
       );
       Response response = await dioProvider.dio.post(
-        '/api/orders/insert',
+        '/api/scan/insert',
         data: {
-          "price": product.price,
-          "productId": product.ProductId,
-          "refundAmount": product.RefundAmount,
-          "hash": product.Hash,
-          "refundPercent": product.RefundPercent,
+            "productId": product.ProductId,
+            "hash": product.Hash,
+            "value": product.Value,
+            "originalPrice": product.OriginalPrice,
+            "refundRatio": product.RefundRatio,
         },
       );
       if (kDebugMode) {
         print(response);
       }
-      if (response.data['result'] != null) {
-        OrderModel order = OrderModel.fromJson(response.data['result']);
-        String message = response.data['message'];
-        Map<String, dynamic> result = {"message": message, "result": order};
-        return result;
-      } else {
-        // 处理 result 为空的情况
-        String message = response.data['message'];
-        Map<String, dynamic> result = {"message": message, "result": null};
-        return result;
-      }
+      String? message = response.data['message'] as String ? ?? '';
+      if (response.data['code'] == 1) {
+        message = "添加订单成功";
+      } 
+      return message;
     } on DioException catch (e) {
-      String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
+      String message = '网络异常';
       if (kDebugMode) {
         print("Dio错误详情:");
         print("请求URL: ${e.requestOptions.uri}");
@@ -88,11 +87,11 @@ class ApiOrderService {
           e.type == DioExceptionType.receiveTimeout) {
         // 请求超时
         message = '请求超时: + ${e.message}';
-        return result;
+        return message;
       } else if (e.type == DioExceptionType.connectionTimeout) {
         // 服务器不可达或网络连接失败
         message = '网络连接失败: 无法连接到服务器';
-        return result;
+        return message;
       } else if (e.response != null) {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
@@ -114,13 +113,13 @@ class ApiOrderService {
           print('网络请求异常: ${e.message}');
         }
       }
-      return result;
+      return message;
     } catch (e) {
       // 处理其他异常
       print('未知错误: $e');
       String message = '未知错误: $e';
       Map<String, dynamic> result = {"message": message, "order": null};
-      return result;
+      return message;
     }
   }
 
@@ -164,23 +163,24 @@ class ApiOrderService {
   Future<int> Refund(BuildContext context,Set<OrderModel> orders,int refundType,String refundAccount) async{
     DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
     try{
-      List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
-      if (kDebugMode) {
-        print(ordersJson);
-      }
+      //提取ScanId拼接成字符串，用,分隔
+      String scanIds = orders.map((order) => order.scanId).join(',');
+      // List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
+      // if (kDebugMode) {
+      //   print(ordersJson);
+      // }
       Response response = await dioProvider.dio.post(
-        "/api/refund/insert",
+        "/api/refund-request",
         data: {
-          "orders" : ordersJson,
-          "refundMethod" : refundType,
-          "account": refundAccount,
+          "scanIds" : scanIds,
+          "paymentMethod" : refundType,
+          "paymentNumber": refundAccount,
         }
 
       );
-      String message = response.data['message'];
-      // UserModel user = response.data['result'];
 
-      return 1;
+      int code = response.data['code'];
+      return code;
     }on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};

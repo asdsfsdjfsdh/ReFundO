@@ -176,11 +176,11 @@ class _HomePageState extends State<HomePage> {
                 } else {
                   // 计算总金额
                   final Decimal totalAmount = refundProvider.allAmount();
-                  final int checkState = await refundProvider.checkRefundConditions(context);
-                  if(checkState != 200){
-                    _handleRefundResult(checkState, l10n);
-                    return;
-                  }
+                  // final int checkState = await refundProvider.checkRefundConditions(context);
+                  // if(checkState != 200){
+                  //   _handleRefundResult(checkState, l10n);
+                  //   return;
+                  // }
                   // 显示退款确认悬浮窗
                   _showRefundConfirmationOverlay(
                     context: context,

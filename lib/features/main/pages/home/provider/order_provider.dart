@@ -49,8 +49,7 @@ class OrderProvider with ChangeNotifier {
         print("获取订单失败: $e");
       }
       _orders = [];
-
-    }finally {
+    } finally {
       notifyListeners();
     }
   }
@@ -64,29 +63,26 @@ class OrderProvider with ChangeNotifier {
       //检查产品信息完整性
       if (product.ProductId != '' &&
           product.Hash != '' &&
-          product.RefundAmount != -1 &&
-          product.price != -1 &&
-          product.RefundPercent != -1) {
+          product.Value != -1 &&
+          product.OriginalPrice != -1 &&
+          product.RefundRatio != -1) {
         //插入订单
-        
-        Map<String, dynamic> result = await _orderService.insertOrder(product, context);
+
+        String? result = await _orderService.insertOrder(product, context);
         if (kDebugMode) {
           print(result);
         }
-        String message = result['message'];
-        OrderModel? order = result['result'];
-        if(order != null){
-          _orders!.add(result['result']);
-          Provider.of<UserProvider>(context, listen: false).Info(context);
-          notifyListeners();
-        }
-        return message;
+        _orders = await _orderService.getOrders(context, false);
+
+        return result;
       } else {
         return "无效产品";
       }
     } catch (e) {
       print("添加订单失败: $e");
       return "添加订单失败: $e";
+    }finally {
+      notifyListeners();
     }
   }
 

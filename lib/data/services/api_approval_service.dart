@@ -17,17 +17,6 @@ class ApiApprovalService {
       Response response = await dioProvider.dio.post(
         '/api/admin/approve',
         data: {
-          'approveType': ApproveType,
-          'refunds': {
-            "refundId": refund!.recordId,
-            "orderId": refund.orderId,
-            "orderNumber": refund.orderNumber,
-            "uid": refund.userId,
-            "productId": refund.productId,
-            "time": refund.timestamp,
-            "method": refund.refundMethod,
-            "account": refund.account,
-          },
         },
       );
       final statusCode = response.statusCode;

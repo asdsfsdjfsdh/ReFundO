@@ -75,8 +75,8 @@ class ApiUserLogicService {
   Future<UserModel> getUserInfo(BuildContext context) async {
     try {
       DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
-      Response response = await dioProvider.dio.post(
-        "/api/user/info",
+      Response response = await dioProvider.dio.get(
+        "/api/user",
       );
       Map<String, dynamic> responseData = response.data;
       

@@ -283,7 +283,7 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
     switch (_selectedMethod) {
       case PaymentMethod.phone:
         return (value) {
-          if (value == null || value.isEmpty || _accountController != _phoneController) return l10n.enter_phone_number;
+          if (value == null || value.isEmpty || _accountController.text != _phoneController.text) return l10n.enter_phone_number;
           if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) return l10n.invalid_phone_format;
           return null;
         };
