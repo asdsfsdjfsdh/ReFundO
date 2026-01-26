@@ -609,4 +609,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get password_set_success => 'Password set successfully';
+
+  @override
+  String get error_username_required => 'Username is required';
+
+  @override
+  String get error_username_length => 'Username must be 3-20 characters';
+
+  @override
+  String get error_email_required => 'Email is required';
+
+  @override
+  String get error_password_required => 'Password is required';
+
+  @override
+  String get error_password_length => 'Password must be 6-20 characters';
+
+  @override
+  String get error_code_required => 'Verification code is required';
+
+  @override
+  String get error_code_format => 'Invalid verification code format';
+
+  @override
+  String get error_account_repetition_username => 'Username already exists';
+
+  @override
+  String get error_account_repetition_email => 'Email already in use';
+
+  @override
+  String get error_code_send_too_frequently => 'Verification code sent too frequently, please try again later';
+
+  @override
+  String get error_server_signup_failed => 'Registration failed, please try again';
+
+  @override
+  String error_login_ip_locked(Object minutes) => 'IP is locked, please try again after $minutes minutes';
+
+  @override
+  String error_login_account_locked(Object minutes) => 'Account is locked, please try again after $minutes minutes';
 }

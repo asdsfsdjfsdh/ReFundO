@@ -133,12 +133,13 @@ class ApiUserLogicService {
     String username,
     String userEmail,
     String password,
+    String verificationCode,
     BuildContext context
   ) async {
     try {
       Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
-        "/api/user/register",
-        data: {"name": username, "email": userEmail, "password": password},
+        "/api/user/signup",
+        data: {"userName": username, "email": userEmail, "password": password, "verificationCode": verificationCode},
       );
       final Map<String, dynamic> responseData = response.data;
       

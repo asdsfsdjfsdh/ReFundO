@@ -220,5 +220,18 @@
   "new_password": "New Password",
   "hint_enter_new_password": "Please enter new password",
   "hint_confirm_new_password": "Please enter new password again",
-  "password_set_success": "Password set successfully"
+  "password_set_success": "Password set successfully",
+  "error_username_required": "Username is required",
+  "error_username_length": "Username must be 3-20 characters",
+  "error_email_required": "Email is required",
+  "error_password_required": "Password is required",
+  "error_password_length": "Password must be 6-20 characters",
+  "error_code_required": "Verification code is required",
+  "error_code_format": "Invalid verification code format",
+  "error_account_repetition_username": "Username already exists",
+  "error_account_repetition_email": "Email already in use",
+  "error_code_send_too_frequently": "Verification code sent too frequently, please try again later",
+  "error_server_signup_failed": "Registration failed, please try again",
+  "error_login_ip_locked": "IP is locked, please try again after {0} minutes",
+  "error_login_account_locked": "Account is locked, please try again after {0} minutes"
 }

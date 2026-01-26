@@ -41,11 +41,12 @@ class FloatingRegister {
     String username,
     String userEmail,
     String password,
+    String verificationCode,
   ) async {
     Provider.of<UserProvider>(
       context,
       listen: false,
-    ).register(username, userEmail, password, context);
+    ).register(username, userEmail, password, verificationCode, context);
   }
 
   /// 获取验证码按钮点击事件
@@ -236,7 +237,7 @@ class FloatingRegister {
                   });
 
                   try {
-                    await onRegister(context, username, email, password);
+                    await onRegister(context, username, email, password, verificationCode);
                     final userProvider = Provider.of<UserProvider>(
                       context,
                       listen: false,

@@ -16,13 +16,23 @@ class DioProvider extends ChangeNotifier {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          final prefs = await SharedPreferences.getInstance();
+
           // 从 SharedPreferences 获取 Token
-          String token = await getToken();
+          String token = prefs.getString('access_token') ?? '';
 
           if (token.isNotEmpty) {
             print('Token: $token');
             options.headers['Authorization'] = 'Bearer $token';
           }
+
+          // 添加 Accept-Language 头
+          final languageCode = prefs.getString('languageCode') ?? 'zh';
+          final countryCode = prefs.getString('countryCode') ?? 'CN';
+          final acceptLanguage = '$languageCode-$countryCode';
+          options.headers['Accept-Language'] = acceptLanguage;
+          print('Accept-Language: $acceptLanguage');
+
           return handler.next(options);
         },
         onResponse: (response, handler) {

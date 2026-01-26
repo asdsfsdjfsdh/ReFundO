@@ -195,5 +195,18 @@
   "new_password": "Nouveau mot de passe",
   "hint_enter_new_password": "Veuillez entrer le nouveau mot de passe",
   "hint_confirm_new_password": "Veuillez entrer à nouveau le nouveau mot de passe",
-  "password_set_success": "Mot de passe défini avec succès"
+  "password_set_success": "Mot de passe défini avec succès",
+  "error_username_required": "Le nom d'utilisateur est requis",
+  "error_username_length": "Le nom d'utilisateur doit contenir 3 à 20 caractères",
+  "error_email_required": "L'adresse e-mail est requise",
+  "error_password_required": "Le mot de passe est requis",
+  "error_password_length": "Le mot de passe doit contenir 6 à 20 caractères",
+  "error_code_required": "Le code de vérification est requis",
+  "error_code_format": "Format de code de vérification invalide",
+  "error_account_repetition_username": "Le nom d'utilisateur existe déjà",
+  "error_account_repetition_email": "L'adresse e-mail est déjà utilisée",
+  "error_code_send_too_frequently": "Le code de vérification a été envoyé trop fréquemment, veuillez réessayer dans 60 secondes",
+  "error_server_signup_failed": "L'inscription a échoué, veuillez réessayer",
+  "error_login_ip_locked": "L'IP est verrouillée, veuillez réessayer après {0} minutes",
+  "error_login_account_locked": "Le compte est verrouillé, veuillez réessayer après {0} minutes"
 }

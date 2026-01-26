@@ -77,10 +77,11 @@ class UserProvider with ChangeNotifier {
     String username,
     String userEmail,
     String password,
+    String verificationCode,
     BuildContext context
   ) async {
     try {
-      UserModel user =  await _service.register(username, userEmail, password,context);
+      UserModel user =  await _service.register(username, userEmail, password, verificationCode, context);
       _errorMessage = user.errorMessage;
       print(_errorMessage);
     } catch (e) {

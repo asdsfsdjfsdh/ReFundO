@@ -609,4 +609,43 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get password_set_success => '密码设置成功';
+
+  @override
+  String get error_username_required => '用户名不能为空';
+
+  @override
+  String get error_username_length => '用户名长度应为3-20个字符';
+
+  @override
+  String get error_email_required => '邮箱不能为空';
+
+  @override
+  String get error_password_required => '密码不能为空';
+
+  @override
+  String get error_password_length => '密码长度应为6-20个字符';
+
+  @override
+  String get error_code_required => '验证码不能为空';
+
+  @override
+  String get error_code_format => '验证码格式不正确';
+
+  @override
+  String get error_account_repetition_username => '用户名已存在';
+
+  @override
+  String get error_account_repetition_email => '邮箱已被使用';
+
+  @override
+  String get error_code_send_too_frequently => '验证码发送过于频繁，请60秒后再试';
+
+  @override
+  String get error_server_signup_failed => '注册失败，请重试';
+
+  @override
+  String error_login_ip_locked(Object minutes) => 'IP已被锁定，请${minutes}分钟后再试';
+
+  @override
+  String error_login_account_locked(Object minutes) => '账号已被锁定，请${minutes}分钟后再试';
 }

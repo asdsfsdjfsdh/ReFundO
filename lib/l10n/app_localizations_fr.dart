@@ -609,4 +609,43 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get password_set_success => 'Mot de passe défini avec succès';
+
+  @override
+  String get error_username_required => 'Le nom d\'utilisateur est requis';
+
+  @override
+  String get error_username_length => 'Le nom d\'utilisateur doit contenir 3 à 20 caractères';
+
+  @override
+  String get error_email_required => 'L\'adresse e-mail est requise';
+
+  @override
+  String get error_password_required => 'Le mot de passe est requis';
+
+  @override
+  String get error_password_length => 'Le mot de passe doit contenir 6 à 20 caractères';
+
+  @override
+  String get error_code_required => 'Le code de vérification est requis';
+
+  @override
+  String get error_code_format => 'Format de code de vérification invalide';
+
+  @override
+  String get error_account_repetition_username => 'Le nom d\'utilisateur existe déjà';
+
+  @override
+  String get error_account_repetition_email => 'L\'adresse e-mail est déjà utilisée';
+
+  @override
+  String get error_code_send_too_frequently => 'Le code de vérification a été envoyé trop fréquemment, veuillez réessayer dans 60 secondes';
+
+  @override
+  String get error_server_signup_failed => 'L\'inscription a échoué, veuillez réessayer';
+
+  @override
+  String error_login_ip_locked(Object minutes) => 'L\'IP est verrouillée, veuillez réessayer après $minutes minutes';
+
+  @override
+  String error_login_account_locked(Object minutes) => 'Le compte est verrouillé, veuillez réessayer après $minutes minutes';
 }

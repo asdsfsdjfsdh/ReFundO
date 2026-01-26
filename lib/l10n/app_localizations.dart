@@ -1284,6 +1284,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password set successfully'**
   String get password_set_success;
+
+  /// No description provided for @error_username_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get error_username_required;
+
+  /// No description provided for @error_username_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be 3-20 characters'**
+  String get error_username_length;
+
+  /// No description provided for @error_email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get error_email_required;
+
+  /// No description provided for @error_password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get error_password_required;
+
+  /// No description provided for @error_password_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be 6-20 characters'**
+  String get error_password_length;
+
+  /// No description provided for @error_code_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code is required'**
+  String get error_code_required;
+
+  /// No description provided for @error_code_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid verification code format'**
+  String get error_code_format;
+
+  /// No description provided for @error_account_repetition_username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username already exists'**
+  String get error_account_repetition_username;
+
+  /// No description provided for @error_account_repetition_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email already in use'**
+  String get error_account_repetition_email;
+
+  /// No description provided for @error_code_send_too_frequently.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code sent too frequently, please try again later'**
+  String get error_code_send_too_frequently;
+
+  /// No description provided for @error_server_signup_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed, please try again'**
+  String get error_server_signup_failed;
+
+  /// No description provided for @error_login_ip_locked.
+  ///
+  /// In en, this message translates to:
+  /// **'IP is locked, please try again after {0} minutes'**
+  String error_login_ip_locked(Object minutes);
+
+  /// No description provided for @error_login_account_locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Account is locked, please try again after {0} minutes'**
+  String error_login_account_locked(Object minutes);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
