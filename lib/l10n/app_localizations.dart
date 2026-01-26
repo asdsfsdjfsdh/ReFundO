@@ -1812,6 +1812,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If you need more help, please contact us'**
   String get faq_contact_support_hint;
+
+  /// No description provided for @status_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get status_pending;
+
+  /// No description provided for @status_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get status_approved;
+
+  /// No description provided for @status_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get status_rejected;
+
+  /// No description provided for @status_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get status_processing;
+
+  /// No description provided for @status_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get status_completed;
+
+  /// No description provided for @status_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get status_failed;
+
+  /// No description provided for @status_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get status_unknown;
+
+  /// No description provided for @transaction_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get transaction_pending;
+
+  /// No description provided for @transaction_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get transaction_success;
+
+  /// No description provided for @transaction_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get transaction_failed;
+
+  /// No description provided for @transaction_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get transaction_processing;
+
+  /// No description provided for @transaction_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transaction_details;
+
+  /// No description provided for @no_transaction_records.
+  ///
+  /// In en, this message translates to:
+  /// **'No transaction records'**
+  String get no_transaction_records;
+
+  /// No description provided for @change_avatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Avatar'**
+  String get change_avatar;
+
+  /// No description provided for @take_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get take_photo;
+
+  /// No description provided for @choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get choose_from_gallery;
+
+  /// No description provided for @discount_voucher.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount Voucher (Optional)'**
+  String get discount_voucher;
+
+  /// No description provided for @tap_to_upload_voucher.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload voucher'**
+  String get tap_to_upload_voucher;
+
+  /// No description provided for @voucherUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Voucher'**
+  String get voucherUrl;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

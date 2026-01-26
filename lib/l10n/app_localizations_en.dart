@@ -877,4 +877,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faq_contact_support_hint => 'If you need more help, please contact us';
+
+  @override
+  String get status_pending => 'Pending';
+
+  @override
+  String get status_approved => 'Approved';
+
+  @override
+  String get status_rejected => 'Rejected';
+
+  @override
+  String get status_processing => 'Processing';
+
+  @override
+  String get status_completed => 'Completed';
+
+  @override
+  String get status_failed => 'Failed';
+
+  @override
+  String get status_unknown => 'Unknown';
+
+  @override
+  String get transaction_pending => 'Pending';
+
+  @override
+  String get transaction_success => 'Success';
+
+  @override
+  String get transaction_failed => 'Failed';
+
+  @override
+  String get transaction_processing => 'Processing';
+
+  @override
+  String get transaction_details => 'Transaction Details';
+
+  @override
+  String get no_transaction_records => 'No transaction records';
+
+  @override
+  String get change_avatar => 'Change Avatar';
+
+  @override
+  String get take_photo => 'Take Photo';
+
+  @override
+  String get choose_from_gallery => 'Choose from Gallery';
+
+  @override
+  String get discount_voucher => 'Discount Voucher (Optional)';
+
+  @override
+  String get tap_to_upload_voucher => 'Tap to upload voucher';
+
+  @override
+  String get voucherUrl => 'Voucher';
 }

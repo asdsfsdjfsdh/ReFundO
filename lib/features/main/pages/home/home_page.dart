@@ -186,9 +186,9 @@ class _HomePageState extends State<HomePage> {
                     context: context,
                     totalAmount: totalAmount,
                     selectedCount: refundProvider.orders!.length,
-                    onConfirm: (refundType,refundAccount) async {
+                    onConfirm: (refundType,refundAccount,voucherUrl) async {
                       // 执行退款逻辑
-                      final Map<String, dynamic> result = await refundProvider.Refund(context,refundType,refundAccount);
+                      final Map<String, dynamic> result = await refundProvider.Refund(context,refundType,refundAccount,voucherUrl);
                       _handleRefundResult(result, l10n);
                     },
                   );
@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
     required BuildContext context,
     required Decimal totalAmount,
     required int selectedCount,
-    required Function(int,String) onConfirm,
+    required Function(int,String,String) onConfirm,
   }) {
     showModalBottomSheet(
       context: context,

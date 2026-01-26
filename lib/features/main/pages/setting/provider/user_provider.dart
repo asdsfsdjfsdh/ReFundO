@@ -205,4 +205,37 @@ class UserProvider with ChangeNotifier {
       return {'success': false, 'message': 'unknown_error'};
     }
   }
+
+  // 更新用户头像
+  Future<Map<String, dynamic>> updateAvatar(
+    BuildContext context,
+    String avatarUrl,
+  ) async {
+    try {
+      UserModel? user = _user;
+      if (user == null) {
+        return {'success': false, 'message': 'user_not_found'};
+      }
+
+      user.avatarUrl = avatarUrl;
+      user = await _service.updateUserInfo(
+        user,
+        context,
+        successMessageKey: 'update_avatar_success',
+      );
+
+      if (user.errorMessage.isEmpty) {
+        _user = user;
+        return {'success': true, 'data': user, 'messageKey': 'update_avatar_success'};
+      } else {
+        LogUtil.e("更新用户头像", user.errorMessage);
+        return {'success': false, 'message': user.errorMessage};
+      }
+    } catch (e) {
+      LogUtil.e("更新用户头像", e.toString());
+      return {'success': false, 'message': 'unknown_error'};
+    } finally {
+      notifyListeners();
+    }
+  }
 }

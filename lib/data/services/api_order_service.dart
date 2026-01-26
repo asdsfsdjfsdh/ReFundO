@@ -192,19 +192,26 @@ class ApiOrderService {
   }
 
   // 退款功能
-  Future<Map<String, dynamic>> Refund(BuildContext context,Set<OrderModel> orders,int refundType,String refundAccount) async{
+  Future<Map<String, dynamic>> Refund(BuildContext context,Set<OrderModel> orders,int refundType,String refundAccount,String voucherUrl) async{
     DioProvider dioProvider = Provider.of<DioProvider>(context,listen: false);
     try{
       //提取ScanId拼接成字符串，用,分隔
       String scanIds = orders.map((order) => order.scanId).join(',');
 
+      Map<String, dynamic> requestData = {
+        "scanIds" : scanIds,
+        "paymentMethod" : refundType,
+        "paymentNumber": refundAccount,
+      };
+
+      // 如果有优惠凭证URL，添加到请求中
+      if (voucherUrl.isNotEmpty) {
+        requestData["voucherUrl"] = voucherUrl;
+      }
+
       Response response = await dioProvider.dio.post(
         "/api/refund-request",
-        data: {
-          "scanIds" : scanIds,
-          "paymentMethod" : refundType,
-          "paymentNumber": refundAccount,
-        }
+        data: requestData,
       );
 
       final Map<String, dynamic> responseData = response.data;

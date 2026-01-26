@@ -6,6 +6,7 @@ import 'package:refundo/data/services/api_order_service.dart';
 import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/models/order_model.dart';
 import 'package:refundo/models/refund_model.dart';
+import 'package:refundo/models/refund_transaction_model.dart';
 
 class ApiRefundService {
   //用户获取退款记录
@@ -113,6 +114,50 @@ class ApiRefundService {
     } catch (e) {
       print('未知错误: $e');
       return {'success': false, 'data': [], 'message': 'unknown_error'};
+    }
+  }
+
+  // 获取退款请求的交易详情
+  Future<Map<String, dynamic>> getRefundTransaction(BuildContext context, int requestId) async {
+    try {
+      DioProvider dioProvider = Provider.of<DioProvider>(
+        context,
+        listen: false,
+      );
+
+      Response response = await dioProvider.dio.get('/api/refund-transactions/$requestId');
+
+      final Map<String, dynamic> responseData = response.data;
+      int code = responseData['code'] as int? ?? 0;
+      String? message = responseData['message'];
+
+      if (code == 1 && responseData['data'] != null) {
+        return {'success': true, 'data': responseData['data'], 'message': 'get_transaction_success'};
+      } else {
+        return {'success': false, 'data': null, 'message': message ?? 'get_transaction_failed'};
+      }
+    } on DioException catch (e) {
+      String message = 'network_error';
+      print("Dio错误详情:");
+      print("请求URL: ${e.requestOptions.uri}");
+      print("请求方法: ${e.requestOptions.method}");
+      print("响应数据: ${e.response?.data}");
+
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        message = 'network_timeout';
+      } else if (e.response != null) {
+        final statusCode = e.response!.statusCode;
+        if (statusCode == 404) {
+          message = "server_error_404";
+        } else if (statusCode == 500) {
+          message = 'server_error_500';
+        }
+      }
+      return {'success': false, 'data': null, 'message': message};
+    } catch (e) {
+      print('未知错误: $e');
+      return {'success': false, 'data': null, 'message': 'unknown_error'};
     }
   }
 }

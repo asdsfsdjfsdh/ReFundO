@@ -877,4 +877,61 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get faq_contact_support_hint => '如果您需要更多帮助，请联系我们';
+
+  @override
+  String get status_pending => '待处理';
+
+  @override
+  String get status_approved => '已批准';
+
+  @override
+  String get status_rejected => '已拒绝';
+
+  @override
+  String get status_processing => '处理中';
+
+  @override
+  String get status_completed => '已完成';
+
+  @override
+  String get status_failed => '失败';
+
+  @override
+  String get status_unknown => '未知状态';
+
+  @override
+  String get transaction_pending => '待处理';
+
+  @override
+  String get transaction_success => '成功';
+
+  @override
+  String get transaction_failed => '失败';
+
+  @override
+  String get transaction_processing => '处理中';
+
+  @override
+  String get transaction_details => '交易详情';
+
+  @override
+  String get no_transaction_records => '暂无交易记录';
+
+  @override
+  String get change_avatar => '修改头像';
+
+  @override
+  String get take_photo => '拍照';
+
+  @override
+  String get choose_from_gallery => '从相册选择';
+
+  @override
+  String get discount_voucher => '优惠凭证 (可选)';
+
+  @override
+  String get tap_to_upload_voucher => '点击上传优惠凭证';
+
+  @override
+  String get voucherUrl => '凭证';
 }

@@ -129,10 +129,10 @@ class RefundProvider with ChangeNotifier {
   }
 
 // 退款
-  Future<Map<String, dynamic>> Refund(BuildContext context,int refundType,String refundAccount) async {
+  Future<Map<String, dynamic>> Refund(BuildContext context,int refundType,String refundAccount,String voucherUrl) async {
     try {
       if (_orders!.isNotEmpty) {
-        final result = await _orderService.Refund(context, _orders!,refundType,refundAccount);
+        final result = await _orderService.Refund(context, _orders!,refundType,refundAccount,voucherUrl);
         if (result['success'] == true) {
           Provider.of<OrderProvider>(context,listen: false).getOrders(context);
           this.getRefunds(context);

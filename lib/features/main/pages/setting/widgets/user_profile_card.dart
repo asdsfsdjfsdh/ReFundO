@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:refundo/core/widgets/floating_login.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/features/main/pages/setting/widgets/user_update_newname.dart';
+import 'package:refundo/features/main/pages/setting/widgets/avatar_edit_dialog.dart';
 import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持
 
 class UserProfileCard extends StatefulWidget {
@@ -101,38 +102,67 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
   }
 
   Widget _buildPremiumAvatar(BuildContext context, UserProvider provider) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white.withOpacity(0.3),
-          width: 2,
+    return GestureDetector(
+      onTap: () => _showAvatarEditDialog(context),
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+        child: CircleAvatar(
+          radius: 36,
+          backgroundColor: Colors.white.withOpacity(0.1),
+          child: Stack(
+            children: [
+              Center(
+                child: provider.user!.avatarUrl != null &&
+                        provider.user!.avatarUrl!.isNotEmpty
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: provider.user!.avatarUrl!,
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              _buildAvatarPlaceholder(context, provider),
+                          errorWidget: (context, url, error) =>
+                              _buildAvatarPlaceholder(context, provider),
+                        ),
+                      )
+                    : _buildAvatarPlaceholder(context, provider),
+              ),
+              // 编辑图标
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 16,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: CircleAvatar(
-        radius: 36,
-        backgroundColor: Colors.white.withOpacity(0.1),
-        child: provider.user!.avatarUrl != null && provider.user!.avatarUrl!.isNotEmpty
-            ? ClipOval(
-          child: CachedNetworkImage(
-            imageUrl: provider.user!.avatarUrl!,
-            width: 70,
-            height: 70,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => _buildAvatarPlaceholder(context, provider),
-            errorWidget: (context, url, error) => _buildAvatarPlaceholder(context, provider),
-          ),
-        )
-            : _buildAvatarPlaceholder(context, provider),
+        ),
       ),
     );
   }
@@ -470,5 +500,12 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
   void _handleEditEmail() {
     print('修改邮箱');
     // 这里可以添加邮箱修改逻辑
+  }
+
+  void _showAvatarEditDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const AvatarEditDialog(),
+    );
   }
 }
