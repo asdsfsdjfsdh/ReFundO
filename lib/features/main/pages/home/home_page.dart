@@ -22,6 +22,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late UserProvider _apiLoginc;
   late double _totalAmount = 0.0;
+  late double _processedAmount = 0.0;
+  late int _pendingApprovalCount = 0;
   bool _isRefunding = false;
   int _currentIndex = 0;
 
@@ -92,7 +94,6 @@ class _HomePageState extends State<HomePage> {
             context,
             listen: false,
           );
-          _totalAmount = userProvider.user?.AmountSum ?? 0.0;
 
           return Scaffold(
             appBar: _buildAppBar(context, userProvider),
@@ -175,19 +176,19 @@ class _HomePageState extends State<HomePage> {
                 } else {
                   // 计算总金额
                   final Decimal totalAmount = refundProvider.allAmount();
-                  final int checkState = await refundProvider.checkRefundConditions(context);
-                  if(checkState != 200){
-                    _handleRefundResult(checkState, l10n);
-                    return;
-                  }
+                  // final int checkState = await refundProvider.checkRefundConditions(context);
+                  // if(checkState != 200){
+                  //   _handleRefundResult(checkState, l10n);
+                  //   return;
+                  // }
                   // 显示退款确认悬浮窗
                   _showRefundConfirmationOverlay(
                     context: context,
                     totalAmount: totalAmount,
                     selectedCount: refundProvider.orders!.length,
-                    onConfirm: (refundType,refundAccount) async {
+                    onConfirm: (refundType,refundAccount,voucherUrl) async {
                       // 执行退款逻辑
-                      final int result = await refundProvider.Refund(context,refundType,refundAccount);
+                      final Map<String, dynamic> result = await refundProvider.Refund(context,refundType,refundAccount,voucherUrl);
                       _handleRefundResult(result, l10n);
                     },
                   );
@@ -212,7 +213,7 @@ class _HomePageState extends State<HomePage> {
     required BuildContext context,
     required Decimal totalAmount,
     required int selectedCount,
-    required Function(int,String) onConfirm,
+    required Function(int,String,String) onConfirm,
   }) {
     showModalBottomSheet(
       context: context,
@@ -228,29 +229,32 @@ class _HomePageState extends State<HomePage> {
   }
 
 // 处理退款结果
-  void _handleRefundResult(int result, AppLocalizations l10n) {
+  void _handleRefundResult(Map<String, dynamic> result, AppLocalizations l10n) {
     String message;
     bool shouldResetState = false;
 
-    switch (result) {
-      case 1:
-        message = l10n.refund_success_waiting_approval;
-        shouldResetState = true;
-        break;
-      case 0:
-        message = l10n.unknown_error;
-        break;
-      case -1:
-        message = l10n.server_error;
-        break;
-      case 201:
-        message = l10n.order_less_than_5_months;
-        break;
-      case 202:
-        message = l10n.total_amount_less_than_5000;
-        break;
-      default:
-        message = l10n.error;
+    if (result['success']) {
+      // 成功
+      String messageKey = result['messageKey'] ?? 'create_refund_success';
+      message = l10n.refund_success_waiting_approval;
+      shouldResetState = true;
+    } else {
+      // 失败 - 使用错误消息
+      String errorMsg = result['message'] ?? 'unknown_error';
+      // 映射错误消息到本地化文本
+      switch (errorMsg) {
+        case 'no_orders_selected':
+          message = l10n.select_at_least_one_order;
+          break;
+        case 'network_error':
+        case 'network_timeout':
+        case 'server_error_404':
+        case 'server_error_500':
+          message = _getLocalizedErrorMessage(l10n, errorMsg);
+          break;
+        default:
+          message = errorMsg; // 后端返回的错误消息
+      }
     }
 
     if (shouldResetState) {
@@ -260,6 +264,23 @@ class _HomePageState extends State<HomePage> {
     }
 
     _showDialog(context, message);
+  }
+
+  // 获取本地化错误消息的辅助方法
+  String _getLocalizedErrorMessage(AppLocalizations l10n, String errorKey) {
+    switch (errorKey) {
+      case 'network_timeout':
+        return l10n.network_timeout;
+      case 'network_error':
+        return l10n.network_error;
+      case 'server_error_404':
+        return l10n.server_error_404;
+      case 'server_error_500':
+        return l10n.server_error_500;
+      case 'unknown_error':
+      default:
+        return l10n.unknown_error;
+    }
   }
 
 
@@ -310,6 +331,10 @@ class _HomePageState extends State<HomePage> {
     
     // 获取退款提供者以访问统计数据
     final refundProvider = Provider.of<RefundProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
+    // 使用新的用户模型字段
+    final double balance = userProvider.user?.balance ?? 0.0;
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -344,7 +369,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                '${_totalAmount.toStringAsFixed(2)} FCFA',
+                '${balance.toStringAsFixed(2)} FCFA',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -531,6 +556,41 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Text(l10n.confirm, style: const TextStyle(fontSize: 16)),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateTotals() {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    // 使用新的balance属性替代AmountSum
+    _totalAmount = provider.user?.balance ?? 0.0;
+    _processedAmount = 0.0; // 重新计算已处理金额
+    _pendingApprovalCount = 0; // 重新计算待审批数量
+    setState(() {});
+  }
+
+  void _showUserBalanceDialog() {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    // 使用新的balance属性
+    final double balance = provider.user?.balance ?? 0.0;
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.account_settings),
+          content: Text(
+            '${AppLocalizations.of(context)!.total_amount}: ${balance.toStringAsFixed(2)}',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.confirm),
             ),
           ],
         );

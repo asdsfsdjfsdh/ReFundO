@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,12 @@ class OrderProvider with ChangeNotifier {
       }
       if (token.isNotEmpty) {
         try {
-          _orders = await _orderService.getOrders(context, false);
+          final result = await _orderService.getOrders(context, false);
+          if (result['success'] == true) {
+            _orders = result['data'] as List<OrderModel>;
+          } else {
+            _orders = [];
+          }
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);
@@ -49,44 +55,47 @@ class OrderProvider with ChangeNotifier {
         print("获取订单失败: $e");
       }
       _orders = [];
-
-    }finally {
+    } finally {
       notifyListeners();
     }
   }
 
   // 添加订单信息
-  Future<String> insertOrder(ProductModel product, BuildContext context) async {
+  Future<Map<String, dynamic>> insertOrder(ProductModel product, BuildContext context) async {
     try {
       if (kDebugMode) {
         print(product);
       }
       //检查产品信息完整性
-      if (product.ProductId != '' &&
-          product.Hash != '' &&
-          product.RefundAmount != -1 &&
-          product.price != -1 &&
-          product.RefundPercent != -1) {
+      if (product.ProductId != 0 &&
+          product.Hash.isNotEmpty &&
+          product.Value != Decimal.zero &&
+          product.OriginalPrice != Decimal.zero &&
+          product.RefundRatio != Decimal.zero) {
         //插入订单
-        
-        Map<String, dynamic> result = await _orderService.insertOrder(product, context);
+
+        OrderModel result = await _orderService.insertOrder(product, context);
         if (kDebugMode) {
           print(result);
         }
-        String message = result['message'];
-        OrderModel? order = result['result'];
-        if(order != null){
-          _orders!.add(result['result']);
-          Provider.of<UserProvider>(context, listen: false).Info(context);
-          notifyListeners();
+        final orderResult = await _orderService.getOrders(context, false);
+        if (orderResult['success'] == true) {
+          _orders = orderResult['data'] as List<OrderModel>;
         }
-        return message;
+
+        if (result.errorMessage.isNotEmpty) {
+          return {'success': false, 'message': result.errorMessage};
+        } else {
+          return {'success': true, 'data': result, 'messageKey': result.successMessageKey};
+        }
       } else {
-        return "无效产品";
+        return {'success': false, 'message': 'invalid_product'};
       }
     } catch (e) {
       print("添加订单失败: $e");
-      return "添加订单失败: $e";
+      return {'success': false, 'message': 'unknown_error'};
+    }finally {
+      notifyListeners();
     }
   }
 

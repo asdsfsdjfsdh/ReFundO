@@ -9,13 +9,14 @@ class ApiEmailService{
   try{
     print('开始发送邮件');
     Response response = await Provider.of<DioProvider>(context, listen: false).dio.get(
-      '/api/email/findback', 
+      '/api/user/forget', 
       queryParameters: {
       'email': email
     });
     print('邮件发送成功');
-    final statusCode = response.statusCode;
-    return statusCode;
+    final Code = response.data['code'];
+    print(Code);
+    return Code;
   } on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
@@ -111,7 +112,7 @@ class ApiEmailService{
   try{
     
     Response response = await Provider.of<DioProvider>(context, listen: false).dio.get(
-      '/api/email/checkCode', 
+      '/api/user/checkCode', 
       queryParameters: {
       'email': email,
       'code': code

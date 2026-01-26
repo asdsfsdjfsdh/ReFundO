@@ -44,14 +44,14 @@ class _OrderWidgetState extends State<OrderWidget> {
 
   void _initializeSelectionState() {
     for (final order in widget.models) {
-      _selectionState[order.orderid] = false;
+      _selectionState[order.scanId] = false;
     }
   }
 
   void _updateSelectionState() {
     final newState = <int, bool>{};
     for (final order in widget.models) {
-      newState[order.orderid] = _selectionState[order.orderid] ?? false;
+      newState[order.scanId] = _selectionState[order.scanId] ?? false;
     }
     setState(() {
       _selectionState.clear();
@@ -68,7 +68,7 @@ class _OrderWidgetState extends State<OrderWidget> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (final order in widget.models) {
-        refundProvider.removeOrder(order.orderid);
+        refundProvider.removeOrder(order.scanId);
       }
     });
   }
@@ -92,23 +92,23 @@ class _OrderWidgetState extends State<OrderWidget> {
       }
     } else {
       for (final order in widget.models) {
-        refundProvider.removeOrder(order.orderid);
+        refundProvider.removeOrder(order.scanId);
       }
     }
   }
 
   void _toggleOrderSelection(OrderModel order) {
     final refundProvider = Provider.of<RefundProvider>(context, listen: false);
-    final isCurrentlySelected = _selectionState[order.orderid] ?? false;
+    final isCurrentlySelected = _selectionState[order.scanId] ?? false;
 
     setState(() {
-      _selectionState[order.orderid] = !isCurrentlySelected;
+      _selectionState[order.scanId] = !isCurrentlySelected;
     });
 
     if (!isCurrentlySelected) {
       refundProvider.addOrder(order);
     } else {
-      refundProvider.removeOrder(order.orderid);
+      refundProvider.removeOrder(order.scanId);
     }
   }
 
@@ -237,7 +237,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         return _OrderListItem(
           order: order,
           isRefundingMode: widget.isrefunding,
-          isSelected: _selectionState[order.orderid] ?? false,
+          isSelected: _selectionState[order.scanId] ?? false,
           onSelectionChanged: () => _toggleOrderSelection(order),
         );
       },
@@ -410,7 +410,7 @@ class _OrderListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${l10n!.order_number}: ${order.orderNumber}',
+          '${l10n!.order_number}: ${order.scanNumber}', // 使用scanNumber作为订单号显示
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -421,7 +421,15 @@ class _OrderListItem extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '${l10n.time}: ${order.OrderTime}',
+          '${l10n!.time}: ${order.formattedScanTime}', // 使用现有的time字段
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Product ID: ${order.productId}', // 使用硬编码文本
           style: TextStyle(
             fontSize: 14,
             color: Colors.grey.shade600,
@@ -439,7 +447,7 @@ class _OrderListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          '${order.refundAmount.toStringAsFixed(2)} FCFA',
+          '${order.value.toStringAsFixed(2)} FCFA',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -447,13 +455,22 @@ class _OrderListItem extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          l10n!.refundable,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade500,
+        if (order.originalPrice != null) 
+          Text(
+            '${l10n!.refundable} ${order.originalPrice!.toStringAsFixed(2)} FCFA',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade500,
+            ),
           ),
-        ),
+        if (order.refundRatio != null)
+          Text(
+            'Refund Ratio: ${(order.refundRatio! * 100).toStringAsFixed(1)}%',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.orange.shade500,
+            ),
+          ),
       ],
     );
   }

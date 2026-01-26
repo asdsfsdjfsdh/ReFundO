@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
+import 'package:refundo/core/utils/showToast.dart';
 import 'package:refundo/core/utils/storage/setting_storage.dart';
 import 'package:refundo/core/utils/storage/user_storage.dart';
 import 'package:refundo/core/widgets/floating_register.dart';
@@ -31,8 +32,10 @@ class FloatingLogin {
       bool rememberMe,
       ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final UserModel user = await userProvider.login(username, password, context);
-    _errorMessage = user.errorMessage;
+    final l10n = AppLocalizations.of(context)!;
+
+    // 新模式：获取 Map<String, dynamic> 返回值
+    var result = await userProvider.login(username, password, context);
     SettingStorage.saveRememberAccount(rememberMe);
 
     if (rememberMe) {
@@ -45,8 +48,72 @@ class FloatingLogin {
       LogUtil.d("登录:", "不保存用户名和密码");
     }
 
-    if (_errorMessage == null) {
+    // 使用新的显示消息方式
+    if (result['success']) {
+      // 成功 - 显示绿色成功消息
+      String messageKey = result['messageKey'] ?? 'login_success';
+      String successMessage = _getLocalizedMessage(l10n, messageKey);
+      ShowToast.showSuccess(context, successMessage);
       hide();
+    } else {
+      // 失败 - 显示红色错误消息
+      String errorMsg = result['message'] ?? 'unknown_error';
+      String localizedError = _getLocalizedMessage(l10n, errorMsg);
+      ShowToast.showError(context, localizedError);
+    }
+  }
+
+  // 获取本地化消息的辅助方法
+  static String _getLocalizedMessage(AppLocalizations l10n, String key) {
+    switch (key) {
+      // 成功消息
+      case 'login_success':
+        return l10n.login_success;
+      case 'register_success':
+        return l10n.register_success;
+      case 'get_user_info_success':
+        return l10n.get_user_info_success;
+      case 'update_username_success':
+        return l10n.update_username_success;
+      case 'update_password_success':
+        return l10n.update_password_success;
+      case 'update_email_success':
+        return l10n.update_email_success;
+      case 'update_phone_success':
+        return l10n.update_phone_success;
+      case 'send_email_success':
+        return l10n.send_email_success;
+      case 'create_order_success':
+        return l10n.create_order_success;
+      case 'get_orders_success':
+        return l10n.get_orders_success;
+      case 'create_refund_success':
+        return l10n.create_refund_success;
+      case 'get_refunds_success':
+        return l10n.get_refunds_success;
+      case 'scan_product_success':
+        return l10n.scan_product_success;
+      case 'get_product_success':
+        return l10n.get_product_success;
+      // 网络错误消息
+      case 'network_timeout':
+        return l10n.network_timeout;
+      case 'network_error':
+        return l10n.network_error;
+      case 'server_error_404':
+        return l10n.server_error_404;
+      case 'server_error_500':
+        return l10n.server_error_500;
+      case 'unknown_error':
+        return l10n.unknown_error;
+      // 验证消息
+      case 'verification_success':
+        return l10n.verification_success;
+      case 'verification_code_sent_success':
+        return l10n.verification_code_sent_success;
+      // 默认返回 key 本身（如果未找到）
+      default:
+        return key;
     }
   }
 
@@ -97,14 +164,9 @@ class FloatingLogin {
                     return;
                   }
 
+                  setState(() => _isLoading = true);
                   try {
-                    setState(() => _isLoading = true);
                     await onLogin(context, username, password, _rememberMe);
-
-                    if (_errorMessage == null || _errorMessage == '') {
-                      hide();
-                      setState(() => _errorMessage = null);
-                    }
                   } finally {
                     setState(() => _isLoading = false);
                   }

@@ -36,16 +36,45 @@ class FloatingRegister {
   static Timer? _countdownTimer;
 
   // 注册逻辑
-  static Future<void> onRegister(
+  static Future<Map<String, dynamic>> onRegister(
     BuildContext context,
     String username,
     String userEmail,
     String password,
+    String verificationCode,
   ) async {
-    Provider.of<UserProvider>(
+    return await Provider.of<UserProvider>(
       context,
       listen: false,
-    ).register(username, userEmail, password, context);
+    ).register(username, userEmail, password, verificationCode, context);
+  }
+
+  // 获取本地化消息的辅助方法
+  static String _getLocalizedMessage(AppLocalizations? l10n, String key) {
+    switch (key) {
+      // 成功消息
+      case 'register_success':
+        return l10n!.register_success;
+      case 'send_email_success':
+        return l10n!.send_email_success;
+      // 网络错误消息
+      case 'network_timeout':
+        return l10n!.network_timeout;
+      case 'network_error':
+        return l10n!.network_error;
+      case 'server_error_404':
+        return l10n!.server_error_404;
+      case 'server_error_500':
+        return l10n!.server_error_500;
+      case 'unknown_error':
+        return l10n!.unknown_error;
+      // 验证消息
+      case 'verification_success':
+        return l10n!.verification_success;
+      // 默认返回 key 本身
+      default:
+        return key;
+    }
   }
 
   /// 获取验证码按钮点击事件
@@ -53,7 +82,7 @@ class FloatingRegister {
     StateSetter setState,
     BuildContext context,
   ) async {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     String mail = _emailController.text;
 
     // 邮箱验证
@@ -78,7 +107,7 @@ class FloatingRegister {
           context,
           listen: false,
         ).sendEmail(mail, context, 2);
-        if (message == 200) {
+        if (message == 1) {
           ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
         } else if (message == 411) {
           ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
@@ -236,17 +265,23 @@ class FloatingRegister {
                   });
 
                   try {
-                    await onRegister(context, username, email, password);
-                    final userProvider = Provider.of<UserProvider>(
-                      context,
-                      listen: false,
-                    );
-                    setState(() {
-                      _errorMessage = userProvider.errorMessage;
-                    });
-                    _isRegister = true;
+                    var result = await onRegister(context, username, email, password, verificationCode);
+
+                    if (result['success']) {
+                      // 注册成功 - 显示绿色成功消息并跳转到登录
+                      String messageKey = result['messageKey'] ?? 'register_success';
+                      String successMessage = _getLocalizedMessage(l10n, messageKey);
+                      ShowToast.showSuccess(context, successMessage);
+                      hide();
+                      FloatingLogin.show(context: context);
+                    } else {
+                      // 注册失败 - 显示红色错误消息
+                      String errorMsg = result['message'] ?? 'unknown_error';
+                      String localizedError = _getLocalizedMessage(l10n, errorMsg);
+                      ShowToast.showError(context, localizedError);
+                    }
                   } catch (e) {
-                    setState(() => _errorMessage = e.toString());
+                    ShowToast.showError(context, _getLocalizedMessage(l10n, 'unknown_error'));
                   } finally {
                     setState(() {
                       _isLoading = false;

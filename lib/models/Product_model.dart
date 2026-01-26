@@ -1,39 +1,45 @@
 import 'package:decimal/decimal.dart';
 
 class ProductModel{
-  final String ProductId;
-  final Decimal price;
-  final Decimal RefundAmount;
+  final int ProductId;
+  final Decimal Value;
+  final Decimal OriginalPrice;
   final String Hash;
-  final double RefundPercent;
+  final Decimal RefundRatio;
+  final String errorMessage;
+  final String successMessageKey;
 
   ProductModel({
     required this.ProductId,
-    required this.price,
-    required this.RefundAmount,
+    required this.Value,
+    required this.OriginalPrice,
     required this.Hash,
-    required this.RefundPercent,
+    required this.RefundRatio,
+    this.errorMessage = '',
+    this.successMessageKey = '',
   });
 
   Map<String, dynamic> toJson() => {
     'ProductId': ProductId,
-    'price': price,
-    'RefundAmount': RefundAmount,
+    'Value': Value,
+    'RefundRatio': RefundRatio,
     'Hash': Hash,
-    'RefundPercent': RefundPercent,
+    'OriginalPrice': OriginalPrice,
   };
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-    ProductId: json['ProductId'] as String ? ?? '',
-    price: Decimal.parse(json['price']?.toString() ?? '0') ,
-    RefundAmount: Decimal.parse(json['RefundAmount']?.toString() ?? '0'),
+  factory ProductModel.fromJson(Map<String, dynamic> json, {String errorMessage = '', String successMessageKey = ''}) => ProductModel(
+    ProductId: json['ProductId'] as int ? ?? 0,
+    OriginalPrice: Decimal.parse(json['price']?.toString() ?? '0') ,
+    Value: Decimal.parse(json['RefundAmount']?.toString() ?? '0'),
     Hash: json['Hash'] as String ? ?? '',
-    RefundPercent: json['RefundPercent'] as double ? ?? -1.0,
+    RefundRatio: Decimal.parse(json['RefundPercent']?.toString() ?? '0'),
+    errorMessage: errorMessage,
+    successMessageKey: successMessageKey,
   );
 
  @override
   String toString() {
-    return 'ProductModel{ProductId: $ProductId, price: $price, RefundAmount: $RefundAmount, Hash: $Hash, RefundPercent: $RefundPercent}';
+    return 'ProductModel{ProductId: $ProductId, Value: $Value, OriginalPrice: $OriginalPrice, Hash: $Hash, RefundRatio: $RefundRatio}';
   }
 
 }

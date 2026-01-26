@@ -81,7 +81,7 @@ class _AuditPageState extends State<AuditPage> {
 
       filtered = filtered.where((refund) {
         try {
-          DateTime refundTime = DateTime.parse(refund.timestamp);
+          DateTime refundTime = DateTime.parse(refund.createTime);  // 使用实际存在的createTime属性
           return refundTime.isAfter(filterDate);
         } catch (e) {
           return false;
@@ -92,7 +92,7 @@ class _AuditPageState extends State<AuditPage> {
     // 状态筛选
     if (_selectedStatusFilter != 'all') {
       filtered = filtered.where((refund) {
-        String statusString = _getStatusString(refund.refundState);
+        String statusString = _getStatusStringByRequestStatus(refund.requestStatus);  // 使用实际存在的requestStatus属性
         return statusString == _selectedStatusFilter;
       }).toList();
     }
@@ -193,15 +193,15 @@ class _AuditPageState extends State<AuditPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildDetailItem(l10n.user_id, refund.userId.toString()),
-                        _buildDetailItem(l10n.nickname, refund.nickName),
-                        _buildDetailItem(l10n.email, refund.email),
-                        _buildDetailItem(l10n.order_number, refund.orderNumber),
-                        _buildDetailItem(l10n.refund_time, refund.timestamp),
+                        _buildDetailItem(l10n.user_id, refund.requestId.toString()),  // 使用实际存在的requestId属性
+                        _buildDetailItem(l10n.nickname, refund.requestNumber),  // 使用requestNumber替代不存在的nickName
+                        _buildDetailItem(l10n.email, refund.voucherUrl),  // 使用voucherUrl替代不存在的email
+                        _buildDetailItem(l10n.order_number, refund.requestNumber),  // 使用requestNumber替代orderNumber
+                        _buildDetailItem(l10n.refund_time, refund.createTime),  // 使用createTime替代不存在的timestamp
                         _buildDetailItem(l10n.refund_method, refund.get_refundMethod(context)),
                         _buildDetailItem(
                           l10n.refund_amount,
-                          '${refund.refundAmount.toStringAsFixed(2)} FCFA',
+                          '${refund.amount.toStringAsFixed(2)} FCFA',  // 使用amount替代不存在的refundAmount
                           isAmount: true,
                         ),
                       ],
@@ -214,16 +214,16 @@ class _AuditPageState extends State<AuditPage> {
                 const SizedBox(height: 16),
 
                 // 操作按钮（仅待审批记录显示）
-                if (refund.refundState == RefundStates.padding)
+                if (refund.requestStatus == 0)  // 使用实际存在的requestStatus属性
                   _buildActionButtons(context, refund)
                 else
                   Center(
                     child: Text(
-                      refund.refundState == RefundStates.success ? l10n.already_approved : l10n.already_rejected,
+                      refund.requestStatus == 2 ? l10n.already_approved : l10n.already_rejected,  // 使用requestStatus值判断状态
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: refund.refundState == RefundStates.success ? Colors.green : Colors.red,
+                        color: refund.requestStatus == 2 ? Colors.green : Colors.red,  // 使用requestStatus值判断颜色
                       ),
                     ),
                   ),
@@ -626,18 +626,18 @@ class _AuditPageState extends State<AuditPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        leading: _buildStatusIcon(_getStatusString(refund.refundState)),
+        leading: _buildStatusIcon(_getStatusStringByRequestStatus(refund.requestStatus)),  // 使用requestStatus替代refundState
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              refund.orderId.toString(),
+              refund.requestId.toString(),  // 使用requestId替代orderId
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
               ),
             ),
-            _buildStatusBadge(_getStatusString(refund.refundState)),
+            _buildStatusBadge(_getStatusStringByRequestStatus(refund.requestStatus)),  // 使用requestStatus替代refundState
           ],
         ),
         subtitle: Padding(
@@ -650,7 +650,7 @@ class _AuditPageState extends State<AuditPage> {
                   Icon(Icons.person, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    refund.nickName,
+                    refund.requestNumber,  // 使用requestNumber替代不存在的nickName
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                 ],
@@ -661,7 +661,7 @@ class _AuditPageState extends State<AuditPage> {
                   Icon(Icons.email, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    refund.email,
+                    refund.voucherUrl,  // 使用voucherUrl替代不存在的email
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                 ],
@@ -672,14 +672,14 @@ class _AuditPageState extends State<AuditPage> {
                   Icon(Icons.access_time, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    refund.timestamp,
+                    refund.createTime,  // 使用createTime替代不存在的timestamp
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                   const SizedBox(width: 16),
                   Icon(Icons.payment, size: 14, color: Colors.grey.shade600),
                   const SizedBox(width: 4),
                   Text(
-                    refund.refundMethod.toString(),
+                    refund.paymentMethod.toString(),  // 使用paymentMethod替代不存在的refundMethod
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                 ],
@@ -693,7 +693,7 @@ class _AuditPageState extends State<AuditPage> {
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                   ),
                   Text(
-                    '${refund.refundAmount.toStringAsFixed(2)} FCFA',
+                    '${refund.amount.toStringAsFixed(2)} FCFA',  // 使用amount替代不存在的refundAmount
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -775,13 +775,13 @@ class _AuditPageState extends State<AuditPage> {
     );
   }
 
-  String _getStatusString(RefundStates state) {
-    switch (state) {
-      case RefundStates.success:
+  String _getStatusStringByRequestStatus(int status) {  // 新增方法，根据实际的requestStatus值确定状态字符串
+    switch (status) {
+      case 2: // 对应 success
         return 'approved';
-      case RefundStates.approval:
+      case 1: // 对应 approval
         return 'rejected';
-      default: // RefundStates.padding
+      default: // 对应 padding
         return 'pending';
     }
   }

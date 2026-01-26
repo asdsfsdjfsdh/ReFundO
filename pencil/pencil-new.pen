@@ -1,0 +1,926 @@
+{
+  "version": "2.6",
+  "children": [
+    {
+      "type": "frame",
+      "id": "bi8Au",
+      "x": 0,
+      "y": 0,
+      "name": "Frame",
+      "clip": true,
+      "width": 800,
+      "height": 600,
+      "fill": "#FFFFFF",
+      "layout": "none"
+    },
+    {
+      "type": "frame",
+      "id": "BhksT",
+      "x": 0,
+      "y": 0,
+      "name": "page",
+      "width": 390,
+      "fill": "#F5F7FA",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "oam6U",
+          "name": "header",
+          "width": "fill_container",
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "#E5E7EB"
+          },
+          "layout": "vertical",
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "iMZVL",
+              "name": "titleText",
+              "fill": "#111827",
+              "content": "FAQ",
+              "fontFamily": "Inter",
+              "fontSize": 28,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "egJou",
+              "name": "subtitleText",
+              "fill": "#6B7280",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Frequently Asked Questions",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QCfqY",
+          "name": "searchSection",
+          "width": "fill_container",
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "#E5E7EB"
+          },
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "giEiZ",
+              "name": "searchBar",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "#F9FAFB",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "gap": 12,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "hJvl2",
+                  "name": "searchIcon",
+                  "width": 20,
+                  "height": 20,
+                  "iconFontName": "search",
+                  "iconFontFamily": "lucide",
+                  "fill": "#9CA3AF"
+                },
+                {
+                  "type": "text",
+                  "id": "SuuED",
+                  "name": "searchPlaceholder",
+                  "fill": "#9CA3AF",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Search questions...",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "MosvB",
+          "name": "categorySection",
+          "width": "fill_container",
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "#E5E7EB"
+          },
+          "gap": 8,
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ljHWh",
+              "name": "catAll",
+              "height": 36,
+              "fill": "#3B82F6",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#3B82F6"
+              },
+              "gap": 8,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "A6JhE",
+                  "name": "catAllText",
+                  "fill": "#FFFFFF",
+                  "content": "All",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HP8Ge",
+              "name": "catOrders",
+              "height": 36,
+              "fill": "#F3F4F6",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "gap": 8,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "C9Zg9",
+                  "name": "catOrdersText",
+                  "fill": "#374151",
+                  "content": "Orders",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ARnyr",
+              "name": "catRefund",
+              "height": 36,
+              "fill": "#F3F4F6",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "gap": 8,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vL0co",
+                  "name": "catRefundText",
+                  "fill": "#374151",
+                  "content": "Refunds",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jo8P9",
+              "name": "catAccount",
+              "height": 36,
+              "fill": "#F3F4F6",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "gap": 8,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "B8bvd",
+                  "name": "catAccountText",
+                  "fill": "#374151",
+                  "content": "Account",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "0dBHG",
+          "name": "faqList",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "qRUDi",
+              "name": "faqPinned",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "H1UMN",
+                  "name": "pinnedHeader",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "BChQ4",
+                      "name": "pinnedIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "pin",
+                      "iconFontFamily": "lucide",
+                      "fill": "#EF4444"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U08ta",
+                      "name": "pinnedBadge",
+                      "height": 20,
+                      "fill": "#FEF2F2",
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FECACA"
+                      },
+                      "gap": 4,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "03kRz",
+                          "name": "pinnedBadgeText",
+                          "fill": "#DC2626",
+                          "content": "Pinned",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MXzVG",
+                      "name": "pinnedSpacer",
+                      "width": 4,
+                      "height": 4
+                    },
+                    {
+                      "type": "text",
+                      "id": "Tkv8g",
+                      "name": "pinnedTitle",
+                      "fill": "#111827",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "How to request a refund?",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "ZiTqg",
+                      "name": "pinnedArrow",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "chevron-up",
+                      "iconFontFamily": "lucide",
+                      "fill": "#6B7280"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iSbAY",
+                  "name": "pinnedDivider",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "#E5E7EB"
+                },
+                {
+                  "type": "frame",
+                  "id": "uMVTT",
+                  "name": "pinnedAnswer",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    16,
+                    16,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "whVlA",
+                      "name": "pinnedAnswerText",
+                      "fill": "#4B5563",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "To request a refund, go to your Orders page and select the order you want to refund.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CciiO",
+                  "name": "pinnedMeta",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "oUWBm",
+                      "name": "pinnedViews",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "EyeRH",
+                          "name": "viewsIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "eye",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9CA3AF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GsuQM",
+                          "name": "viewsText",
+                          "fill": "#9CA3AF",
+                          "content": "1,234 views",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HOllW",
+              "name": "faq1",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vvFmd",
+                  "name": "faq1Header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "5lL31",
+                      "name": "faq1Title",
+                      "fill": "#111827",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "What is the refund processing time?",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "ISo4V",
+                      "name": "faq1Arrow",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "chevron-down",
+                      "iconFontFamily": "lucide",
+                      "fill": "#6B7280"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YjcQE",
+                  "name": "faq1Meta",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    0,
+                    16,
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "56mux",
+                      "name": "faq1Views",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "g3W9a",
+                          "name": "faq1ViewsIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "eye",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9CA3AF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NLmjo",
+                          "name": "faq1ViewsText",
+                          "fill": "#9CA3AF",
+                          "content": "856 views",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tB3P7",
+                      "name": "faq1Category",
+                      "height": 20,
+                      "fill": "#EFF6FF",
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#BFDBFE"
+                      },
+                      "gap": 4,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "7AgD9",
+                          "name": "faq1CategoryText",
+                          "fill": "#1D4ED8",
+                          "content": "Refunds",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "q9xXJ",
+              "name": "faq2",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TXR3x",
+                  "name": "faq2Header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "N4x0J",
+                      "name": "faq2Title",
+                      "fill": "#111827",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "How to track my order status?",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "AZgVN",
+                      "name": "faq2Arrow",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "chevron-down",
+                      "iconFontFamily": "lucide",
+                      "fill": "#6B7280"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LvxnW",
+                  "name": "faq2Meta",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    0,
+                    16,
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eZ45A",
+                      "name": "faq2Views",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "kzgCY",
+                          "name": "faq2ViewsIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "eye",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9CA3AF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Paahu",
+                          "name": "faq2ViewsText",
+                          "fill": "#9CA3AF",
+                          "content": "642 views",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hSRvz",
+                      "name": "faq2Category",
+                      "height": 20,
+                      "fill": "#F0FDF4",
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#BBF7D0"
+                      },
+                      "gap": 4,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "86oY1",
+                          "name": "faq2CategoryText",
+                          "fill": "#15803D",
+                          "content": "Orders",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wA7a4",
+              "name": "faq3",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": {
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "tXJXS",
+                  "name": "faq3Header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SYk1v",
+                      "name": "faq3Title",
+                      "fill": "#111827",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "How to update my account information?",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "9aNG4",
+                      "name": "faq3Arrow",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "chevron-down",
+                      "iconFontFamily": "lucide",
+                      "fill": "#6B7280"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uzuGp",
+                  "name": "faq3Meta",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    0,
+                    16,
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Zzz5b",
+                      "name": "faq3Views",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "jjD3k",
+                          "name": "faq3ViewsIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "eye",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9CA3AF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "vNj2s",
+                          "name": "faq3ViewsText",
+                          "fill": "#9CA3AF",
+                          "content": "523 views",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "m71ii",
+                      "name": "faq3Category",
+                      "height": 20,
+                      "fill": "#FEF3C7",
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FDE68A"
+                      },
+                      "gap": 4,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "SHWdq",
+                          "name": "faq3CategoryText",
+                          "fill": "#B45309",
+                          "content": "Account",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d0OCS",
+              "name": "emptyState",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                40,
+                20
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "CLI6t",
+                  "name": "emptyIcon",
+                  "width": 48,
+                  "height": 48,
+                  "iconFontName": "help-circle",
+                  "iconFontFamily": "lucide",
+                  "fill": "#D1D5DB"
+                },
+                {
+                  "type": "text",
+                  "id": "FpEzq",
+                  "name": "emptyTitle",
+                  "fill": "#6B7280",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "No more questions",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "7XKa6",
+                  "name": "emptySubtitle",
+                  "fill": "#9CA3AF",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Contact us if you need more help",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "8kWv1",
+                  "name": "contactBtn",
+                  "height": 40,
+                  "fill": "#3B82F6",
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#3B82F6"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    20
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D93NO",
+                      "name": "contactBtnText",
+                      "fill": "#FFFFFF",
+                      "content": "Contact Support",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "nOnly",
+                      "name": "contactBtnIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "message-circle",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

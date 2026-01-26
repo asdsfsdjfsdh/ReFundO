@@ -1,13 +1,17 @@
+import 'dart:io';
 import 'package:decimal/decimal.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 
 class RefundConfirmationDialog extends StatefulWidget {
   final Decimal totalAmount;
   final int selectedCount;
-  // final VoidCallback onConfirm;
-  final Function(int,String) onConfirm;
+  final Function(int,String,String) onConfirm;
   final VoidCallback onCancel;
 
   const RefundConfirmationDialog({
@@ -26,6 +30,10 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
   PaymentMethod _selectedMethod = PaymentMethod.phone;
   final TextEditingController _accountController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  File? _discountImage;
+  String? _discountUrl;
+  bool _isUploading = false;
 
   @override
   void initState() {
@@ -231,6 +239,9 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
+          // 优惠凭证上传
+          _buildDiscountVoucherSection(context, l10n),
+          const SizedBox(height: 12),
           TextFormField(
             controller: _accountController,
             decoration: InputDecoration(
@@ -254,6 +265,101 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildDiscountVoucherSection(BuildContext context, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.discount_voucher,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: _isUploading ? null : _pickDiscountImage,
+          child: Container(
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: _discountImage != null
+                ? Stack(
+                    children: [
+                      Positioned.fill(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(
+                            _discountImage!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: GestureDetector(
+                          onTap: () => setState(() {
+                            _discountImage = null;
+                            _discountUrl = null;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (_isUploading)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black54,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_photo_alternate,
+                          size: 32,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.tap_to_upload_voucher,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -283,7 +389,7 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
     switch (_selectedMethod) {
       case PaymentMethod.phone:
         return (value) {
-          if (value == null || value.isEmpty || _accountController != _phoneController) return l10n.enter_phone_number;
+          if (value == null || value.isEmpty || _accountController.text != _phoneController.text) return l10n.enter_phone_number;
           if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) return l10n.invalid_phone_format;
           return null;
         };
@@ -362,8 +468,80 @@ class _RefundConfirmationDialogState extends State<RefundConfirmationDialog> {
     final refundType = _getRefundType();
     // 关闭对话框
     Navigator.of(context).pop();
-    // 执行确认回调
-    widget.onConfirm(refundType, _accountController.text);
+    // 执行确认回调，传递 voucherUrl
+    widget.onConfirm(refundType, _accountController.text, _discountUrl ?? '');
+  }
+
+  Future<void> _pickDiscountImage() async {
+    // 请求相册权限
+    final status = await Permission.photos.request();
+    if (!status.isGranted) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('需要相册权限才能选择图片')),
+        );
+      }
+      return;
+    }
+
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        setState(() => _discountImage = File(image.path));
+        // 上传图片
+        await _uploadDiscountImage(File(image.path));
+      }
+    } catch (e) {
+      debugPrint('选择图片失败: $e');
+    }
+  }
+
+  Future<void> _uploadDiscountImage(File image) async {
+    setState(() => _isUploading = true);
+
+    try {
+      final dioProvider = Provider.of<DioProvider>(context, listen: false);
+
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          image.path,
+          filename: image.path.split('/').last,
+        ),
+      });
+
+      final response = await dioProvider.dio.post(
+        '/api/common/upload',
+        data: formData,
+      );
+
+      if (response.data['code'] == 1) {
+        setState(() {
+          _discountUrl = response.data['data'];
+          _isUploading = false;
+        });
+      } else {
+        setState(() => _isUploading = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('图片上传失败')),
+          );
+        }
+      }
+    } catch (e) {
+      setState(() => _isUploading = false);
+      debugPrint('上传图片失败: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('上传失败: $e')),
+        );
+      }
+    }
   }
 }
 

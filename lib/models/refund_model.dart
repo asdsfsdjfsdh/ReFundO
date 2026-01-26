@@ -2,125 +2,89 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 
-class RefundModel{
-
+class RefundModel {
   // 提现申请编号
-  final int recordId;
-
-  // 订单号
-  final String orderNumber;
-
-  // 订单编号
-  final int orderId;
-
-  // 商品ID
-  final String productId;
-
-  // 退款方式
-  final int refundMethod;
-
-  // 退款账号
-  final String account;
-
-  // 手机号码
-  final String phone;
-
-  // 用户ID
-  final int userId;
-
-  // 用户名
-  final String nickName;
-
-  // 用户邮箱
-  final String email;
-
-  // 返还金额
-  final Decimal refundAmount;
-
-  // 提现时间
-  final String timestamp;
-
-  // 提现审批状态
-  RefundStates refundState;
+  final int requestId;
+  final String requestNumber;
+  final int requestStatus;
+  final String rejectreason;
+  final Decimal amount;
+  final String voucherUrl;
+  final String scanIds;
+  final String paymentNumber;
+  final int paymentMethod;
+  final String createTime;
+  final String updateTime;
+  final String errorMessage;
+  final String successMessageKey;
 
   // 初始化方法
   RefundModel({
-    required this.recordId,
-    required this.orderId,
-    required this.orderNumber,
-    required this.productId,
-    required this.refundMethod,
-    required this.account,
-    required this.phone,
-    required this.userId,
-    required this.nickName,
-    required this.email,
-    required this.refundAmount,
-    required this.timestamp,
-    required this.refundState
+    required this.requestId,
+    required this.scanIds,
+    required this.requestNumber,
+    required this.paymentNumber,
+    required this.requestStatus,
+    required this.rejectreason,
+    required this.paymentMethod,
+    required this.voucherUrl,
+    required this.createTime,
+    required this.updateTime,
+    required this.amount,
+    this.errorMessage = '',
+    this.successMessageKey = '',
   });
 
-  String get_refundMethod(BuildContext context){
-    if (refundMethod == 1){
+  String get_refundMethod(BuildContext context) {
+    if (paymentMethod == 1) {
       return AppLocalizations.of(context)!.phone_payment;
-    }else if(refundMethod == 2){
+    } else if (paymentMethod == 2) {
       return AppLocalizations.of(context)!.sanke_money;
-    }else{
+    } else {
       return AppLocalizations.of(context)!.wave_payment;
     }
   }
 
   // 配置转化Json方法
-  Map<String, dynamic> toJson() =>{
-    'recordId': recordId,
-    'orderId': orderId,
-    'orderNumber': orderNumber,
-    'refundMethod': refundMethod,
-    'account': account,
-    'phone': phone,
-    'userId': userId,
-    'nickName': nickName,
-    'email': email,
-    'refundAmount': refundAmount.toString(),
-    'timestamp': timestamp,
-    'refundState': refundState.index
+  Map<String, dynamic> toJson() => {
+    "requestId": requestId,
+    "voucherUrl": voucherUrl,
+    "scanIds": scanIds,
+    "paymentNumber": paymentNumber,
+    "paymentMethod": paymentMethod,
+    "createTime": createTime,
+    "updateTime": updateTime,
+    "requestNumber": requestNumber,
+    "requestStatus": requestStatus,
+    "rejectReason": rejectreason,
+    "amount": amount,
   };
 
   // 从Json的转化方法
-  factory RefundModel.fromJson(Map<String,dynamic> json){
-    RefundStates state;
-    if(json['refund']['state'] != null)
-        state = json['refund']['state'] ? RefundStates.success : RefundStates.approval;
-    else
-        state = RefundStates.padding;
+  factory RefundModel.fromJson(Map<String, dynamic> json, {String errorMessage = '', String successMessageKey = ''}) {
 
     return RefundModel(
-        recordId: json['refund']['refundId'] as int ? ?? 0 ,
-        orderId: json['refund']['orderId'] as int ? ?? 0,
-        orderNumber: json['refund']['orderNumber'] as String ? ?? '',
-        refundMethod: json['refund']['method'] as int ? ?? 0,
-        account: json['refund']['account'] as String ? ?? '',
-        phone: json['phoneNumber'] as String ? ?? '',
-        userId: json['refund']['uid'] as int ? ?? 0,
-        nickName: json['userName'] as String ? ?? '',
-        email: json['email'] as String ? ?? '',
-        refundAmount: Decimal.parse(json['amount']?.toString() ?? '0' ),
-        timestamp: json['refund']['time'] as String ? ?? '',
-        productId: json['refund']['productId'] as String ? ?? '',
-        refundState: state
+      requestId: json['requestId'] as int? ?? 0,
+      scanIds: json['scanIds'] as String? ?? '',
+      requestNumber: json['requestNumber'] as String? ?? '',
+      paymentMethod: json['paymentMethod'] as int? ?? 0,
+      paymentNumber: json['paymentNumber'] as String? ?? '',
+      createTime: json['createTime'] as String? ?? '',
+      amount: Decimal.parse(json['amount']?.toString() ?? '0'),
+      rejectreason: json['rejectReason'] as String? ?? '',
+      updateTime: json['updateTime'] as String? ?? '',
+      requestStatus: json['requestStatus'] as int? ?? 0,
+      voucherUrl: json['voucherUrl'] as String? ?? '',
+      errorMessage: errorMessage,
+      successMessageKey: successMessageKey,
     );
   }
 
   // 重写输出方法
   @override
   String toString() {
-    return "返还金额：$refundAmount，提现时间：$timestamp，审批状态:$refundState";
+    return "申请编号：$requestId，申请编号：$requestNumber，金额：$amount，申请时间：$createTime，状态：$requestStatus，拒绝理由：$rejectreason";
   }
-
 }
 
-enum RefundStates{
-  approval,
-  success,
-  padding
-}
+enum RefundStates { approval, success, padding }

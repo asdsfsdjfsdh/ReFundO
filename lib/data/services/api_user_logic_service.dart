@@ -13,22 +13,25 @@ class ApiUserLogicService {
       DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
       Response response = await dioProvider.dio.post(
         "/api/user/login",
-        data: {"name": username, "password": password, "email": username},
+        data: {"userName": username, "password": password},
       );
       final Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] == null) {
-        return  UserModel.fromJson({}, errorMessage: message);
-      } else {
-        await dioProvider.saveToken(responseData['result']['token']);
 
-      UserModel User = UserModel.fromJson(responseData['result']['user']);
-      return User;
-// ---------------------------------------------------------
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理 - 传递 successMessageKey
+        UserModel user = UserModel.fromJson(responseData, successMessageKey: 'login_success');
+        if (user.token != null) {
+          await dioProvider.saveToken(user.token!);
+        }
+        return user;
+      } else {
+        // 如果不是新格式，返回错误信息
+        String message = responseData['message'] ?? 'unknown_error';
+        return UserModel.fromJson({}, errorMessage: message);
       }
     } on DioException catch (e) {
       String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -36,33 +39,32 @@ class ApiUserLogicService {
       print("请求体: ${e.requestOptions.data}");
       print("响应状态码: ${e.response?.statusCode}");
       print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
+      // 处理Dio相关的异常 - 使用本地化键
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         // 请求超时
-        message = '请求超时: + ${e.message}';
+        message = 'network_timeout';
       } else if (e.type == DioExceptionType.connectionTimeout) {
         // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_error';
       } else if (e.response != null) {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
+          message = 'server_error_500';
         } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'unknown_error';
         }
       } else {
-        message = '网络请求异常: ${e.message}';
+        message = 'network_error';
       }
       return UserModel.fromJson({}, errorMessage: message);
     } catch (e) {
       // 处理其他异常
       print('未知错误: $e');
-      String message = '未知错误: $e';
-      return UserModel.fromJson({}, errorMessage: message);
+      return UserModel.fromJson({}, errorMessage: 'unknown_error');
     }
     // return UserModel(username: username, userAccount: username, AmountSum: 30,RefundedAmount:100,Email:'',CardNumber:'');
   }
@@ -71,19 +73,21 @@ class ApiUserLogicService {
   Future<UserModel> getUserInfo(BuildContext context) async {
     try {
       DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
-      Response response = await dioProvider.dio.post(
-        "/api/user/info",
+      Response response = await dioProvider.dio.get(
+        "/api/user",
       );
       Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] != null) {
-        return UserModel.fromJson(responseData['result']);
+
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理 - 传递 successMessageKey
+        return UserModel.fromJson(responseData, successMessageKey: 'get_user_info_success');
       } else {
+        String message = responseData['message'] ?? 'unknown_error';
         return UserModel.fromJson({}, errorMessage: message);
       }
     }  on DioException catch (e) {
       String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -91,33 +95,32 @@ class ApiUserLogicService {
       print("请求体: ${e.requestOptions.data}");
       print("响应状态码: ${e.response?.statusCode}");
       print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
+      // 处理Dio相关的异常 - 使用本地化键
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         // 请求超时
-        message = '请求超时: + ${e.message}';
+        message = 'network_timeout';
       } else if (e.type == DioExceptionType.connectionTimeout) {
         // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_error';
       } else if (e.response != null) {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
+          message = 'server_error_500';
         } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'unknown_error';
         }
       } else {
-        message = '网络请求异常: ${e.message}';
+        message = 'network_error';
       }
       return UserModel.fromJson({}, errorMessage: message);
     } catch (e) {
       // 处理其他异常
       print('未知错误: $e');
-      String message = '未知错误: $e';
-      return UserModel.fromJson({}, errorMessage: message);
+      return UserModel.fromJson({}, errorMessage: 'unknown_error');
     }
   }
 
@@ -126,19 +129,31 @@ class ApiUserLogicService {
     String username,
     String userEmail,
     String password,
+    String verificationCode,
     BuildContext context
   ) async {
     try {
       Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
-        "/api/user/register",
-        data: {"name": username, "email": userEmail, "password": password},
+        "/api/user/signup",
+        data: {"userName": username, "email": userEmail, "password": password, "verificationCode": verificationCode},
       );
-      final String responseData = response.data;
-      print(responseData);
-      return UserModel.fromJson({}, errorMessage: responseData);
+      final Map<String, dynamic> responseData = response.data;
+
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理 - 传递 successMessageKey
+        UserModel user = UserModel.fromJson(responseData, successMessageKey: 'register_success');
+        if (user.token != null) {
+          await Provider.of<DioProvider>(context, listen: false).saveToken(user.token!);
+        }
+        return user;
+      } else {
+        // 如果不是新格式，返回错误信息
+        String message = responseData['message'] ?? 'unknown_error';
+        return UserModel.fromJson({}, errorMessage: message);
+      }
     }  on DioException catch (e) {
       String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -146,60 +161,58 @@ class ApiUserLogicService {
       print("请求体: ${e.requestOptions.data}");
       print("响应状态码: ${e.response?.statusCode}");
       print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
+      // 处理Dio相关的异常 - 使用本地化键
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         // 请求超时
-        message = '请求超时: + ${e.message}';
+        message = 'network_timeout';
       } else if (e.type == DioExceptionType.connectionTimeout) {
         // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_error';
       } else if (e.response != null) {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
+          message = 'server_error_500';
         } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'unknown_error';
         }
       } else {
-        message = '网络请求异常: ${e.message}';
+        message = 'network_error';
       }
       return UserModel.fromJson({}, errorMessage: message);
     } catch (e) {
       // 处理其他异常
       print('未知错误: $e');
-      String message = '未知错误';
-      return UserModel.fromJson({}, errorMessage: message);
+      return UserModel.fromJson({}, errorMessage: 'unknown_error');
     }
   }
 
   //修改用户数据
   Future<UserModel> updateUserInfo(
     UserModel userModel,
-    int updateType,
-    BuildContext context
+    BuildContext context,
+    {String successMessageKey = 'update_success'}
   ) async {
     try {
-      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
-        "/api/user/update",
-        data: {
-          "user": userModel.toJson(),
-          "updateType": updateType
-        }
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.put(
+        "/api/user",
+        data: userModel.toJson(),
       );
       Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] != null) {
-        return UserModel.fromJson(responseData['result']);
+
+      // 完全按照新格式处理：{"message": null, "data": {...}, "code": 1}
+      if (responseData['code'] != null && responseData['code'] == 1 && responseData['data'] != null) {
+        // 新格式处理 - 传递 successMessageKey
+        return UserModel.fromJson(responseData, successMessageKey: successMessageKey);
       } else {
+        String message = responseData['message'] ?? 'unknown_error';
         return UserModel.fromJson({}, errorMessage: message);
       }
     }on DioException catch (e) {
       String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -207,33 +220,32 @@ class ApiUserLogicService {
       print("请求体: ${e.requestOptions.data}");
       print("响应状态码: ${e.response?.statusCode}");
       print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
+      // 处理Dio相关的异常 - 使用本地化键
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         // 请求超时
-        message = '请求超时: + ${e.message}';
+        message = 'network_timeout';
       } else if (e.type == DioExceptionType.connectionTimeout) {
         // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_error';
       } else if (e.response != null) {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
+          message = 'server_error_500';
         } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'unknown_error';
         }
       } else {
-        message = '网络请求异常: ${e.message}';
+        message = 'network_error';
       }
       return UserModel.fromJson({}, errorMessage: message);
     } catch (e) {
       // 处理其他异常
       print('未知错误: $e');
-      String message = '未知错误: $e';
-      return UserModel.fromJson({}, errorMessage: message);
+      return UserModel.fromJson({}, errorMessage: 'unknown_error');
     }
   }
 
@@ -251,11 +263,10 @@ class ApiUserLogicService {
           "password": password,
         }
       );
-      String message = response.data;
+      String message = response.data["code"].toString();
       return message;
     } on DioException catch (e) {
       String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
       if (kDebugMode) {
         print("Dio错误详情:");
         print("请求URL: ${e.requestOptions.uri}");
@@ -265,26 +276,26 @@ class ApiUserLogicService {
         print("响应状态码: ${e.response?.statusCode}");
         print("响应数据: ${e.response?.data}");
       }
-      // 处理Dio相关的异常
+      // 处理Dio相关的异常 - 使用本地化键
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         // 请求超时
-        message = '请求超时: + ${e.message}';
+        message = 'network_timeout';
       } else if (e.type == DioExceptionType.connectionTimeout) {
         // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_error';
       } else if (e.response != null) {
         // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
+          message = 'server_error_500';
         } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'unknown_error';
         }
       } else {
-        message = '网络请求异常: ${e.message}';
+        message = 'network_error';
       }
       return message;
     } catch (e) {
@@ -292,8 +303,7 @@ class ApiUserLogicService {
       if (kDebugMode) {
         print('未知错误: $e');
       }
-      String message = '未知错误: $e';
-      return message;
+      return 'unknown_error';
     }
   }
 }

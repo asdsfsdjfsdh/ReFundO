@@ -49,43 +49,51 @@ class UserProvider with ChangeNotifier {
   }
 
   // 向后端请求登入
-  Future<UserModel> login(String username, String password,BuildContext context) async {
+  Future<Map<String, dynamic>> login(String username, String password,BuildContext context) async {
     try {
-      UserModel User = await _service.logic(username, password,context);
-      if (User!.errorMessage.isNotEmpty) {
-        LogUtil.e("登入", _user!.errorMessage);
+      UserModel user = await _service.logic(username, password,context);
+      if (user.errorMessage.isNotEmpty) {
+        LogUtil.e("登入", user.errorMessage);
         _isLogin = false;
+        return {'success': false, 'message': user.errorMessage};
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
-        _user = User;
+        _user = user;
+        Provider.of<OrderProvider>(context, listen: false).getOrders(context);
+        Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
+        return {'success': true, 'data': user, 'messageKey': user.successMessageKey};
       }
-      Provider.of<OrderProvider>(context, listen: false).getOrders(context);
-      Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
-      return User;
     } catch (e) {
       LogUtil.e("登入", e.toString());
       print(e.toString());
-      return UserModel.fromJson({}, errorMessage: "Error");
+      return {'success': false, 'message': 'unknown_error'};
     } finally {
       notifyListeners();
     }
   }
 
   // 向后端请求注册
-  Future<void> register(
+  Future<Map<String, dynamic>> register(
     String username,
     String userEmail,
     String password,
+    String verificationCode,
     BuildContext context
   ) async {
     try {
-      UserModel User =  await _service.register(username, userEmail, password,context);
-      _errorMessage = User.errorMessage;
-      print(_errorMessage);
+      UserModel user =  await _service.register(username, userEmail, password, verificationCode, context);
+      if (user.errorMessage.isNotEmpty) {
+        _errorMessage = user.errorMessage;
+        return {'success': false, 'message': user.errorMessage};
+      } else {
+        _user = user;
+        _isLogin = true;
+        return {'success': true, 'data': user, 'messageKey': user.successMessageKey};
+      }
     } catch (e) {
       LogUtil.e("注册", e.toString());
-      _errorMessage = "Error";
+      return {'success': false, 'message': 'unknown_error'};
     } finally {
       notifyListeners();
     }
@@ -128,71 +136,106 @@ class UserProvider with ChangeNotifier {
   }
 
   // 更新用户信息
-  Future<String> updateUserInfo(
-    String Info,
+  Future<Map<String, dynamic>> updateUserInfo(
+    String info,
     int updateType,
     BuildContext context,
     [String? email]
   ) async {
     try {
       UserModel? user = _user;
+      String successMessageKey;
 
       switch (updateType) {
         case 1:
-          user?.username = Info;
+          user?.userName = info;
+          successMessageKey = 'update_username_success';
           break;
         case 2:
-          if(email != null){
-            user?.Email = email;
-          }
-          user?.password = Info;
+          user?.password = info;
+          successMessageKey = 'update_password_success';
           break;
         case 3:
-          print("email:$Info");
-          user?.Email = Info;
+          print("email:$info");
+          user?.email = info;
+          successMessageKey = 'update_email_success';
           break;
         case 4:
-          user?.phoneNumber = Info;
+          user?.phoneNumber = info;
+          successMessageKey = 'update_phone_success';
           break;
-        
+
         default:
-          return "Error";
+          return {'success': false, 'message': 'unknown_error'};
       }
 
-      user = await _service.updateUserInfo(user!,updateType,context);
+      user = await _service.updateUserInfo(user!, context, successMessageKey: successMessageKey);
 
       if(user.errorMessage.isEmpty){
         _user = user;
-        return "修改成功";
-      }else{
+        return {'success': true, 'data': user, 'messageKey': successMessageKey};
+      } else{
         LogUtil.e("更新用户信息", user.errorMessage);
-        return user.errorMessage;
+        return {'success': false, 'message': user.errorMessage};
       }
     } catch (e) {
       LogUtil.e("更新用户信息", e.toString());
-      return "Error";
+      return {'success': false, 'message': 'unknown_error'};
     } finally {
       notifyListeners();
     }
   } 
 
   //验证用户身份
-  Future<bool> verifyUserIdentity(
+  Future<Map<String, dynamic>> verifyUserIdentity(
     String email,
     String password,
     BuildContext context
   ) async {
     try {
-      String message = await _service.verifyUserInfo(email,password,context);
-      if(message == "验证通过"){
-        return true;
+      String message = await _service.verifyUserInfo(email, password, context);
+      if(message == "1"){
+        return {'success': true, 'message': 'verification_success'};
       } else {
         LogUtil.e("验证用户身份", message);
-        return false;
+        return {'success': false, 'message': message};
       }
     } catch (e) {
       LogUtil.e("验证用户身份", e.toString());
-      return false;
+      return {'success': false, 'message': 'unknown_error'};
+    }
+  }
+
+  // 更新用户头像
+  Future<Map<String, dynamic>> updateAvatar(
+    BuildContext context,
+    String avatarUrl,
+  ) async {
+    try {
+      UserModel? user = _user;
+      if (user == null) {
+        return {'success': false, 'message': 'user_not_found'};
+      }
+
+      user.avatarUrl = avatarUrl;
+      user = await _service.updateUserInfo(
+        user,
+        context,
+        successMessageKey: 'update_avatar_success',
+      );
+
+      if (user.errorMessage.isEmpty) {
+        _user = user;
+        return {'success': true, 'data': user, 'messageKey': 'update_avatar_success'};
+      } else {
+        LogUtil.e("更新用户头像", user.errorMessage);
+        return {'success': false, 'message': user.errorMessage};
+      }
+    } catch (e) {
+      LogUtil.e("更新用户头像", e.toString());
+      return {'success': false, 'message': 'unknown_error'};
+    } finally {
+      notifyListeners();
     }
   }
 }

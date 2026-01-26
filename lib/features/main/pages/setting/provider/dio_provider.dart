@@ -9,20 +9,30 @@ class DioProvider extends ChangeNotifier {
 
  DioProvider() {
   // http://10.0.2.2
-  _dio.options.baseUrl = "http://114.215.202.212:4040";
+  _dio.options.baseUrl = "http://10.0.2.2:4040";
   _dio.options.contentType = Headers.jsonContentType; 
 
   // 添加拦截器
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          final prefs = await SharedPreferences.getInstance();
+
           // 从 SharedPreferences 获取 Token
-          String token = await getToken();
+          String token = prefs.getString('access_token') ?? '';
 
           if (token.isNotEmpty) {
             print('Token: $token');
             options.headers['Authorization'] = 'Bearer $token';
           }
+
+          // 添加 Accept-Language 头
+          final languageCode = prefs.getString('languageCode') ?? 'zh';
+          final countryCode = prefs.getString('countryCode') ?? 'CN';
+          final acceptLanguage = '$languageCode-$countryCode';
+          options.headers['Accept-Language'] = acceptLanguage;
+          print('Accept-Language: $acceptLanguage');
+
           return handler.next(options);
         },
         onResponse: (response, handler) {

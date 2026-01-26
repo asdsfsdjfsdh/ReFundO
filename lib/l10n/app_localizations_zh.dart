@@ -609,4 +609,329 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get password_set_success => '密码设置成功';
+
+  @override
+  String get error_username_required => '用户名不能为空';
+
+  @override
+  String get error_username_length => '用户名长度应为3-20个字符';
+
+  @override
+  String get error_email_required => '邮箱不能为空';
+
+  @override
+  String get error_password_required => '密码不能为空';
+
+  @override
+  String get error_password_length => '密码长度应为6-20个字符';
+
+  @override
+  String get error_code_required => '验证码不能为空';
+
+  @override
+  String get error_code_format => '验证码格式不正确';
+
+  @override
+  String get error_account_repetition_username => '用户名已存在';
+
+  @override
+  String get error_account_repetition_email => '邮箱已被使用';
+
+  @override
+  String get error_code_send_too_frequently => '验证码发送过于频繁，请60秒后再试';
+
+  @override
+  String get error_server_signup_failed => '注册失败，请重试';
+
+  @override
+  String error_login_ip_locked(Object minutes) {
+    return 'IP已被锁定，请$minutes分钟后再试';
+  }
+
+  @override
+  String error_login_account_locked(Object minutes) {
+    return '账号已被锁定，请$minutes分钟后再试';
+  }
+
+  @override
+  String get login_success => '登录成功';
+
+  @override
+  String get register_success => '注册成功';
+
+  @override
+  String get get_user_info_success => '获取用户信息成功';
+
+  @override
+  String get update_username_success => '用户名更新成功';
+
+  @override
+  String get update_password_success => '密码修改成功';
+
+  @override
+  String get update_email_success => '邮箱更新成功';
+
+  @override
+  String get update_phone_success => '电话号码更新成功';
+
+  @override
+  String get send_email_success => '邮件发送成功';
+
+  @override
+  String get create_order_success => '订单创建成功';
+
+  @override
+  String get get_orders_success => '获取订单列表成功';
+
+  @override
+  String get create_refund_success => '退款申请成功';
+
+  @override
+  String get get_refunds_success => '获取退款列表成功';
+
+  @override
+  String get scan_product_success => '商品扫描成功';
+
+  @override
+  String get get_product_success => '获取商品信息成功';
+
+  @override
+  String get network_timeout => '请求超时，请检查网络连接';
+
+  @override
+  String get network_error => '网络连接失败';
+
+  @override
+  String get server_error_404 => '请求的资源未找到';
+
+  @override
+  String get server_error_500 => '服务器内部错误';
+
+  @override
+  String get feedback_title => '意见反馈';
+
+  @override
+  String get feedback_subtitle => '我们重视您的每一条反馈';
+
+  @override
+  String get feedback_tab_submit => '提交反馈';
+
+  @override
+  String get feedback_tab_history => '历史记录';
+
+  @override
+  String get feedback_type_label => '反馈类型';
+
+  @override
+  String get feedback_content_label => '反馈内容';
+
+  @override
+  String get feedback_content_hint => '请详细描述您的问题、建议或投诉内容...';
+
+  @override
+  String get feedback_content_min_chars => '至少输入10个字符';
+
+  @override
+  String get feedback_contact_label => '联系方式（选填）';
+
+  @override
+  String get feedback_contact_hint => '邮箱或手机号';
+
+  @override
+  String get feedback_upload_label => '相关截图（选填）';
+
+  @override
+  String get feedback_upload_hint => '点击上传截图';
+
+  @override
+  String get feedback_upload_format_hint => '支持 JPG、PNG 格式，最大 5MB';
+
+  @override
+  String get feedback_submit => '提交反馈';
+
+  @override
+  String get feedback_submit_success => '反馈提交成功，感谢您的意见！';
+
+  @override
+  String get feedback_submit_failed => '反馈提交失败，请重试';
+
+  @override
+  String get feedback_no_records => '暂无反馈记录';
+
+  @override
+  String get feedback_withdraw => '撤回';
+
+  @override
+  String get feedback_withdraw_confirm_title => '确认撤回';
+
+  @override
+  String get feedback_withdraw_confirm_message => '确定要撤回这条反馈吗？';
+
+  @override
+  String get feedback_withdraw_success => '反馈已撤回';
+
+  @override
+  String get feedback_withdraw_failed => '撤回失败';
+
+  @override
+  String get feedback_detail_title => '反馈详情';
+
+  @override
+  String get feedback_status_label => '状态';
+
+  @override
+  String get feedback_time_label => '提交时间';
+
+  @override
+  String get feedback_attachment => '附件';
+
+  @override
+  String get error_feedback_content_length => '反馈内容长度应为10-1000个字符';
+
+  @override
+  String get error_feedback_file_too_large => '文件大小不能超过5MB';
+
+  @override
+  String get error_feedback_file_format => '仅支持 JPG、PNG 格式';
+
+  @override
+  String get error_upload_failed => '图片上传失败，请重试';
+
+  @override
+  String get get_feedbacks_success => '获取反馈列表成功';
+
+  @override
+  String get get_feedbacks_failed => '获取反馈列表失败';
+
+  @override
+  String get faq_title => '帮助中心';
+
+  @override
+  String get faq_search_hint => '搜索问题...';
+
+  @override
+  String get faq_categories => '快速分类';
+
+  @override
+  String get faq_popular => '热门问题';
+
+  @override
+  String get faq_view_all => '查看全部';
+
+  @override
+  String get faq_no_results => '没有找到相关问题';
+
+  @override
+  String get faq_contact_support => '联系客服';
+
+  @override
+  String get faq_category_refund => '退款流程';
+
+  @override
+  String get faq_category_account => '账户问题';
+
+  @override
+  String get faq_category_scan => '产品扫描';
+
+  @override
+  String get faq_category_refund_desc => '申请退款';
+
+  @override
+  String get faq_category_account_desc => '登录注册';
+
+  @override
+  String get faq_category_scan_desc => '扫码查询';
+
+  @override
+  String get get_faqs_success => '获取FAQ列表成功';
+
+  @override
+  String get get_faqs_failed => '获取FAQ列表失败';
+
+  @override
+  String get get_faq_success => '获取FAQ详情成功';
+
+  @override
+  String get get_faq_failed => '获取FAQ详情失败';
+
+  @override
+  String get get_categories_success => '获取分类列表成功';
+
+  @override
+  String get get_categories_failed => '获取分类列表失败';
+
+  @override
+  String get get_category_success => '获取分类详情成功';
+
+  @override
+  String get get_category_failed => '获取分类详情失败';
+
+  @override
+  String get faq_close => '关闭';
+
+  @override
+  String get faq_all => '全部';
+
+  @override
+  String get faq_pinned => '置顶';
+
+  @override
+  String get faq_contact_support_hint => '如果您需要更多帮助，请联系我们';
+
+  @override
+  String get status_pending => '待处理';
+
+  @override
+  String get status_approved => '已批准';
+
+  @override
+  String get status_rejected => '已拒绝';
+
+  @override
+  String get status_processing => '处理中';
+
+  @override
+  String get status_completed => '已完成';
+
+  @override
+  String get status_failed => '失败';
+
+  @override
+  String get status_unknown => '未知状态';
+
+  @override
+  String get transaction_pending => '待处理';
+
+  @override
+  String get transaction_success => '成功';
+
+  @override
+  String get transaction_failed => '失败';
+
+  @override
+  String get transaction_processing => '处理中';
+
+  @override
+  String get transaction_details => '交易详情';
+
+  @override
+  String get no_transaction_records => '暂无交易记录';
+
+  @override
+  String get change_avatar => '修改头像';
+
+  @override
+  String get take_photo => '拍照';
+
+  @override
+  String get choose_from_gallery => '从相册选择';
+
+  @override
+  String get discount_voucher => '优惠凭证 (可选)';
+
+  @override
+  String get tap_to_upload_voucher => '点击上传优惠凭证';
+
+  @override
+  String get voucherUrl => '凭证';
 }

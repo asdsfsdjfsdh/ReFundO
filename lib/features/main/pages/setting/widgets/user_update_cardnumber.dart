@@ -232,13 +232,13 @@ class _CardChangeSheetState extends State<CardChangeSheet> {
 
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final isVerified = await userProvider.verifyUserIdentity(
+      final result = await userProvider.verifyUserIdentity(
         _oldEmailController.text,
         _passwordController.text,
         context,
       );
 
-      if (isVerified) {
+      if (result['success']) {
         ShowToast.showCenterToast(context, l10n!.verification_success);
         setState(() {
           _isVerified = true;
@@ -266,16 +266,17 @@ class _CardChangeSheetState extends State<CardChangeSheet> {
 
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final message = await userProvider.updateUserInfo(
+      final result = await userProvider.updateUserInfo(
         _newCardController.text,
         4, // 假设4是银行卡号的类型代码
         context,
       );
 
-      ShowToast.showCenterToast(context, message);
-
-      if (message == l10n!.modification_success) {
+      if (result['success']) {
+        ShowToast.showCenterToast(context, l10n!.update_phone_success);
         Navigator.of(context).pop();
+      } else {
+        ShowToast.showCenterToast(context, result['message'] ?? l10n!.modification_failed);
       }
     } catch (e) {
       ShowToast.showCenterToast(context, l10n!.modification_failed);

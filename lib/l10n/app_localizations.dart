@@ -1284,6 +1284,648 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password set successfully'**
   String get password_set_success;
+
+  /// No description provided for @error_username_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get error_username_required;
+
+  /// No description provided for @error_username_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be 3-20 characters'**
+  String get error_username_length;
+
+  /// No description provided for @error_email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get error_email_required;
+
+  /// No description provided for @error_password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get error_password_required;
+
+  /// No description provided for @error_password_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be 6-20 characters'**
+  String get error_password_length;
+
+  /// No description provided for @error_code_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code is required'**
+  String get error_code_required;
+
+  /// No description provided for @error_code_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid verification code format'**
+  String get error_code_format;
+
+  /// No description provided for @error_account_repetition_username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username already exists'**
+  String get error_account_repetition_username;
+
+  /// No description provided for @error_account_repetition_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email already in use'**
+  String get error_account_repetition_email;
+
+  /// No description provided for @error_code_send_too_frequently.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code sent too frequently, please try again later'**
+  String get error_code_send_too_frequently;
+
+  /// No description provided for @error_server_signup_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed, please try again'**
+  String get error_server_signup_failed;
+
+  /// No description provided for @error_login_ip_locked.
+  ///
+  /// In en, this message translates to:
+  /// **'IP is locked, please try again after {minutes} minutes'**
+  String error_login_ip_locked(Object minutes);
+
+  /// No description provided for @error_login_account_locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Account is locked, please try again after {minutes} minutes'**
+  String error_login_account_locked(Object minutes);
+
+  /// No description provided for @login_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful'**
+  String get login_success;
+
+  /// No description provided for @register_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful'**
+  String get register_success;
+
+  /// No description provided for @get_user_info_success.
+  ///
+  /// In en, this message translates to:
+  /// **'User info retrieved successfully'**
+  String get get_user_info_success;
+
+  /// No description provided for @update_username_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Username updated successfully'**
+  String get update_username_success;
+
+  /// No description provided for @update_password_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get update_password_success;
+
+  /// No description provided for @update_email_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Email updated successfully'**
+  String get update_email_success;
+
+  /// No description provided for @update_phone_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number updated successfully'**
+  String get update_phone_success;
+
+  /// No description provided for @send_email_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sent successfully'**
+  String get send_email_success;
+
+  /// No description provided for @create_order_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Order created successfully'**
+  String get create_order_success;
+
+  /// No description provided for @get_orders_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Order list retrieved successfully'**
+  String get get_orders_success;
+
+  /// No description provided for @create_refund_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund request submitted successfully'**
+  String get create_refund_success;
+
+  /// No description provided for @get_refunds_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund list retrieved successfully'**
+  String get get_refunds_success;
+
+  /// No description provided for @scan_product_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Product scanned successfully'**
+  String get scan_product_success;
+
+  /// No description provided for @get_product_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Product info retrieved successfully'**
+  String get get_product_success;
+
+  /// No description provided for @network_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timeout, please check network connection'**
+  String get network_timeout;
+
+  /// No description provided for @network_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection failed'**
+  String get network_error;
+
+  /// No description provided for @server_error_404.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested resource not found'**
+  String get server_error_404;
+
+  /// No description provided for @server_error_500.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal server error'**
+  String get server_error_500;
+
+  /// No description provided for @feedback_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback_title;
+
+  /// No description provided for @feedback_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We value every feedback you provide'**
+  String get feedback_subtitle;
+
+  /// No description provided for @feedback_tab_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get feedback_tab_submit;
+
+  /// No description provided for @feedback_tab_history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get feedback_tab_history;
+
+  /// No description provided for @feedback_type_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback Type'**
+  String get feedback_type_label;
+
+  /// No description provided for @feedback_content_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get feedback_content_label;
+
+  /// No description provided for @feedback_content_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe your issue, suggestion or complaint in detail...'**
+  String get feedback_content_hint;
+
+  /// No description provided for @feedback_content_min_chars.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 10 characters'**
+  String get feedback_content_min_chars;
+
+  /// No description provided for @feedback_contact_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact (Optional)'**
+  String get feedback_contact_label;
+
+  /// No description provided for @feedback_contact_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or phone number'**
+  String get feedback_contact_hint;
+
+  /// No description provided for @feedback_upload_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshot (Optional)'**
+  String get feedback_upload_label;
+
+  /// No description provided for @feedback_upload_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload screenshot'**
+  String get feedback_upload_hint;
+
+  /// No description provided for @feedback_upload_format_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'JPG, PNG format, max 5MB'**
+  String get feedback_upload_format_hint;
+
+  /// No description provided for @feedback_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Feedback'**
+  String get feedback_submit;
+
+  /// No description provided for @feedback_submit_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted successfully, thank you!'**
+  String get feedback_submit_success;
+
+  /// No description provided for @feedback_submit_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit feedback, please try again'**
+  String get feedback_submit_failed;
+
+  /// No description provided for @feedback_no_records.
+  ///
+  /// In en, this message translates to:
+  /// **'No feedback records'**
+  String get feedback_no_records;
+
+  /// No description provided for @feedback_withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get feedback_withdraw;
+
+  /// No description provided for @feedback_withdraw_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Withdraw'**
+  String get feedback_withdraw_confirm_title;
+
+  /// No description provided for @feedback_withdraw_confirm_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to withdraw this feedback?'**
+  String get feedback_withdraw_confirm_message;
+
+  /// No description provided for @feedback_withdraw_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback withdrawn'**
+  String get feedback_withdraw_success;
+
+  /// No description provided for @feedback_withdraw_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to withdraw'**
+  String get feedback_withdraw_failed;
+
+  /// No description provided for @feedback_detail_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback Details'**
+  String get feedback_detail_title;
+
+  /// No description provided for @feedback_status_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get feedback_status_label;
+
+  /// No description provided for @feedback_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get feedback_time_label;
+
+  /// No description provided for @feedback_attachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment'**
+  String get feedback_attachment;
+
+  /// No description provided for @error_feedback_content_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Content must be 10-1000 characters'**
+  String get error_feedback_content_length;
+
+  /// No description provided for @error_feedback_file_too_large.
+  ///
+  /// In en, this message translates to:
+  /// **'File size cannot exceed 5MB'**
+  String get error_feedback_file_too_large;
+
+  /// No description provided for @error_feedback_file_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Only JPG and PNG formats are supported'**
+  String get error_feedback_file_format;
+
+  /// No description provided for @error_upload_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Image upload failed, please try again'**
+  String get error_upload_failed;
+
+  /// No description provided for @get_feedbacks_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback list retrieved successfully'**
+  String get get_feedbacks_success;
+
+  /// No description provided for @get_feedbacks_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to retrieve feedback list'**
+  String get get_feedbacks_failed;
+
+  /// No description provided for @faq_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get faq_title;
+
+  /// No description provided for @faq_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search questions...'**
+  String get faq_search_hint;
+
+  /// No description provided for @faq_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Categories'**
+  String get faq_categories;
+
+  /// No description provided for @faq_popular.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Questions'**
+  String get faq_popular;
+
+  /// No description provided for @faq_view_all.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get faq_view_all;
+
+  /// No description provided for @faq_no_results.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching questions found'**
+  String get faq_no_results;
+
+  /// No description provided for @faq_contact_support.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get faq_contact_support;
+
+  /// No description provided for @faq_category_refund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Process'**
+  String get faq_category_refund;
+
+  /// No description provided for @faq_category_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get faq_category_account;
+
+  /// No description provided for @faq_category_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Scan'**
+  String get faq_category_scan;
+
+  /// No description provided for @faq_category_refund_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply for refund'**
+  String get faq_category_refund_desc;
+
+  /// No description provided for @faq_category_account_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Login & Register'**
+  String get faq_category_account_desc;
+
+  /// No description provided for @faq_category_scan_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to query'**
+  String get faq_category_scan_desc;
+
+  /// No description provided for @get_faqs_success.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ list retrieved successfully'**
+  String get get_faqs_success;
+
+  /// No description provided for @get_faqs_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to retrieve FAQ list'**
+  String get get_faqs_failed;
+
+  /// No description provided for @get_faq_success.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ details retrieved successfully'**
+  String get get_faq_success;
+
+  /// No description provided for @get_faq_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to retrieve FAQ details'**
+  String get get_faq_failed;
+
+  /// No description provided for @get_categories_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Category list retrieved successfully'**
+  String get get_categories_success;
+
+  /// No description provided for @get_categories_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to retrieve category list'**
+  String get get_categories_failed;
+
+  /// No description provided for @get_category_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Category details retrieved successfully'**
+  String get get_category_success;
+
+  /// No description provided for @get_category_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to retrieve category details'**
+  String get get_category_failed;
+
+  /// No description provided for @faq_close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get faq_close;
+
+  /// No description provided for @faq_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get faq_all;
+
+  /// No description provided for @faq_pinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get faq_pinned;
+
+  /// No description provided for @faq_contact_support_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'If you need more help, please contact us'**
+  String get faq_contact_support_hint;
+
+  /// No description provided for @status_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get status_pending;
+
+  /// No description provided for @status_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get status_approved;
+
+  /// No description provided for @status_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get status_rejected;
+
+  /// No description provided for @status_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get status_processing;
+
+  /// No description provided for @status_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get status_completed;
+
+  /// No description provided for @status_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get status_failed;
+
+  /// No description provided for @status_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get status_unknown;
+
+  /// No description provided for @transaction_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get transaction_pending;
+
+  /// No description provided for @transaction_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get transaction_success;
+
+  /// No description provided for @transaction_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get transaction_failed;
+
+  /// No description provided for @transaction_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get transaction_processing;
+
+  /// No description provided for @transaction_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transaction_details;
+
+  /// No description provided for @no_transaction_records.
+  ///
+  /// In en, this message translates to:
+  /// **'No transaction records'**
+  String get no_transaction_records;
+
+  /// No description provided for @change_avatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Avatar'**
+  String get change_avatar;
+
+  /// No description provided for @take_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get take_photo;
+
+  /// No description provided for @choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get choose_from_gallery;
+
+  /// No description provided for @discount_voucher.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount Voucher (Optional)'**
+  String get discount_voucher;
+
+  /// No description provided for @tap_to_upload_voucher.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload voucher'**
+  String get tap_to_upload_voucher;
+
+  /// No description provided for @voucherUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Voucher'**
+  String get voucherUrl;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

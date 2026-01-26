@@ -36,8 +36,9 @@ class _ScannerPageState extends State<ScannerPage> {
             _showTextResultDialog(context, result);
           } else {
             // 显示错误提示
+            final l10n = AppLocalizations.of(context);
             setState(() {
-              _message = '无效的二维码';
+              _message = l10n!.invalid_email_format; // 使用现有键作为临时解决方案
               _isScanning = false;
             });
             _showDialog(context, _message);
@@ -50,38 +51,52 @@ class _ScannerPageState extends State<ScannerPage> {
 
 
   void _showTextResultDialog(BuildContext context, Code result) async {
+    final l10n = AppLocalizations.of(context);
     String? decodedText = result.text;
     print(decodedText);
-    Map<String, dynamic> productData = _parseKeyValueFormat(decodedText!);
 
-    ProductModel product = ProductModel.fromJson(productData);
-    OrderProvider orderProvider = Provider.of<OrderProvider>(
-      context,
-      listen: false,
-    );
-    String message = await orderProvider.insertOrder(product, context);
-    Provider.of<UserProvider>(context, listen: false).Info(context);
-    
+    try {
+      Map<String, dynamic> productData = _parseKeyValueFormat(decodedText!);
 
-    setState(() {
-      _message = message;
+      ProductModel product = ProductModel.fromJson(productData);
+      OrderProvider orderProvider = Provider.of<OrderProvider>(
+        context,
+        listen: false,
+      );
+      var resultMsg = await orderProvider.insertOrder(product, context);
+      Provider.of<UserProvider>(context, listen: false).Info(context);
+
+      if (resultMsg['success']) {
+        setState(() {
+          _message = l10n!.create_order_success;
+        });
+      } else {
+        setState(() {
+          _message = resultMsg['message'] ?? l10n!.unknown_error;
+        });
+      }
       _showDialog(context, _message);
-    });
-
+    } catch (e) {
+      setState(() {
+        _message = '二维码格式错误';
+      });
+      _showDialog(context, _message);
+    }
   }
 
   void _showDialog(BuildContext context, String message) {
+    final l10n = AppLocalizations.of(context);
    showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext ctx) {
         return AlertDialog(
-          title: Text('提示'),
+          title: Text(l10n!.notification),
           content: Text(_message, style: TextStyle(fontSize: 16)),
           actions: [
             TextButton(
-              child: Text('确定'),
+              child: Text(l10n.confirm),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(ctx).pop();
                 setState(() {
                   _isScanning = true;
                 });
@@ -96,14 +111,8 @@ class _ScannerPageState extends State<ScannerPage> {
 
   //解析二维码数据
   Map<String, dynamic> _parseKeyValueFormat(String text) {
-     try {
     // 尝试解析为 JSON
     final Map<String, dynamic> jsonData = json.decode(text);
     return jsonData;
-  } on FormatException catch (e) {
-    // 如果不是合法 JSON，返回空 map 或抛出异常
-    _showDialog(context, '二维码内容非法');
-    throw Exception('二维码内容不是有效的 JSON 格式');
-  }
   }
 }
