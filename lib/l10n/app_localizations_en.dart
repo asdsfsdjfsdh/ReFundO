@@ -644,8 +644,237 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_server_signup_failed => 'Registration failed, please try again';
 
   @override
-  String error_login_ip_locked(Object minutes) => 'IP is locked, please try again after $minutes minutes';
+  String error_login_ip_locked(Object minutes) {
+    return 'IP is locked, please try again after $minutes minutes';
+  }
 
   @override
-  String error_login_account_locked(Object minutes) => 'Account is locked, please try again after $minutes minutes';
+  String error_login_account_locked(Object minutes) {
+    return 'Account is locked, please try again after $minutes minutes';
+  }
+
+  @override
+  String get login_success => 'Login successful';
+
+  @override
+  String get register_success => 'Registration successful';
+
+  @override
+  String get get_user_info_success => 'User info retrieved successfully';
+
+  @override
+  String get update_username_success => 'Username updated successfully';
+
+  @override
+  String get update_password_success => 'Password changed successfully';
+
+  @override
+  String get update_email_success => 'Email updated successfully';
+
+  @override
+  String get update_phone_success => 'Phone number updated successfully';
+
+  @override
+  String get send_email_success => 'Email sent successfully';
+
+  @override
+  String get create_order_success => 'Order created successfully';
+
+  @override
+  String get get_orders_success => 'Order list retrieved successfully';
+
+  @override
+  String get create_refund_success => 'Refund request submitted successfully';
+
+  @override
+  String get get_refunds_success => 'Refund list retrieved successfully';
+
+  @override
+  String get scan_product_success => 'Product scanned successfully';
+
+  @override
+  String get get_product_success => 'Product info retrieved successfully';
+
+  @override
+  String get network_timeout => 'Request timeout, please check network connection';
+
+  @override
+  String get network_error => 'Network connection failed';
+
+  @override
+  String get server_error_404 => 'Requested resource not found';
+
+  @override
+  String get server_error_500 => 'Internal server error';
+
+  @override
+  String get feedback_title => 'Feedback';
+
+  @override
+  String get feedback_subtitle => 'We value every feedback you provide';
+
+  @override
+  String get feedback_tab_submit => 'Submit';
+
+  @override
+  String get feedback_tab_history => 'History';
+
+  @override
+  String get feedback_type_label => 'Feedback Type';
+
+  @override
+  String get feedback_content_label => 'Content';
+
+  @override
+  String get feedback_content_hint => 'Please describe your issue, suggestion or complaint in detail...';
+
+  @override
+  String get feedback_content_min_chars => 'At least 10 characters';
+
+  @override
+  String get feedback_contact_label => 'Contact (Optional)';
+
+  @override
+  String get feedback_contact_hint => 'Email or phone number';
+
+  @override
+  String get feedback_upload_label => 'Screenshot (Optional)';
+
+  @override
+  String get feedback_upload_hint => 'Tap to upload screenshot';
+
+  @override
+  String get feedback_upload_format_hint => 'JPG, PNG format, max 5MB';
+
+  @override
+  String get feedback_submit => 'Submit Feedback';
+
+  @override
+  String get feedback_submit_success => 'Feedback submitted successfully, thank you!';
+
+  @override
+  String get feedback_submit_failed => 'Failed to submit feedback, please try again';
+
+  @override
+  String get feedback_no_records => 'No feedback records';
+
+  @override
+  String get feedback_withdraw => 'Withdraw';
+
+  @override
+  String get feedback_withdraw_confirm_title => 'Confirm Withdraw';
+
+  @override
+  String get feedback_withdraw_confirm_message => 'Are you sure you want to withdraw this feedback?';
+
+  @override
+  String get feedback_withdraw_success => 'Feedback withdrawn';
+
+  @override
+  String get feedback_withdraw_failed => 'Failed to withdraw';
+
+  @override
+  String get feedback_detail_title => 'Feedback Details';
+
+  @override
+  String get feedback_status_label => 'Status';
+
+  @override
+  String get feedback_time_label => 'Submitted';
+
+  @override
+  String get feedback_attachment => 'Attachment';
+
+  @override
+  String get error_feedback_content_length => 'Content must be 10-1000 characters';
+
+  @override
+  String get error_feedback_file_too_large => 'File size cannot exceed 5MB';
+
+  @override
+  String get error_feedback_file_format => 'Only JPG and PNG formats are supported';
+
+  @override
+  String get error_upload_failed => 'Image upload failed, please try again';
+
+  @override
+  String get get_feedbacks_success => 'Feedback list retrieved successfully';
+
+  @override
+  String get get_feedbacks_failed => 'Failed to retrieve feedback list';
+
+  @override
+  String get faq_title => 'Help Center';
+
+  @override
+  String get faq_search_hint => 'Search questions...';
+
+  @override
+  String get faq_categories => 'Quick Categories';
+
+  @override
+  String get faq_popular => 'Popular Questions';
+
+  @override
+  String get faq_view_all => 'View All';
+
+  @override
+  String get faq_no_results => 'No matching questions found';
+
+  @override
+  String get faq_contact_support => 'Contact Support';
+
+  @override
+  String get faq_category_refund => 'Refund Process';
+
+  @override
+  String get faq_category_account => 'Account';
+
+  @override
+  String get faq_category_scan => 'Product Scan';
+
+  @override
+  String get faq_category_refund_desc => 'Apply for refund';
+
+  @override
+  String get faq_category_account_desc => 'Login & Register';
+
+  @override
+  String get faq_category_scan_desc => 'Scan to query';
+
+  @override
+  String get get_faqs_success => 'FAQ list retrieved successfully';
+
+  @override
+  String get get_faqs_failed => 'Failed to retrieve FAQ list';
+
+  @override
+  String get get_faq_success => 'FAQ details retrieved successfully';
+
+  @override
+  String get get_faq_failed => 'Failed to retrieve FAQ details';
+
+  @override
+  String get get_categories_success => 'Category list retrieved successfully';
+
+  @override
+  String get get_categories_failed => 'Failed to retrieve category list';
+
+  @override
+  String get get_category_success => 'Category details retrieved successfully';
+
+  @override
+  String get get_category_failed => 'Failed to retrieve category details';
+
+  @override
+  String get faq_close => 'Close';
+
+  @override
+  String get faq_all => 'All';
+
+  @override
+  String get faq_pinned => 'Pinned';
+
+  @override
+  String get faq_contact_support_hint => 'If you need more help, please contact us';
 }

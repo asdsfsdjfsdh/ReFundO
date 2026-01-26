@@ -644,8 +644,237 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error_server_signup_failed => 'L\'inscription a échoué, veuillez réessayer';
 
   @override
-  String error_login_ip_locked(Object minutes) => 'L\'IP est verrouillée, veuillez réessayer après $minutes minutes';
+  String error_login_ip_locked(Object minutes) {
+    return 'L\'IP est verrouillée, veuillez réessayer après $minutes minutes';
+  }
 
   @override
-  String error_login_account_locked(Object minutes) => 'Le compte est verrouillé, veuillez réessayer après $minutes minutes';
+  String error_login_account_locked(Object minutes) {
+    return 'Le compte est verrouillé, veuillez réessayer après $minutes minutes';
+  }
+
+  @override
+  String get login_success => 'Connexion réussie';
+
+  @override
+  String get register_success => 'Inscription réussie';
+
+  @override
+  String get get_user_info_success => 'Informations utilisateur récupérées avec succès';
+
+  @override
+  String get update_username_success => 'Nom d\'utilisateur mis à jour avec succès';
+
+  @override
+  String get update_password_success => 'Mot de passe changé avec succès';
+
+  @override
+  String get update_email_success => 'E-mail mis à jour avec succès';
+
+  @override
+  String get update_phone_success => 'Numéro de téléphone mis à jour avec succès';
+
+  @override
+  String get send_email_success => 'E-mail envoyé avec succès';
+
+  @override
+  String get create_order_success => 'Commande créée avec succès';
+
+  @override
+  String get get_orders_success => 'Liste des commandes récupérée avec succès';
+
+  @override
+  String get create_refund_success => 'Demande de remboursement soumise avec succès';
+
+  @override
+  String get get_refunds_success => 'Liste des remboursements récupérée avec succès';
+
+  @override
+  String get scan_product_success => 'Produit scanné avec succès';
+
+  @override
+  String get get_product_success => 'Informations sur le produit récupérées avec succès';
+
+  @override
+  String get network_timeout => 'Délai d\'attente de la demande, veuillez vérifier la connexion réseau';
+
+  @override
+  String get network_error => 'Échec de la connexion réseau';
+
+  @override
+  String get server_error_404 => 'Ressource demandée non trouvée';
+
+  @override
+  String get server_error_500 => 'Erreur interne du serveur';
+
+  @override
+  String get feedback_title => 'Commentaires';
+
+  @override
+  String get feedback_subtitle => 'Nous apprécions chaque commentaire que vous fournissez';
+
+  @override
+  String get feedback_tab_submit => 'Soumettre';
+
+  @override
+  String get feedback_tab_history => 'Historique';
+
+  @override
+  String get feedback_type_label => 'Type de commentaire';
+
+  @override
+  String get feedback_content_label => 'Contenu';
+
+  @override
+  String get feedback_content_hint => 'Veuillez décrire votre problème, suggestion ou plainte en détail...';
+
+  @override
+  String get feedback_content_min_chars => 'Au moins 10 caractères';
+
+  @override
+  String get feedback_contact_label => 'Contact (Optionnel)';
+
+  @override
+  String get feedback_contact_hint => 'E-mail ou numéro de téléphone';
+
+  @override
+  String get feedback_upload_label => 'Capture d\'écran (Optionnel)';
+
+  @override
+  String get feedback_upload_hint => 'Appuyez pour télécharger la capture d\'écran';
+
+  @override
+  String get feedback_upload_format_hint => 'Format JPG, PNG, max 5 Mo';
+
+  @override
+  String get feedback_submit => 'Soumettre un commentaire';
+
+  @override
+  String get feedback_submit_success => 'Commentaire soumis avec succès, merci!';
+
+  @override
+  String get feedback_submit_failed => 'Échec de la soumission du commentaire, veuillez réessayer';
+
+  @override
+  String get feedback_no_records => 'Aucun enregistrement de commentaire';
+
+  @override
+  String get feedback_withdraw => 'Retirer';
+
+  @override
+  String get feedback_withdraw_confirm_title => 'Confirmer le retrait';
+
+  @override
+  String get feedback_withdraw_confirm_message => 'Êtes-vous sûr de vouloir retirer ce commentaire?';
+
+  @override
+  String get feedback_withdraw_success => 'Commentaire retiré';
+
+  @override
+  String get feedback_withdraw_failed => 'Échec du retrait';
+
+  @override
+  String get feedback_detail_title => 'Détails du commentaire';
+
+  @override
+  String get feedback_status_label => 'Statut';
+
+  @override
+  String get feedback_time_label => 'Soumis';
+
+  @override
+  String get feedback_attachment => 'Pièce jointe';
+
+  @override
+  String get error_feedback_content_length => 'Le contenu doit contenir 10 à 1000 caractères';
+
+  @override
+  String get error_feedback_file_too_large => 'La taille du fichier ne peut pas dépasser 5 Mo';
+
+  @override
+  String get error_feedback_file_format => 'Seuls les formats JPG et PNG sont pris en charge';
+
+  @override
+  String get error_upload_failed => 'Échec du téléchargement de l\'image, veuillez réessayer';
+
+  @override
+  String get get_feedbacks_success => 'Liste des commentaires récupérée avec succès';
+
+  @override
+  String get get_feedbacks_failed => 'Échec de la récupération de la liste des commentaires';
+
+  @override
+  String get faq_title => 'Centre d\'aide';
+
+  @override
+  String get faq_search_hint => 'Rechercher des questions...';
+
+  @override
+  String get faq_categories => 'Catégories rapides';
+
+  @override
+  String get faq_popular => 'Questions populaires';
+
+  @override
+  String get faq_view_all => 'Voir tout';
+
+  @override
+  String get faq_no_results => 'Aucune question correspondante trouvée';
+
+  @override
+  String get faq_contact_support => 'Contacter le support';
+
+  @override
+  String get faq_category_refund => 'Processus de remboursement';
+
+  @override
+  String get faq_category_account => 'Compte';
+
+  @override
+  String get faq_category_scan => 'Scan de produit';
+
+  @override
+  String get faq_category_refund_desc => 'Demander un remboursement';
+
+  @override
+  String get faq_category_account_desc => 'Connexion & Inscription';
+
+  @override
+  String get faq_category_scan_desc => 'Scanner pour rechercher';
+
+  @override
+  String get get_faqs_success => 'Liste FAQ récupérée avec succès';
+
+  @override
+  String get get_faqs_failed => 'Échec de la récupération de la liste FAQ';
+
+  @override
+  String get get_faq_success => 'Détails FAQ récupérés avec succès';
+
+  @override
+  String get get_faq_failed => 'Échec de la récupération des détails FAQ';
+
+  @override
+  String get get_categories_success => 'Liste des catégories récupérée avec succès';
+
+  @override
+  String get get_categories_failed => 'Échec de la récupération de la liste des catégories';
+
+  @override
+  String get get_category_success => 'Détails de la catégorie récupérés avec succès';
+
+  @override
+  String get get_category_failed => 'Échec de la récupération des détails de la catégorie';
+
+  @override
+  String get faq_close => 'Fermer';
+
+  @override
+  String get faq_all => 'Tous';
+
+  @override
+  String get faq_pinned => 'Épinglé';
+
+  @override
+  String get faq_contact_support_hint => 'Si vous avez besoin de plus d\'aide, contactez-nous';
 }

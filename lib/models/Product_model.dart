@@ -6,6 +6,8 @@ class ProductModel{
   final Decimal OriginalPrice;
   final String Hash;
   final Decimal RefundRatio;
+  final String errorMessage;
+  final String successMessageKey;
 
   ProductModel({
     required this.ProductId,
@@ -13,6 +15,8 @@ class ProductModel{
     required this.OriginalPrice,
     required this.Hash,
     required this.RefundRatio,
+    this.errorMessage = '',
+    this.successMessageKey = '',
   });
 
   Map<String, dynamic> toJson() => {
@@ -23,12 +27,14 @@ class ProductModel{
     'OriginalPrice': OriginalPrice,
   };
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+  factory ProductModel.fromJson(Map<String, dynamic> json, {String errorMessage = '', String successMessageKey = ''}) => ProductModel(
     ProductId: json['ProductId'] as int ? ?? 0,
     OriginalPrice: Decimal.parse(json['price']?.toString() ?? '0') ,
     Value: Decimal.parse(json['RefundAmount']?.toString() ?? '0'),
     Hash: json['Hash'] as String ? ?? '',
     RefundRatio: Decimal.parse(json['RefundPercent']?.toString() ?? '0'),
+    errorMessage: errorMessage,
+    successMessageKey: successMessageKey,
   );
 
  @override

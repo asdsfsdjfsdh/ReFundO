@@ -15,6 +15,8 @@ class RefundModel {
   final int paymentMethod;
   final String createTime;
   final String updateTime;
+  final String errorMessage;
+  final String successMessageKey;
 
   // 初始化方法
   RefundModel({
@@ -29,6 +31,8 @@ class RefundModel {
     required this.createTime,
     required this.updateTime,
     required this.amount,
+    this.errorMessage = '',
+    this.successMessageKey = '',
   });
 
   String get_refundMethod(BuildContext context) {
@@ -57,7 +61,7 @@ class RefundModel {
   };
 
   // 从Json的转化方法
-  factory RefundModel.fromJson(Map<String, dynamic> json) {
+  factory RefundModel.fromJson(Map<String, dynamic> json, {String errorMessage = '', String successMessageKey = ''}) {
 
     return RefundModel(
       requestId: json['requestId'] as int? ?? 0,
@@ -71,6 +75,8 @@ class RefundModel {
       updateTime: json['updateTime'] as String? ?? '',
       requestStatus: json['requestStatus'] as int? ?? 0,
       voucherUrl: json['voucherUrl'] as String? ?? '',
+      errorMessage: errorMessage,
+      successMessageKey: successMessageKey,
     );
   }
 

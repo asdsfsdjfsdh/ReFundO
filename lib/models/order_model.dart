@@ -18,6 +18,8 @@ class OrderModel {
   final double? originalPrice;
   // 扫描ID
   final int scanId;
+  final String errorMessage;
+  final String successMessageKey;
 
   // 初始化方法
   OrderModel({
@@ -29,6 +31,8 @@ class OrderModel {
     required this.scanNumber,
     this.originalPrice,
     required this.scanId,
+    this.errorMessage = '',
+    this.successMessageKey = '',
   });
 
   // 配置转化Json方法
@@ -44,7 +48,7 @@ class OrderModel {
   };
 
   // 从Json的转化方法
-  factory OrderModel.fromJson(Map<String, dynamic> json) {
+  factory OrderModel.fromJson(Map<String, dynamic> json, {String errorMessage = '', String successMessageKey = ''}) {
     return OrderModel(
       value: (json['value'] as num?)?.toDouble() ?? 0.0,
       userId: json['userId'] as int? ?? 0,
@@ -54,6 +58,8 @@ class OrderModel {
       scanNumber: json['scanNumber'] as String? ?? '',
       originalPrice: (json['originalPrice'] as num?)?.toDouble(),
       scanId: json['scanId'] as int? ?? 0,
+      errorMessage: errorMessage,
+      successMessageKey: successMessageKey,
     );
   }
 

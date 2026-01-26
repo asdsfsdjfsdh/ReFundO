@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/widgets/callback_password.dart';
+import 'package:refundo/features/main/pages/faq/faq_page.dart';
+import 'package:refundo/features/main/pages/feedback/feedback_page.dart';
+import 'package:refundo/features/main/pages/feedback/provider/feedback_provider.dart';
+import 'package:refundo/features/main/pages/home/provider/faq_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/app_provider.dart';
 import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
 import 'package:refundo/features/main/pages/setting/widgets/audit_page.dart';
@@ -323,6 +327,60 @@ class _SettingPageState extends State<SettingPage> {
 
         // 语言设置卡片
         _buildLanguageSettingCard(context),
+        const SizedBox(height: 8),
+
+        // 意见反馈卡片
+        _buildAppSettingCard(
+          context: context,
+          title: l10n.feedback_title,
+          subtitle: l10n.feedback_subtitle,
+          icon: Icons.feedback_outlined,
+          iconColor: Colors.teal.shade600,
+          onTap: () {
+            if (isLogin) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider(
+                    create: (_) => FeedbackProvider(),
+                    child: const FeedbackPage(),
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.please_login_first),
+                  duration: const Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  backgroundColor: Colors.blue.shade600,
+                ),
+              );
+            }
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // 帮助中心卡片
+        _buildAppSettingCard(
+          context: context,
+          title: l10n.faq_title,
+          subtitle: l10n.faq_title,
+          icon: Icons.help_outline_rounded,
+          iconColor: Colors.indigo.shade600,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider(
+                  create: (_) => FaqProvider(),
+                  child: const FaqPage(),
+                ),
+              ),
+            );
+          },
+        ),
         const SizedBox(height: 8),
 
         _buildAppSettingCard(

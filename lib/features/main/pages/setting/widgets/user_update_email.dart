@@ -232,13 +232,13 @@ class _EmailChangeSheetState extends State<EmailChangeSheet> {
 
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final isVerified = await userProvider.verifyUserIdentity(
+      final result = await userProvider.verifyUserIdentity(
         _oldEmailController.text,
         _passwordController.text,
         context,
       );
 
-      if (isVerified) {
+      if (result['success'] == true) {
         ShowToast.showCenterToast(context, l10n!.verification_success);
         setState(() {
           _isVerified = true;
@@ -273,16 +273,18 @@ class _EmailChangeSheetState extends State<EmailChangeSheet> {
 
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final message = await userProvider.updateUserInfo(
+      final result = await userProvider.updateUserInfo(
         _newEmailController.text,
         3, // 假设3是邮箱的类型代码
         context,
       );
 
-      ShowToast.showCenterToast(context, message);
-
-      if (message == l10n!.modification_success) {
+      if (result['success'] == true) {
+        ShowToast.showCenterToast(context, l10n!.modification_success);
         Navigator.of(context).pop();
+      } else {
+        final errorMsg = result['message'] ?? l10n!.modification_failed;
+        ShowToast.showCenterToast(context, errorMsg);
       }
     } catch (e) {
       ShowToast.showCenterToast(context, l10n!.modification_failed);

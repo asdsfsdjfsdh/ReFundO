@@ -60,7 +60,12 @@ class RefundProvider with ChangeNotifier {
       }
       if (token.isNotEmpty) {
         try {
-            _refunds = await refundService.getRefunds(context);
+            final result = await refundService.getRefunds(context);
+            if (result['success'] == true) {
+              _refunds = result['data'] as List<RefundModel>;
+            } else {
+              _refunds = [];
+            }
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);
@@ -111,44 +116,39 @@ class RefundProvider with ChangeNotifier {
   }
   
   // 检查退款条件
-  Future<int> checkRefundConditions(BuildContext context) async {
+  Future<Map<String, dynamic>> checkRefundConditions(BuildContext context) async {
     try {
-      final statusCode = await _orderService.checkRefundConditions(context,_orders!);
-      return statusCode;
+      final result = await _orderService.checkRefundConditions(context,_orders!);
+      return result;
     } catch (e) {
       if (kDebugMode) {
         print("检查退款条件失败: $e");
       }
-      return -1;
+      return {'success': false, 'message': 'unknown_error'};
     }
   }
 
 // 退款
-  Future<int> Refund(BuildContext context,int refundType,String refundAccount) async {
+  Future<Map<String, dynamic>> Refund(BuildContext context,int refundType,String refundAccount) async {
     try {
       if (_orders!.isNotEmpty) {
-        // 先检查退款条件
-        // final statusCode = await checkRefundConditions(context);
-        // if (statusCode != 200) {
-        //   // 条件不满足，返回状态码
-        //   return statusCode; // 直接返回状态码
-        // }
-        
-        int message = await _orderService.Refund(context, _orders!,refundType,refundAccount);
-        if(message == 1){
+        final result = await _orderService.Refund(context, _orders!,refundType,refundAccount);
+        if (result['success'] == true) {
           Provider.of<OrderProvider>(context,listen: false).getOrders(context);
           this.getRefunds(context);
           Provider.of<UserProvider>(context,listen: false).Info(context);
+          return {'success': true, 'messageKey': 'create_refund_success'};
+        } else {
+          return result;
         }
-        return message;
       } else {
-        return 10086;
+        return {'success': false, 'message': 'no_orders_selected'};
       }
     } catch (e) {
       if (kDebugMode) {
         print("ERROR:$e");
       }
-      return -1;
+      return {'success': false, 'message': 'unknown_error'};
     }
   }
 

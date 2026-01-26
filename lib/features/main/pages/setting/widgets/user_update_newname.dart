@@ -60,10 +60,12 @@ class _NameChangeSheetState extends State<NameChangeSheet> {
             onPressed: () async {
               print(_controller.text);
               if(_controller.text != ''){
-                String message = await Provider.of<UserProvider>(context, listen: false).updateUserInfo(_controller.text, 1, context);
-                ShowToast.showCenterToast(context, message);
-                if(message == l10n.update_success){
+                var result = await Provider.of<UserProvider>(context, listen: false).updateUserInfo(_controller.text, 1, context);
+                if (result['success']) {
+                  ShowToast.showCenterToast(context, l10n.update_username_success);
                   Navigator.pop(context);
+                } else {
+                  ShowToast.showCenterToast(context, result['message'] ?? l10n.modification_failed);
                 }
               }else{
                 ShowToast.showCenterToast(context, l10n.please_enter_name);

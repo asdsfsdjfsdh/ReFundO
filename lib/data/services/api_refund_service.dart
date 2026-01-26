@@ -9,7 +9,7 @@ import 'package:refundo/models/refund_model.dart';
 
 class ApiRefundService {
   //用户获取退款记录
-  Future<List<RefundModel>> getRefunds(BuildContext context) async {
+  Future<Map<String, dynamic>> getRefunds(BuildContext context) async {
     try {
       DioProvider dioProvider = Provider.of<DioProvider>(
         context,
@@ -18,19 +18,24 @@ class ApiRefundService {
       List<RefundModel> refunds = [];
 
       Response response = await dioProvider.dio.get('/api/refund-request/list');
-      // print(response);
-      // String message = response.data['message'];
-      List<dynamic> ordersRequest = response.data['data'];
-      for (var i = 0; i < ordersRequest.length; i++) {
-        Map<String, dynamic> ordersresult = ordersRequest[i];
-        RefundModel refund = RefundModel.fromJson(ordersresult);
-        refunds.add(refund);
-      }
 
-      return refunds;
+      final Map<String, dynamic> responseData = response.data;
+      int code = responseData['code'] as int? ?? 0;
+      String? message = responseData['message'];
+
+      if (code == 1 && responseData['data'] != null) {
+        List<dynamic> ordersRequest = responseData['data'];
+        for (var i = 0; i < ordersRequest.length; i++) {
+          Map<String, dynamic> ordersresult = ordersRequest[i];
+          RefundModel refund = RefundModel.fromJson(ordersresult, successMessageKey: 'get_refunds_success');
+          refunds.add(refund);
+        }
+        return {'success': true, 'data': refunds, 'message': 'get_refunds_success'};
+      } else {
+        return {'success': false, 'data': [], 'message': message ?? 'get_refunds_failed'};
+      }
     } on DioException catch (e) {
-      String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
+      String message = 'network_error';
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -38,38 +43,27 @@ class ApiRefundService {
       print("请求体: ${e.requestOptions.data}");
       print("响应状态码: ${e.response?.statusCode}");
       print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
+
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
-        message = '请求超时: + ${e.message}';
-      } else if (e.type == DioExceptionType.connectionTimeout) {
-        // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_timeout';
       } else if (e.response != null) {
-        // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
-        } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'server_error_500';
         }
-      } else {
-        message = '网络请求异常: ${e.message}';
       }
-      return [];
+      return {'success': false, 'data': [], 'message': message};
     } catch (e) {
-      // 处理其他异常
       print('未知错误: $e');
-      String message = '未知错误: $e';
-      return [];
+      return {'success': false, 'data': [], 'message': 'unknown_error'};
     }
   }
 
   // 管理员获取退款记录
-  Future<List<RefundModel>> getAllRefunds(BuildContext context) async {
+  Future<Map<String, dynamic>> getAllRefunds(BuildContext context) async {
     try {
       DioProvider dioProvider = Provider.of<DioProvider>(
         context,
@@ -78,18 +72,24 @@ class ApiRefundService {
       List<RefundModel> refunds = [];
 
       Response response = await dioProvider.dio.post('/api/refund/getAll');
-      // print(response);
-      String message = response.data['message'];
-      List<dynamic> ordersRequest = response.data['result'];
-      for (var i = 0; i < ordersRequest.length; i++) {
-        Map<String, dynamic> ordersresult = ordersRequest[i];
-        RefundModel refund = RefundModel.fromJson(ordersresult);
-        refunds.add(refund);
+
+      final Map<String, dynamic> responseData = response.data;
+      int code = responseData['code'] as int? ?? 0;
+      String? message = responseData['message'];
+
+      if (code == 1 && responseData['result'] != null) {
+        List<dynamic> ordersRequest = responseData['result'];
+        for (var i = 0; i < ordersRequest.length; i++) {
+          Map<String, dynamic> ordersresult = ordersRequest[i];
+          RefundModel refund = RefundModel.fromJson(ordersresult, successMessageKey: 'get_refunds_success');
+          refunds.add(refund);
+        }
+        return {'success': true, 'data': refunds, 'message': 'get_refunds_success'};
+      } else {
+        return {'success': false, 'data': [], 'message': message ?? 'get_refunds_failed'};
       }
-      return refunds;
     } on DioException catch (e) {
-      String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
+      String message = 'network_error';
       print("Dio错误详情:");
       print("请求URL: ${e.requestOptions.uri}");
       print("请求方法: ${e.requestOptions.method}");
@@ -97,33 +97,22 @@ class ApiRefundService {
       print("请求体: ${e.requestOptions.data}");
       print("响应状态码: ${e.response?.statusCode}");
       print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
+
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
-        message = '请求超时: + ${e.message}';
-      } else if (e.type == DioExceptionType.connectionTimeout) {
-        // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
+        message = 'network_timeout';
       } else if (e.response != null) {
-        // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
+          message = "server_error_404";
         } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
-        } else {
-          message = '服务器返回错误状态码: $statusCode';
+          message = 'server_error_500';
         }
-      } else {
-        message = '网络请求异常: ${e.message}';
       }
-      return [];
+      return {'success': false, 'data': [], 'message': message};
     } catch (e) {
-      // 处理其他异常
       print('未知错误: $e');
-      String message = '未知错误: $e';
-      return [];
+      return {'success': false, 'data': [], 'message': 'unknown_error'};
     }
   }
 }

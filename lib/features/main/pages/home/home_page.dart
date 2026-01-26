@@ -188,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                     selectedCount: refundProvider.orders!.length,
                     onConfirm: (refundType,refundAccount) async {
                       // 执行退款逻辑
-                      final int result = await refundProvider.Refund(context,refundType,refundAccount);
+                      final Map<String, dynamic> result = await refundProvider.Refund(context,refundType,refundAccount);
                       _handleRefundResult(result, l10n);
                     },
                   );
@@ -229,29 +229,32 @@ class _HomePageState extends State<HomePage> {
   }
 
 // 处理退款结果
-  void _handleRefundResult(int result, AppLocalizations l10n) {
+  void _handleRefundResult(Map<String, dynamic> result, AppLocalizations l10n) {
     String message;
     bool shouldResetState = false;
 
-    switch (result) {
-      case 1:
-        message = l10n.refund_success_waiting_approval;
-        shouldResetState = true;
-        break;
-      case 0:
-        message = l10n.unknown_error;
-        break;
-      case -1:
-        message = l10n.server_error;
-        break;
-      case 201:
-        message = l10n.order_less_than_5_months;
-        break;
-      case 202:
-        message = l10n.total_amount_less_than_5000;
-        break;
-      default:
-        message = l10n.error;
+    if (result['success']) {
+      // 成功
+      String messageKey = result['messageKey'] ?? 'create_refund_success';
+      message = l10n.refund_success_waiting_approval;
+      shouldResetState = true;
+    } else {
+      // 失败 - 使用错误消息
+      String errorMsg = result['message'] ?? 'unknown_error';
+      // 映射错误消息到本地化文本
+      switch (errorMsg) {
+        case 'no_orders_selected':
+          message = l10n.select_at_least_one_order;
+          break;
+        case 'network_error':
+        case 'network_timeout':
+        case 'server_error_404':
+        case 'server_error_500':
+          message = _getLocalizedErrorMessage(l10n, errorMsg);
+          break;
+        default:
+          message = errorMsg; // 后端返回的错误消息
+      }
     }
 
     if (shouldResetState) {
@@ -261,6 +264,23 @@ class _HomePageState extends State<HomePage> {
     }
 
     _showDialog(context, message);
+  }
+
+  // 获取本地化错误消息的辅助方法
+  String _getLocalizedErrorMessage(AppLocalizations l10n, String errorKey) {
+    switch (errorKey) {
+      case 'network_timeout':
+        return l10n.network_timeout;
+      case 'network_error':
+        return l10n.network_error;
+      case 'server_error_404':
+        return l10n.server_error_404;
+      case 'server_error_500':
+        return l10n.server_error_500;
+      case 'unknown_error':
+      default:
+        return l10n.unknown_error;
+    }
   }
 
 

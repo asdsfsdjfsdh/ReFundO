@@ -20,6 +20,7 @@ class UserModel {
   String? avatarUrl;
 
   final String errorMessage;
+  final String successMessageKey;
 
   // 初始化方法
   UserModel({
@@ -34,6 +35,7 @@ class UserModel {
     this.wave,
     this.avatarUrl,
     this.errorMessage = '',
+    this.successMessageKey = '',
   });
 
   // 配置转化Json方法
@@ -50,7 +52,7 @@ class UserModel {
       };
 
   // 从Json的转化方法
-  factory UserModel.fromJson(Map<String, dynamic> json, {String errorMessage = ''}) {
+  factory UserModel.fromJson(Map<String, dynamic> json, {String errorMessage = '', String successMessageKey = ''}) {
     // 如果json为空，返回一个默认实例
     if (json.isEmpty) {
       return UserModel(
@@ -65,6 +67,7 @@ class UserModel {
         wave: null,
         avatarUrl: null,
         errorMessage: errorMessage,
+        successMessageKey: successMessageKey,
       );
     }
 
@@ -92,6 +95,7 @@ class UserModel {
       wave: userData['wave'] as String?,
       avatarUrl: userData['avatarUrl'] as String?,
       errorMessage: errorMessage,
+      successMessageKey: successMessageKey,
     );
   }
 

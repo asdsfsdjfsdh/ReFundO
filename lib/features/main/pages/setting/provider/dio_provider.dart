@@ -9,7 +9,7 @@ class DioProvider extends ChangeNotifier {
 
  DioProvider() {
   // http://10.0.2.2
-  _dio.options.baseUrl = "http://192.168.1.17:4040";
+  _dio.options.baseUrl = "http://10.0.2.2:4040";
   _dio.options.contentType = Headers.jsonContentType; 
 
   // 添加拦截器
