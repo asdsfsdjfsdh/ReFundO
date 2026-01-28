@@ -48,6 +48,9 @@ dependencies:
   #http
   dio: ^5.9.0
 
+  # 网络状态检测
+  connectivity_plus: ^6.1.0
+
   # 密码加密
   pointycastle: ^4.0.0
   # The following adds the Cupertino Icons font to your application.

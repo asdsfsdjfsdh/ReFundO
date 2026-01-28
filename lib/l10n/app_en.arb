@@ -220,5 +220,13 @@
   "new_password": "New Password",
   "hint_enter_new_password": "Please enter new password",
   "hint_confirm_new_password": "Please enter new password again",
-  "password_set_success": "Password set successfully"
+  "password_set_success": "Password set successfully",
+  "sync_offline_orders": "Sync Offline Orders",
+  "no_offline_orders": "No offline orders to sync",
+  "syncing_offline_orders": "Syncing offline orders...",
+  "sync_completed": "Sync completed",
+  "orders_successfully": "orders successfully",
+  "orders_failed": "orders failed",
+  "sync_failed": "Sync failed",
+  "sync_error": "Sync error"
 }

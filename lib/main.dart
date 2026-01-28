@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:refundo/features/main/main_screen.dart';
-import 'package:refundo/features/main/models/initialization_model.dart';
-import 'package:refundo/features/main/pages/home/provider/approval_provider.dart';
-import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
-import 'package:refundo/features/main/pages/home/provider/refund_provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/app_provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/email_provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
-import 'package:refundo/features/start/start_screen.dart';
+import 'package:refundo/presentation/pages/home/main_screen.dart';
+import 'package:refundo/presentation/pages/initialization_model.dart';
+import 'package:refundo/presentation/providers/approval_provider.dart';
+import 'package:refundo/presentation/providers/order_provider.dart';
+import 'package:refundo/presentation/providers/refund_provider.dart';
+import 'package:refundo/presentation/providers/app_provider.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
+import 'package:refundo/presentation/providers/email_provider.dart';
+import 'package:refundo/presentation/providers/user_provider.dart';
+import 'package:refundo/presentation/pages/start/start_screen.dart';
 import 'package:refundo/l10n/app_localizations.dart';
-import 'package:refundo/routes/routes.dart';
+import 'package:refundo/config/routes/routes.dart';
 import 'package:provider/provider.dart';
 
 void main() async{
@@ -42,7 +42,14 @@ class _MyAppStatus extends State<MyApp>{
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => InitializationModel()),
-        ChangeNotifierProvider(create: (context)=> OrderProvider()),
+        ChangeNotifierProvider(
+          create: (context) {
+            final orderProvider = OrderProvider();
+            // 初始化离线订单功能
+            orderProvider.initialize();
+            return orderProvider;
+          }
+        ),
         ChangeNotifierProvider(create: (context)=> RefundProvider()),
         ChangeNotifierProvider(create: (context)=> UserProvider()),
         ChangeNotifierProvider(create: (context) => AppProvider()),

@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
-import 'package:refundo/features/main/pages/home/provider/order_provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/user_provider.dart';
-import 'package:refundo/models/Product_model.dart';
-import 'package:refundo/models/order_model.dart';
-import 'package:refundo/models/refund_model.dart';
-import 'package:refundo/models/user_model.dart';
+import 'package:refundo/presentation/providers/order_provider.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
+import 'package:refundo/presentation/providers/user_provider.dart';
+import 'package:refundo/data/models/Product_model.dart';
+import 'package:refundo/data/models/order_model.dart';
+import 'package:refundo/data/models/refund_model.dart';
+import 'package:refundo/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiOrderService {

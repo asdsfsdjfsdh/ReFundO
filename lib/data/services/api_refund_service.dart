@@ -3,9 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/data/services/api_order_service.dart';
-import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
-import 'package:refundo/models/order_model.dart';
-import 'package:refundo/models/refund_model.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
+import 'package:refundo/data/models/order_model.dart';
+import 'package:refundo/data/models/refund_model.dart';
 
 class ApiRefundService {
   //用户获取退款记录

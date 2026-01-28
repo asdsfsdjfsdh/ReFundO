@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
 
 class ApiEmailService{
  

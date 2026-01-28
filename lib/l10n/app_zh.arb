@@ -220,5 +220,13 @@
   "new_password": "新密码",
   "hint_enter_new_password": "请输入新密码",
   "hint_confirm_new_password": "请再次输入新密码",
-  "password_set_success": "密码设置成功"
+  "password_set_success": "密码设置成功",
+  "sync_offline_orders": "同步离线订单",
+  "no_offline_orders": "没有离线订单需要同步",
+  "syncing_offline_orders": "正在同步离线订单...",
+  "sync_completed": "同步完成",
+  "orders_successfully": "个订单成功",
+  "orders_failed": "个订单失败",
+  "sync_failed": "同步失败",
+  "sync_error": "同步错误"
 }

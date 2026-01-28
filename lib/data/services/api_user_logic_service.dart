@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/features/main/pages/setting/provider/dio_provider.dart';
-import 'package:refundo/models/user_model.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
+import 'package:refundo/data/models/user_model.dart';
 import 'package:dio/dio.dart';
 
 class ApiUserLogicService {
