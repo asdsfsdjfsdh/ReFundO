@@ -737,21 +737,32 @@ class DebugPanelButton extends StatelessWidget {
     return Positioned(
       top: 100,
       right: 16,
-      child: FloatingActionButton(
-        mini: true,
-        heroTag: 'debug_panel',
-        backgroundColor: Colors.red.shade700,
-        foregroundColor: Colors.white,
-        tooltip: '打开调试面板',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CompleteDebugPanelPage(),
-            ),
-          );
-        },
-        child: const Icon(Icons.bug_report),
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Builder(
+          builder: (buttonContext) => FloatingActionButton(
+            mini: true,
+            heroTag: 'debug_panel',
+            backgroundColor: Colors.red.shade700,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              try {
+                // 尝试使用普通Navigator
+                Navigator.push(
+                  buttonContext,
+                  MaterialPageRoute(
+                    builder: (context) => const CompleteDebugPanelPage(),
+                  ),
+                );
+              } catch (e) {
+                // 如果失败（比如在StartScreen），忽略错误
+                // 调试按钮在MainScreen上可以正常工作
+                debugPrint('导航失败: $e');
+              }
+            },
+            child: const Icon(Icons.bug_report),
+          ),
+        ),
       ),
     );
   }

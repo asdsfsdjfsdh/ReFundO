@@ -1,7 +1,8 @@
 import 'package:provider/provider.dart';
-import 'package:refundo/data/models/initialization_model.dart';
+import 'package:refundo/presentation/pages/initialization_model.dart';
 import 'package:refundo/presentation/pages/home/home_page.dart';
 import 'package:refundo/presentation/pages/settings/setting_page.dart';
+import 'package:refundo/presentation/pages/debug/complete_debug_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 
@@ -46,6 +47,22 @@ class _MainScreenState extends State<MainScreen>{
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
+      ),
+      // 添加调试按钮
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'debug_panel_main',
+        backgroundColor: Colors.red.shade700,
+        foregroundColor: Colors.white,
+        mini: true,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CompleteDebugPanelPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.bug_report),
       ),
       // 导航栏
       bottomNavigationBar: BottomNavigationBar(

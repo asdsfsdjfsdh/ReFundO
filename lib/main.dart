@@ -12,17 +12,10 @@ import 'package:refundo/presentation/providers/user_provider.dart';
 import 'package:refundo/presentation/pages/start/start_screen.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/config/routes/routes.dart';
-import 'package:refundo/core/performance/performance_optimizer.dart';
-import 'package:refundo/core/utils/app_lifecycle_observer.dart';
-import 'package:refundo/presentation/pages/debug/debug_panel.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // 初始化性能优化器
-  await PerformanceOptimizer.instance.initialize();
-
   runApp(const MyApp());
 }
 
@@ -33,22 +26,7 @@ class MyApp extends StatefulWidget {
   State<StatefulWidget> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  late final AppLifecycleObserver _lifecycleObserver;
-
-  @override
-  void initState() {
-    super.initState();
-    _lifecycleObserver = AppLifecycleObserver();
-    WidgetsBinding.instance.addObserver(_lifecycleObserver);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(_lifecycleObserver);
-    super.dispose();
-  }
-
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -74,7 +52,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           // 加载保存的语言设置
           appProvider.loadLocale();
 
-          final app = MaterialApp(
+          return MaterialApp(
             title: "RefundO",
             // 设置首页路由为启动界面
             initialRoute: AppRoutes.start,
@@ -102,9 +80,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             // 性能优化：启用光标去抖动
             debugShowMaterialGrid: false,
           );
-
-          // 用调试面板包装应用（仅在调试模式）
-          return DebugPanelWrapper(child: app);
         },
       ),
     );
