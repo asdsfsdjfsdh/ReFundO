@@ -8,6 +8,9 @@ import 'package:refundo/presentation/widgets/audit_page.dart';
 import 'package:refundo/presentation/widgets/user_profile_card.dart';
 import 'package:refundo/presentation/widgets/user_update_cardnumber.dart';
 import 'package:refundo/presentation/widgets/user_update_email.dart';
+import 'package:refundo/presentation/pages/help/help_and_feedback_page.dart';
+import 'package:refundo/presentation/pages/history/scan_history_page.dart';
+import 'package:refundo/presentation/pages/statistics/statistics_page.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 
 class SettingPage extends StatefulWidget {
@@ -377,6 +380,57 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               );
             }
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // 帮助与反馈
+        _buildAppSettingCard(
+          context: context,
+          title: l10n.help_and_feedback,
+          subtitle: l10n.faq,
+          icon: Icons.help_outline_rounded,
+          iconColor: Colors.teal.shade600,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const HelpAndFeedbackPage(),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // 扫描历史
+        _buildAppSettingCard(
+          context: context,
+          title: '扫描历史',
+          subtitle: '查看扫描记录',
+          icon: Icons.history_rounded,
+          iconColor: Colors.indigo.shade600,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const ScanHistoryPage(),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // 统计分析
+        _buildAppSettingCard(
+          context: context,
+          title: '统计分析',
+          subtitle: '查看数据统计',
+          icon: Icons.bar_chart_rounded,
+          iconColor: Colors.amber.shade600,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const StatisticsPage(),
+              ),
+            );
           },
         ),
         const SizedBox(height: 8),

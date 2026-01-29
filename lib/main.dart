@@ -12,83 +12,101 @@ import 'package:refundo/presentation/providers/user_provider.dart';
 import 'package:refundo/presentation/pages/start/start_screen.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/config/routes/routes.dart';
+import 'package:refundo/core/performance/performance_optimizer.dart';
+import 'package:refundo/core/utils/app_lifecycle_observer.dart';
+import 'package:refundo/presentation/pages/debug/debug_panel.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
-  runApp(
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => EmailProvider()),
-        ChangeNotifierProvider(create: (_) => DioProvider()),
-        ChangeNotifierProvider(create: (_) => RefundProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  // 初始化性能优化器
+  await PerformanceOptimizer.instance.initialize();
+
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget{
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MyAppStatus();
+  State<StatefulWidget> createState() => _MyAppState();
 }
 
-class _MyAppStatus extends State<MyApp>{
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  late final AppLifecycleObserver _lifecycleObserver;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleObserver = AppLifecycleObserver();
+    WidgetsBinding.instance.addObserver(_lifecycleObserver);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(_lifecycleObserver);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => InitializationModel()),
+        ChangeNotifierProvider(create: (_) => InitializationModel()),
         ChangeNotifierProvider(
-          create: (context) {
+          create: (_) {
             final orderProvider = OrderProvider();
             // 初始化离线订单功能
             orderProvider.initialize();
             return orderProvider;
           }
         ),
-        ChangeNotifierProvider(create: (context)=> RefundProvider()),
-        ChangeNotifierProvider(create: (context)=> UserProvider()),
-        ChangeNotifierProvider(create: (context) => AppProvider()),
-        ChangeNotifierProvider(create: (context) => EmailProvider()),
-        ChangeNotifierProvider(create: (context) => DioProvider()),
-        ChangeNotifierProvider(create: (context) => ApprovalProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => AppProvider()),
+        ChangeNotifierProvider(create: (_) => RefundProvider()),
+        ChangeNotifierProvider(create: (_) => EmailProvider()),
+        ChangeNotifierProvider(create: (_) => DioProvider()),
+        ChangeNotifierProvider(create: (_) => ApprovalProvider()),
       ],
-      child:Consumer<AppProvider>(
-          builder: (context, appProvider, child) {
-            // 加载保存的语言设置
-            appProvider.loadLocale();
-            return MaterialApp(
-              title: "RefundO",
-              // 设置首页路由为启动界面
-              initialRoute: AppRoutes.start,
-              // 初始化路由
-              routes: {
-                AppRoutes.main: (context) => MainScreen(),
-                AppRoutes.start: (context) => StartScreen(),
-              },
-              locale: appProvider.locale,
-              // 配置本地化代理（语言转换）
-              localizationsDelegates: const [
-                AppLocalizations.delegate, // 生成本地化代理
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate
-              ],
-              // 支持的语言环境
-              supportedLocales: const[
-                // 英语
-                Locale('en'),
-                // 中文
-                Locale('zh'),
-                Locale('fr', 'FR'), // 法语
-              ],
-            );
-          }
-          )
+      child: Consumer<AppProvider>(
+        builder: (context, appProvider, child) {
+          // 加载保存的语言设置
+          appProvider.loadLocale();
+
+          final app = MaterialApp(
+            title: "RefundO",
+            // 设置首页路由为启动界面
+            initialRoute: AppRoutes.start,
+            // 初始化路由
+            routes: {
+              AppRoutes.main: (context) => const MainScreen(),
+              AppRoutes.start: (context) => const StartScreen(),
+            },
+            locale: appProvider.locale,
+            // 配置本地化代理（语言转换）
+            localizationsDelegates: const [
+              AppLocalizations.delegate, // 生成本地化代理
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
+            ],
+            // 支持的语言环境
+            supportedLocales: const [
+              // 英语
+              Locale('en'),
+              // 中文
+              Locale('zh'),
+              Locale('fr', 'FR'), // 法语
+            ],
+            // 性能优化：启用光标去抖动
+            debugShowMaterialGrid: false,
+          );
+
+          // 用调试面板包装应用（仅在调试模式）
+          return DebugPanelWrapper(child: app);
+        },
+      ),
     );
   }
 
