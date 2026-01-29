@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/l10n/app_localizations.dart';
-import 'package:refundo/presentation/pages/home/home_page_v2.dart';
+import 'package:refundo/presentation/pages/home/home_page_colorful.dart';
 import 'package:refundo/presentation/pages/profile/profile_page.dart';
 import 'package:refundo/presentation/pages/initialization_model.dart';
 
@@ -33,7 +33,7 @@ class _MainScreenSimpleState extends State<MainScreenSimple> {
         setState(() {
           _isInitialized = true;
           _pages = [
-            const HomePageV2(),
+            const HomePageColorful(),
             const ProfilePage(),
           ];
         });
