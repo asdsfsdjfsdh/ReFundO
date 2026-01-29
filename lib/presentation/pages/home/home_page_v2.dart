@@ -11,9 +11,8 @@ import 'package:refundo/presentation/providers/user_provider.dart';
 import 'package:refundo/presentation/pages/scanner/scanner_page.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/widgets/app_cards.dart';
-import 'package:refundo/presentation/widgets/app_buttons.dart';
+import 'package:refundo/presentation/widgets/app_states.dart';
 import 'package:refundo/presentation/widgets/loading_widgets.dart';
-import 'package:refundo/core/utils/storage/offline_order_storage.dart';
 
 /// 新的首页 - 订单和退款管理
 class HomePageV2 extends StatefulWidget {
@@ -126,76 +125,42 @@ class _HomePageV2State extends State<HomePageV2> {
 
     return Container(
       margin: const EdgeInsets.all(16),
-      child: AppCards.gradient(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.blue.shade600,
-            Colors.purple.shade600,
-          ],
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.today_orders,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white70,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${orders.length}',
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      children: [
-                        const Text(
-                          '总金额',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${totalAmount.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+      child: Row(
+        children: [
+          // 订单数卡片
+          Expanded(
+            child: AppCards.gradient(
+              title: l10n.today_orders,
+              value: '${orders.length}',
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.blue.shade600,
+                  Colors.blue.shade700,
                 ],
               ),
-            ],
+              icon: Icons.shopping_cart_rounded,
+            ),
           ),
-        ),
+          const SizedBox(width: 12),
+          // 总金额卡片
+          Expanded(
+            child: AppCards.gradient(
+              title: l10n.total_amount,
+              value: '${totalAmount.toStringAsFixed(0)} FCFA',
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.green.shade600,
+                  Colors.green.shade700,
+                ],
+              ),
+              icon: Icons.payments_rounded,
+            ),
+          ),
+        ],
       ),
     );
   }
