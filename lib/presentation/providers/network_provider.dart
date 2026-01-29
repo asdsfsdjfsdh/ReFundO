@@ -2,16 +2,19 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:refundo/core/services/offline_sync_service.dart';
+import 'package:refundo/presentation/providers/order_provider.dart';
 
 /// 网络状态Provider
 /// 监听网络连接状态，并在网络恢复时触发离线订单同步
-class NetworkProvider {
+/// 注意: 使用单例模式，请确保在应用生命周期结束时调用 disposeInstance() 来释放资源
+class NetworkProvider with ChangeNotifier {
   static NetworkProvider? _instance;
   static NetworkProvider get instance => _instance ??= NetworkProvider._();
 
   NetworkProvider._() {
-    _initializeConnectivity();
+    initializeConnectivity();
   }
 
   final Connectivity _connectivity = Connectivity();
@@ -24,7 +27,7 @@ class NetworkProvider {
   bool get hasNetwork => _hasNetwork;
 
   /// 初始化网络连接监听
-  Future<void> _initializeConnectivity() async {
+  Future<void> initializeConnectivity() async {
     try {
       // 获取初始网络状态
       final List<ConnectivityResult> result = await _connectivity.checkConnectivity();
@@ -59,6 +62,8 @@ class NetworkProvider {
 
       // 通知同步服务网络状态变化
       _syncService.setNetworkStatus(isConnected);
+      // 通知监听者状态变化
+      notifyListeners();
     }
   }
 
@@ -79,9 +84,18 @@ class NetworkProvider {
     }
   }
 
-  /// 取消网络监听
+  /// 取消网络监听（实例方法）
+  @override
   void dispose() {
     _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
+  /// 释放单例实例的资源
+  /// 应该在应用生命周期结束时调用（例如在 main.dart 的 runApp 之前或 WidgetsBindingObserver.didChangeAppLifecycleState）
+  static void disposeInstance() {
+    _instance?.dispose();
+    _instance = null;
   }
 
   /// 同步离线订单到服务器
@@ -99,8 +113,13 @@ class NetworkProvider {
         print('网络恢复，开始同步 ${offlineOrders.length} 条离线订单');
       }
 
-      // 这里需要通过OrderProvider来同步，因为需要context
-      // 实际同步逻辑由OrderProvider.syncOfflineOrders处理
+      // 通过OrderProvider来同步，因为需要context
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      final result = await orderProvider.syncOfflineOrders(context);
+
+      if (kDebugMode) {
+        print('同步完成: 成功 ${result['success']} 条, 失败 ${result['failed']} 条');
+      }
     } catch (e) {
       if (kDebugMode) {
         print('同步离线订单失败: $e');
@@ -108,4 +127,3 @@ class NetworkProvider {
     }
   }
 }
-

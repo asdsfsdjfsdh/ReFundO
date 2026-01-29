@@ -20,6 +20,9 @@ class UserModel{
 
   String password;
 
+  // Getter for email (lowercase alias for Email)
+  String get email => Email;
+
   // 初始化方法
   UserModel({
     required this.username,

@@ -22,12 +22,24 @@ class OrderProvider with ChangeNotifier {
   // 离线订单数量
   int _offlineOrderCount = 0;
 
+  // 分页相关
+  int _currentPage = 1;
+  int _pageSize = 20;
+  int _totalOrders = 0;
+  bool _hasMore = true;
+  bool _isLoadingMore = false;
+
   List<OrderModel>? get orders => _orders;
 
   // 离线订单数量
   int get offlineOrderCount => _offlineOrderCount;
 
-  // 获取订单信息
+  // 分页状态
+  bool get hasMore => _hasMore;
+  bool get isLoadingMore => _isLoadingMore;
+  int get currentPage => _currentPage;
+
+  // 获取订单信息（首次加载或刷新）
   Future<void> getOrders(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -38,7 +50,19 @@ class OrderProvider with ChangeNotifier {
       }
       if (token.isNotEmpty) {
         try {
-          _orders = await _orderService.getOrders(context, false);
+          // 重置分页状态
+          _currentPage = 1;
+          _hasMore = true;
+          _orders = await _orderService.getOrders(
+            context,
+            false,
+            page: _currentPage,
+            pageSize: _pageSize,
+          );
+
+          // 获取总数
+          _totalOrders = await _orderService.getOrdersCount(context, false);
+          _hasMore = _orders!.length < _totalOrders;
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);
@@ -54,16 +78,57 @@ class OrderProvider with ChangeNotifier {
         }
       } else {
         _orders = [];
+        _hasMore = false;
       }
     } catch (e) {
       if (kDebugMode) {
         print("获取订单失败: $e");
       }
       _orders = [];
+      _hasMore = false;
 
     }finally {
       notifyListeners();
     }
+  }
+
+  // 加载更多订单
+  Future<void> loadMoreOrders(BuildContext context) async {
+    if (_isLoadingMore || !_hasMore) return;
+
+    _isLoadingMore = true;
+    notifyListeners();
+
+    try {
+      _currentPage++;
+      final newOrders = await _orderService.getOrders(
+        context,
+        false,
+        page: _currentPage,
+        pageSize: _pageSize,
+      );
+
+      if (newOrders.isEmpty) {
+        _hasMore = false;
+      } else {
+        _orders ??= [];
+        _orders!.addAll(newOrders);
+        _hasMore = _orders!.length < _totalOrders;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("加载更多订单失败: $e");
+      }
+      _currentPage--; // 回退页码
+    } finally {
+      _isLoadingMore = false;
+      notifyListeners();
+    }
+  }
+
+  // 刷新订单列表
+  Future<void> refreshOrders(BuildContext context) async {
+    await getOrders(context);
   }
 
   // 添加订单信息
@@ -130,11 +195,46 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  /// 同步离线订单到服务器
-  Future<Map<String, int>> syncOfflineOrders(BuildContext context) async {
-    int successCount = 0;
-    int failedCount = 0;
+  /// 同步单个订单（带重试机制）
+  Future<Map<String, dynamic>> _syncSingleOrder(
+    Map<String, dynamic> orderData,
+    BuildContext context, {
+    int maxRetries = 2,
+  }) async {
+    int attempt = 0;
+    while (attempt <= maxRetries) {
+      try {
+        final productData = orderData['product'] as Map<String, dynamic>;
+        final ProductModel product = ProductModel.fromJson(productData);
 
+        final result = await _orderService.insertOrder(product, context);
+        final order = result['result'] as OrderModel?;
+
+        if (order != null) {
+          return {'success': true, 'order': order, 'data': orderData};
+        } else {
+          attempt++;
+          if (attempt > maxRetries) {
+            return {'success': false, 'data': orderData};
+          }
+        }
+      } catch (e) {
+        attempt++;
+        if (kDebugMode) {
+          print('订单同步异常 (尝试 $attempt/$maxRetries): $e');
+        }
+        if (attempt > maxRetries) {
+          return {'success': false, 'data': orderData};
+        }
+        // 等待一段时间后重试
+        await Future.delayed(Duration(milliseconds: 500 * attempt));
+      }
+    }
+    return {'success': false, 'data': orderData};
+  }
+
+  /// 同步离线订单到服务器（并行处理）
+  Future<Map<String, int>> syncOfflineOrders(BuildContext context) async {
     try {
       // 获取所有待同步的离线订单
       List<Map<String, dynamic>> offlineOrders =
@@ -145,50 +245,53 @@ class OrderProvider with ChangeNotifier {
       }
 
       if (kDebugMode) {
-        print('开始同步 ${offlineOrders.length} 条离线订单');
+        print('开始并行同步 ${offlineOrders.length} 条离线订单');
       }
 
-      List<Map<String, dynamic>> syncedOrders = [];
+      // 并行处理所有订单，但限制并发数为5
+      const concurrencyLimit = 5;
+      final results = <Map<String, dynamic>>[];
+      final syncedOrders = <Map<String, dynamic>>[];
 
-      // 逐个同步订单
-      for (var orderData in offlineOrders) {
-        try {
-          // 提取产品信息
-          final productData = orderData['product'] as Map<String, dynamic>;
-          final ProductModel product = ProductModel.fromJson(productData);
+      for (int i = 0; i < offlineOrders.length; i += concurrencyLimit) {
+        final batch = offlineOrders.skip(i).take(concurrencyLimit).toList();
+        final futures = batch.map((orderData) =>
+          _syncSingleOrder(orderData, context)
+        );
 
-          // 发送到服务器
-          Map<String, dynamic> result = await _orderService.insertOrder(product, context);
-          String message = result['message'];
-          OrderModel? order = result['result'];
+        final batchResults = await Future.wait(futures);
+        results.addAll(batchResults);
 
-          if (order != null) {
-            // 同步成功，添加到订单列表
-            _orders ??= [];
-            _orders!.add(order);
-            successCount++;
-            syncedOrders.add(orderData);
-            if (kDebugMode) {
-              print('订单同步成功: ${product.ProductId}');
-            }
-          } else {
-            failedCount++;
-            if (kDebugMode) {
-              print('订单同步失败: ${message}');
-            }
-          }
-        } catch (e) {
-          failedCount++;
+        // 报告进度
+        final completed = (i + batch.length).clamp(0, offlineOrders.length);
+        if (kDebugMode) {
+          print('同步进度: $completed/${offlineOrders.length}');
+        }
+      }
+
+      // 统计结果
+      int successCount = 0;
+      int failedCount = 0;
+
+      for (final result in results) {
+        if (result['success'] == true) {
+          successCount++;
+          syncedOrders.add(result['data']);
+          final order = result['order'] as OrderModel;
+          _orders ??= [];
+          _orders!.add(order);
           if (kDebugMode) {
-            print('订单同步异常: $e');
+            print('订单同步成功: ${order.orderNumber}');
           }
+        } else {
+          failedCount++;
         }
       }
 
       // 删除已同步成功的订单
       if (syncedOrders.isNotEmpty) {
         await _syncService.markOrdersSynced(syncedOrders);
-        _updateOfflineOrderCount();
+        await _updateOfflineOrderCount();
         Provider.of<UserProvider>(context, listen: false).Info(context);
         notifyListeners();
       }
@@ -202,7 +305,7 @@ class OrderProvider with ChangeNotifier {
       if (kDebugMode) {
         print('同步离线订单失败: $e');
       }
-      return {'success': successCount, 'failed': failedCount};
+      return {'success': 0, 'failed': 0};
     }
   }
 

@@ -1284,6 +1284,230 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password set successfully'**
   String get password_set_success;
+
+  /// No description provided for @sync_offline_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync offline orders'**
+  String get sync_offline_orders;
+
+  /// No description provided for @no_offline_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'No offline orders to sync'**
+  String get no_offline_orders;
+
+  /// No description provided for @syncing_offline_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing offline orders...'**
+  String get syncing_offline_orders;
+
+  /// No description provided for @sync_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync completed'**
+  String get sync_completed;
+
+  /// No description provided for @orders_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'orders synced successfully'**
+  String get orders_successfully;
+
+  /// No description provided for @orders_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'orders failed to sync'**
+  String get orders_failed;
+
+  /// No description provided for @sync_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get sync_failed;
+
+  /// No description provided for @sync_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error'**
+  String get sync_error;
+
+  // ==================== FAQ / 帮助与反馈 ====================
+
+  /// 帮助与反馈页面标题
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Feedback'**
+  String get help_and_feedback;
+
+  /// 搜索帮助提示
+  ///
+  /// In en, this message translates to:
+  /// **'Search help...'**
+  String get search_help;
+
+  /// 常见问题标题
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions'**
+  String get frequently_asked_questions;
+
+  /// FAQ缩写标题
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ'**
+  String get faq;
+
+  /// FAQ 1: 如何申请退款？
+  ///
+  /// In en, this message translates to:
+  /// **'How do I apply for a refund?'**
+  String get faq1_question;
+
+  /// FAQ 1 答案: 在订单页面选择您想要退款的商品，点击"退款"按钮，填写退款原因后提交申请
+  ///
+  /// In en, this message translates to:
+  ///  **'On the order page, select the items you want to refund, click the "Refund" button, provide a reason and submit your application'**
+  String get faq1_answer;
+
+  /// FAQ 2: 退款需要多长时间？
+  ///
+  /// In en, this message translates to:
+  ///  **'How long does the refund process take?'**
+  String get faq2_question;
+
+  /// FAQ 2 答案: 退款处理通常需要5-15个工作日，具体时间取决于银行和支付方式
+  ///
+  /// In en, this message translates to:
+  ///  **'The refund process typically takes 5-15 business days, depending on the bank and payment method'**
+  String get faq2_answer;
+
+  /// FAQ 3: 退款申请被拒绝了怎么办？
+  ///
+  /// In en, this message translates to:
+  ///  **'What if my refund application is rejected?'**
+  String get faq3_question;
+
+  /// FAQ 3 答案: 如果被拒绝，您可以查看拒绝原因，修改后重新提交申请，或联系客服寻求帮助
+  ///
+  /// In en, this message translates to:
+  ///  **'If rejected, you can view the rejection reason, modify and resubmit your application, or contact customer support for assistance'**
+  String get faq3_answer;
+
+  /// FAQ 4: 如何查看退款进度？
+  ///
+  /// In en, this message translates to:
+  ///  **'How do I check my refund status?'**
+  String get faq4_question;
+
+  /// FAQ 4 答案: 在"退款"页面可以查看所有退款申请的状态，包括"处理中"、"已批准"、"已拒绝"等
+  ///
+  /// In en, this message translates to:
+  ///  **'On the "Refunds" page, you can view the status of all refund applications, including "Processing", "Approved", "Rejected", etc.'**
+  String get faq4_answer;
+
+  /// 视频教程标题
+  ///
+  /// In en, this message translates to:
+  /// **'Video Tutorials'**
+  String get video_tutorials;
+
+  /// 教程1: 如何扫描商品
+  ///
+  /// In en, this message translates to:
+  ///  **'How to scan products'**
+  String get tutorial1_title;
+
+  /// 教程1描述: 扫描商品的步骤演示
+  ///
+  /// In en, this message translates to:
+  ///  **'Step-by-step guide on scanning products'**
+  String get tutorial1_desc;
+
+  /// 教程2: 如何申请退款
+  ///
+  /// In en, this message translates to:
+  ///  **'How to apply for refund'**
+  String get tutorial2_title;
+
+  /// 教程2描述: 退款申请的详细流程
+  ///
+  /// In en, this message translates to:
+  ///  **'Detailed process of refund application'**
+  String get tutorial2_desc;
+
+  /// 联系我们标题
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contact_us;
+
+  /// 邮件支持
+  ///
+  /// In en, this message translates to:
+  ///  **'Email Support'**
+  String get email_support;
+
+  /// 邮件地址
+  ///
+  /// In en, this message translates to:
+  ///  **'support@refundo.com'**
+  String get email_support_address;
+
+  /// 电话支持
+  ///
+  /// In en, this message translates to:
+  ///  **'Phone Support'**
+  String get phone_support;
+
+  /// 电话号码
+  ///
+  /// In en, this message translates to:
+  ///  **'+1234567890'**
+  String get phone_support_number;
+
+  /// WhatsApp支持
+  ///
+  /// In en, this message translates to:
+  ///  **'WhatsApp Support'**
+  String get whatsapp_support;
+
+  /// WhatsApp可用时间
+  ///
+  /// In en, this message translates to:
+  ///  **'Available on WhatsApp'**
+  String get whatsapp_available;
+
+  /// 发送反馈标题
+  ///
+  /// In en, this message translates to:
+  ///  **'Send Feedback'**
+  String get send_feedback;
+
+  /// 反馈描述
+  ///
+  /// In en, this message translates to:
+  ///  **'Please describe your problem or suggestion in detail. We will do our best to solve it for you.'**
+  String get feedback_description;
+
+  /// 输入反馈提示
+  ///
+  /// In en, this message translates to:
+  ///  **'Enter your feedback here...'**
+  String get enter_your_feedback;
+
+  /// 提交反馈按钮
+  ///
+  /// In en, this message translates to:
+  ///  **'Submit'**
+  String get submit_feedback;
+
+  /// 反馈提交成功提示
+  ///
+  /// In en, this message translates to:
+  ///  **'Feedback submitted successfully'**
+  String get feedback_submitted_successfully;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -6,11 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/utils/storage/setting_storage.dart';
 import 'package:refundo/core/utils/storage/user_storage.dart';
+import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
 import 'package:refundo/data/models/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? _user;
@@ -38,10 +38,10 @@ class UserProvider with ChangeNotifier {
         String? Email = await UserStorage.getEmail();
         LogUtil.d("初始化：", "自动登入");
         login(username!, password!,context);
-      
+
       }else{
-         final prefs = await SharedPreferences.getInstance();
-        await prefs.remove('access_token');
+        // 使用安全存储清除认证信息
+        await SecureStorageService.instance.clearAuthData();
       }
     } catch (e) {
       SettingStorage.saveRememberAccount(false);
@@ -97,8 +97,10 @@ class UserProvider with ChangeNotifier {
       _isLogin = false;
       _user = null;
       SettingStorage.saveRememberAccount(false);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('access_token'); // 移除 key 为 'access_token' 的存储
+
+      // 使用安全存储清除 Token
+      await SecureStorageService.instance.clearAuthData();
+
       //清除订单信息
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
       final refundProvider = Provider.of<RefundProvider>(context, listen: false);
@@ -159,14 +161,14 @@ class UserProvider with ChangeNotifier {
           return "Error";
       }
 
-      user = await _service.updateUserInfo(user!,updateType,context);
+      final updatedUser = await _service.updateUserInfo(user!,updateType,context);
 
-      if(user.errorMessage.isEmpty){
-        _user = user;
+      if(updatedUser.errorMessage.isEmpty){
+        _user = updatedUser;
         return "修改成功";
       }else{
-        LogUtil.e("更新用户信息", user.errorMessage);
-        return user.errorMessage;
+        LogUtil.e("更新用户信息", updatedUser.errorMessage);
+        return updatedUser.errorMessage;
       }
     } catch (e) {
       LogUtil.e("更新用户信息", e.toString());
@@ -195,4 +197,7 @@ class UserProvider with ChangeNotifier {
       return false;
     }
   }
+
+  // 注销账号（别名方法，保持命名一致性）
+  Future<void> logout(BuildContext context) => logOut(context);
 }

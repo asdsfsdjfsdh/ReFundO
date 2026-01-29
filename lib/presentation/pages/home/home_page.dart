@@ -86,16 +86,12 @@ class _HomePageState extends State<HomePage> {
           return false; // 阻止默认返回行为
         }
       },
-      child: Consumer<OrderProvider>(
-        builder: (context, orderProvider, child) {
-          final UserProvider userProvider = Provider.of<UserProvider>(
-            context,
-            listen: false,
-          );
+      child: Consumer2<OrderProvider, UserProvider>(
+        builder: (context, orderProvider, userProvider, child) {
           _totalAmount = userProvider.user?.AmountSum ?? 0.0;
 
           return Scaffold(
-            appBar: _buildAppBar(context, userProvider),
+            appBar: _buildAppBar(context, userProvider, orderProvider),
             body: _buildBody(context, orderProvider),
             bottomNavigationBar: _buildBottomNavigationBar(context),
             floatingActionButton: _buildFloatingActionButton(context),
@@ -108,9 +104,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // 构建应用栏 - 使用多语言
-  AppBar _buildAppBar(BuildContext context, UserProvider userProvider) {
-    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
-
+  AppBar _buildAppBar(BuildContext context, UserProvider userProvider, OrderProvider orderProvider) {
     return AppBar(
       title: Text(
         AppLocalizations.of(context)!.app_name,
@@ -133,49 +127,43 @@ class _HomePageState extends State<HomePage> {
 
     return [
       // 离线订单指示器和同步按钮
-      Consumer<OrderProvider>(
-        builder: (context, provider, child) {
-          final int offlineCount = provider.offlineOrderCount;
-          if (offlineCount > 0) {
-            return IconButton(
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const Icon(Icons.cloud_off, color: Colors.white),
-                  if (offlineCount > 0)
-                    Positioned(
-                      right: -4,
-                      top: -4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 18,
-                          minHeight: 18,
-                        ),
-                        child: Text(
-                          offlineCount > 99 ? '99+' : '$offlineCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+      if (orderProvider.offlineOrderCount > 0)
+        IconButton(
+          icon: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              const Icon(Icons.cloud_off, color: Colors.white),
+              Positioned(
+                right: -4,
+                top: -4,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
+                  child: Text(
+                    orderProvider.offlineOrderCount > 99
+                        ? '99+'
+                        : '${orderProvider.offlineOrderCount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
                     ),
-                ],
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-              onPressed: () => _syncOfflineOrders(context),
-              tooltip: l10n?.sync_offline_orders ?? 'Sync offline orders',
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+            ],
+          ),
+          onPressed: () => _syncOfflineOrders(context),
+          tooltip: l10n?.sync_offline_orders ?? 'Sync offline orders',
+        ),
       if (!_isRefunding)
         TextButton(
           onPressed: () {
@@ -279,7 +267,7 @@ class _HomePageState extends State<HomePage> {
     final orderProvider = Provider.of<OrderProvider>(context, listen: false);
 
     if (orderProvider.offlineOrderCount == 0) {
-      _showDialog(context, l10n.no_offline_orders);
+      _showDialog(context, l10n!.no_offline_orders);
       return;
     }
 
@@ -293,7 +281,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             const CircularProgressIndicator(),
             const SizedBox(height: 16),
-            Text(l10n.syncing_offline_orders),
+            Text(l10n!.syncing_offline_orders),
           ],
         ),
       ),
@@ -309,14 +297,14 @@ class _HomePageState extends State<HomePage> {
       if (successCount > 0) {
         _showDialog(
           context,
-          '${l10n.sync_completed}: $successCount ${l10n.orders_successfully}${failedCount > 0 ? ', $failedCount ${l10n.orders_failed}' : ''}',
+          '${l10n!.sync_completed}: $successCount ${l10n!.orders_successfully}${failedCount > 0 ? ', $failedCount ${l10n.orders_failed}' : ''}',
         );
       } else if (failedCount > 0) {
-        _showDialog(context, '${l10n.sync_failed}: $failedCount ${l10n.orders}');
+        _showDialog(context, '${l10n!.sync_failed}: $failedCount ${l10n!.orders}');
       }
     } catch (e) {
       Navigator.of(context).pop(); // 关闭加载对话框
-      _showDialog(context, '${l10n.sync_error}: $e');
+      _showDialog(context, '${l10n!.sync_error}: $e');
     }
   }
 
@@ -376,13 +364,11 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               children: [
-                Consumer<OrderProvider>(
-                  builder: (context, refundProvider, child) {
-                    return OrderWidget(
-                      models: orderProvider.orders ?? [],
-                      isrefunding: _isRefunding,
-                    );
-                  },
+                // OrderProvider已在外层监听，直接使用
+                OrderWidget(
+                  key: ValueKey(_isRefunding),
+                  models: orderProvider.orders ?? [],
+                  isrefunding: _isRefunding,
                 ),
                 Consumer<RefundProvider>(
                   builder: (context, refundProvider, child) {

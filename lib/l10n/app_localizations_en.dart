@@ -609,4 +609,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get password_set_success => 'Password set successfully';
+
+  @override
+  String get sync_offline_orders => 'Sync offline orders';
+
+  @override
+  String get no_offline_orders => 'No offline orders to sync';
+
+  @override
+  String get syncing_offline_orders => 'Syncing offline orders...';
+
+  @override
+  String get sync_completed => 'Sync completed';
+
+  @override
+  String get orders_successfully => 'orders synced successfully';
+
+  @override
+  String get orders_failed => 'orders failed to sync';
+
+  @override
+  String get sync_failed => 'Sync failed';
+
+  @override
+  String get sync_error => 'Sync error';
+
+  @override
+  String get help_and_feedback => 'Help & Feedback';
+
+  @override
+  String get search_help => 'Search help...';
+
+  @override
+  String get frequently_asked_questions => 'Frequently Asked Questions';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get faq1_question => 'How do I apply for a refund?';
+
+  @override
+  String get faq1_answer => 'On the order page, select the items you want to refund, then click the "Refund" button. Follow the instructions to complete your refund application.';
+
+  @override
+  String get faq2_question => 'How long does the refund process take?';
+
+  @override
+  String get faq2_answer => 'Typically takes 5-15 business days. The processing time depends on your payment method and bank.';
+
+  @override
+  String get faq3_question => 'What if my refund is rejected?';
+
+  @override
+  String get faq3_answer => 'You can view the rejection reason in the refund details. Modify your application according to the feedback and resubmit.';
+
+  @override
+  String get faq4_question => 'How to check refund status?';
+
+  @override
+  String get faq4_answer => 'Go to the "Refunds" page to view all your refund records and their current status.';
+
+  @override
+  String get video_tutorials => 'Video Tutorials';
+
+  @override
+  String get tutorial1_title => 'How to Scan Products';
+
+  @override
+  String get tutorial1_desc => 'Learn how to use the scanning feature to quickly add products to your orders.';
+
+  @override
+  String get tutorial2_title => 'How to Apply for Refund';
+
+  @override
+  String get tutorial2_desc => 'Step-by-step guide on submitting a refund application and tracking its progress.';
+
+  @override
+  String get contact_us => 'Contact Us';
+
+  @override
+  String get email_support => 'Email Support';
+
+  @override
+  String get email_support_address => 'support@refundo.com';
+
+  @override
+  String get phone_support => 'Phone Support';
+
+  @override
+  String get phone_support_number => '+1234567890';
+
+  @override
+  String get whatsapp_support => 'WhatsApp Support';
+
+  @override
+  String get whatsapp_available => 'Available Mon-Fri, 9:00-18:00';
+
+  @override
+  String get send_feedback => 'Send Feedback';
+
+  @override
+  String get feedback_description => 'Your feedback helps us improve our service';
+
+  @override
+  String get enter_your_feedback => 'Enter your feedback here...';
+
+  @override
+  String get submit_feedback => 'Submit Feedback';
+
+  @override
+  String get feedback_submitted_successfully => 'Thank you! Your feedback has been submitted successfully.';
 }

@@ -609,4 +609,115 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get password_set_success => '密码设置成功';
+
+  @override
+  String get sync_offline_orders => '同步离线订单';
+
+  @override
+  String get no_offline_orders => '没有需要同步的离线订单';
+
+  @override
+  String get syncing_offline_orders => '正在同步离线订单...';
+
+  @override
+  String get sync_completed => '同步完成';
+
+  @override
+  String get orders_successfully => '个订单同步成功';
+
+  @override
+  String get orders_failed => '个订单同步失败';
+
+  @override
+  String get sync_failed => '同步失败';
+
+  @override
+  String get sync_error => '同步错误';
+
+  @override
+  String get help_and_feedback => '帮助与反馈';
+
+  @override
+  String get search_help => '搜索帮助...';
+
+  @override
+  String get frequently_asked_questions => '常见问题';
+
+  @override
+  String get faq => '常见问题';
+
+  @override
+  String get faq1_question => '如何申请退款？';
+
+  @override
+  String get faq1_answer => '在订单页面选择您要退款的商品，然后点击"退款"按钮。按照提示完成您的退款申请。';
+
+  @override
+  String get faq2_question => '退款处理需要多长时间？';
+
+  @override
+  String get faq2_answer => '通常需要5-15个工作日。处理时间取决于您的付款方式和银行。';
+
+  @override
+  String get faq3_question => '退款被拒绝怎么办？';
+
+  @override
+  String get faq3_answer => '您可以在退款详情中查看拒绝原因。根据反馈修改您的申请并重新提交。';
+
+  @override
+  String get faq4_question => '如何查看退款状态？';
+
+  @override
+  String get faq4_answer => '进入"退款"页面查看您所有的退款记录及其当前状态。';
+
+  @override
+  String get video_tutorials => '视频教程';
+
+  @override
+  String get tutorial1_title => '如何扫描商品';
+
+  @override
+  String get tutorial1_desc => '学习如何使用扫描功能快速将商品添加到您的订单中。';
+
+  @override
+  String get tutorial2_title => '如何申请退款';
+
+  @override
+  String get tutorial2_desc => '关于提交退款申请和跟踪进度的分步指南。';
+
+  @override
+  String get contact_us => '联系我们';
+
+  @override
+  String get email_support => '邮件支持';
+
+  @override
+  String get email_support_address => 'support@refundo.com';
+
+  @override
+  String get phone_support => '电话支持';
+
+  @override
+  String get phone_support_number => '+1234567890';
+
+  @override
+  String get whatsapp_support => 'WhatsApp支持';
+
+  @override
+  String get whatsapp_available => '周一至周五 9:00-18:00';
+
+  @override
+  String get send_feedback => '发送反馈';
+
+  @override
+  String get feedback_description => '您的反馈帮助我们改进服务';
+
+  @override
+  String get enter_your_feedback => '请输入您的反馈...';
+
+  @override
+  String get submit_feedback => '提交反馈';
+
+  @override
+  String get feedback_submitted_successfully => '谢谢！您的反馈已成功提交。';
 }

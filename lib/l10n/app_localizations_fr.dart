@@ -609,4 +609,115 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get password_set_success => 'Mot de passe défini avec succès';
+
+  @override
+  String get sync_offline_orders => 'Synchroniser les commandes hors ligne';
+
+  @override
+  String get no_offline_orders => 'Aucune commande hors ligne à synchroniser';
+
+  @override
+  String get syncing_offline_orders => 'Synchronisation des commandes hors ligne...';
+
+  @override
+  String get sync_completed => 'Synchronisation terminée';
+
+  @override
+  String get orders_successfully => 'commandes synchronisées avec succès';
+
+  @override
+  String get orders_failed => 'commandes ont échoué à synchroniser';
+
+  @override
+  String get sync_failed => 'Échec de la synchronisation';
+
+  @override
+  String get sync_error => 'Erreur de synchronisation';
+
+  @override
+  String get help_and_feedback => 'Aide et Commentaires';
+
+  @override
+  String get search_help => 'Rechercher de l\'aide...';
+
+  @override
+  String get frequently_asked_questions => 'Questions Fréquentes';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get faq1_question => 'Comment demander un remboursement?';
+
+  @override
+  String get faq1_answer => 'Sur la page des commandes, sélectionnez les articles que vous souhaitez rembourser, puis cliquez sur le bouton "Remboursement". Suivez les instructions pour compléter votre demande.';
+
+  @override
+  String get faq2_question => 'Combien de temps prend le traitement du remboursement?';
+
+  @override
+  String get faq2_answer => 'Habituellement 5 à 15 jours ouvrables. Le temps de traitement dépend de votre mode de paiement et de votre banque.';
+
+  @override
+  String get faq3_question => 'Que se passe-t-il si mon remboursement est rejeté?';
+
+  @override
+  String get faq3_answer => 'Vous pouvez voir la raison du rejet dans les détails du remboursement. Modifiez votre demande selon les commentaires et soumettez à nouveau.';
+
+  @override
+  String get faq4_question => 'Comment vérifier l\'état du remboursement?';
+
+  @override
+  String get faq4_answer => 'Allez sur la page "Remboursements" pour voir tous vos enregistrements de remboursement et leur statut actuel.';
+
+  @override
+  String get video_tutorials => 'Tutoriels Vidéo';
+
+  @override
+  String get tutorial1_title => 'Comment Scanner des Produits';
+
+  @override
+  String get tutorial1_desc => 'Apprenez à utiliser la fonction de numérisation pour ajouter rapidement des produits à vos commandes.';
+
+  @override
+  String get tutorial2_title => 'Comment Demander un Remboursement';
+
+  @override
+  String get tutorial2_desc => 'Guide étape par étape pour soumettre une demande de remboursement et suivre son progression.';
+
+  @override
+  String get contact_us => 'Contactez-nous';
+
+  @override
+  String get email_support => 'Support par Email';
+
+  @override
+  String get email_support_address => 'support@refundo.com';
+
+  @override
+  String get phone_support => 'Support Téléphonique';
+
+  @override
+  String get phone_support_number => '+1234567890';
+
+  @override
+  String get whatsapp_support => 'Support WhatsApp';
+
+  @override
+  String get whatsapp_available => 'Disponible Lun-Ven, 9:00-18:00';
+
+  @override
+  String get send_feedback => 'Envoyer des Commentaires';
+
+  @override
+  String get feedback_description => 'Vos commentaires nous aident à améliorer notre service';
+
+  @override
+  String get enter_your_feedback => 'Entrez vos commentaires ici...';
+
+  @override
+  String get submit_feedback => 'Soumettre des Commentaires';
+
+  @override
+  String get feedback_submitted_successfully => 'Merci! Vos commentaires ont été soumis avec succès.';
 }

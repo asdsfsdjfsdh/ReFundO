@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
@@ -52,22 +53,33 @@ class _ScannerPageState extends State<ScannerPage> {
   void _showTextResultDialog(BuildContext context, Code result) async {
     String? decodedText = result.text;
     print(decodedText);
-    Map<String, dynamic> productData = _parseKeyValueFormat(decodedText!);
 
-    ProductModel product = ProductModel.fromJson(productData);
-    OrderProvider orderProvider = Provider.of<OrderProvider>(
-      context,
-      listen: false,
-    );
-    String message = await orderProvider.insertOrder(product, context);
-    Provider.of<UserProvider>(context, listen: false).Info(context);
-    
+    try {
+      // 使用compute在后台线程解析JSON，避免阻塞UI
+      Map<String, dynamic> productData = await compute(_parseJsonInBackground, decodedText!);
 
-    setState(() {
-      _message = message;
-      _showDialog(context, _message);
-    });
+      ProductModel product = ProductModel.fromJson(productData);
+      OrderProvider orderProvider = Provider.of<OrderProvider>(
+        context,
+        listen: false,
+      );
+      String message = await orderProvider.insertOrder(product, context);
+      Provider.of<UserProvider>(context, listen: false).Info(context);
 
+      if (mounted) {
+        setState(() {
+          _message = message;
+          _showDialog(context, _message);
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _message = '二维码内容非法';
+          _showDialog(context, _message);
+        });
+      }
+    }
   }
 
   void _showDialog(BuildContext context, String message) {
@@ -105,5 +117,16 @@ class _ScannerPageState extends State<ScannerPage> {
     _showDialog(context, '二维码内容非法');
     throw Exception('二维码内容不是有效的 JSON 格式');
   }
+  }
+}
+
+/// 静态函数：在后台线程解析JSON
+/// 必须是顶层函数或静态函数，才能在compute中使用
+Map<String, dynamic> _parseJsonInBackground(String text) {
+  try {
+    final Map<String, dynamic> jsonData = json.decode(text);
+    return jsonData;
+  } on FormatException catch (e) {
+    throw Exception('二维码内容不是有效的 JSON 格式');
   }
 }

@@ -128,6 +128,11 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
             width: 70,
             height: 70,
             fit: BoxFit.cover,
+            // 限制内存缓存尺寸，减少内存占用（显示尺寸的2倍以保证清晰度）
+            memCacheWidth: 140,
+            memCacheHeight: 140,
+            // 使用唯一缓存key，避免头像更新后不刷新的问题
+            cacheKey: 'avatar_${provider.user!.userAccount}_${provider.user!.avatarUrl}',
             placeholder: (context, url) => _buildAvatarPlaceholder(context, provider),
             errorWidget: (context, url, error) => _buildAvatarPlaceholder(context, provider),
           ),

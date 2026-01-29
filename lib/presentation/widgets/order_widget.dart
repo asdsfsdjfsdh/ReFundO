@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
+import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart'; // 添加多语言支持
 import 'package:refundo/data/models/order_model.dart';
 
@@ -27,6 +28,7 @@ class _OrderWidgetState extends State<OrderWidget> {
     super.initState();
     _scrollController = ScrollController();
     _initializeSelectionState();
+    _setupScrollListener();
   }
 
   @override
@@ -39,6 +41,25 @@ class _OrderWidgetState extends State<OrderWidget> {
 
     if (oldWidget.models != widget.models) {
       _updateSelectionState();
+    }
+  }
+
+  /// 设置滚动监听，实现懒加载
+  void _setupScrollListener() {
+    _scrollController.addListener(() {
+      // 当滚动到距离底部200像素时触发加载更多
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        _loadMoreOrders();
+      }
+    });
+  }
+
+  /// 加载更多订单
+  void _loadMoreOrders() {
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    if (orderProvider.hasMore && !orderProvider.isLoadingMore) {
+      orderProvider.loadMoreOrders(context);
     }
   }
 
@@ -154,7 +175,6 @@ class _OrderWidgetState extends State<OrderWidget> {
           // 全选按钮
           _buildSelectAllButton(context),
           const SizedBox(width: 12),
-
           // 选择统计
           _buildSelectionStats(context),
           const Spacer(),
@@ -229,18 +249,36 @@ class _OrderWidgetState extends State<OrderWidget> {
       return _buildEmptyState(context);
     }
 
-    return ListView.builder(
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+
+    return ListView.separated(
       controller: _scrollController,
-      itemCount: widget.models.length,
+      itemCount: widget.models.length + (orderProvider.hasMore ? 1 : 0),
+      separatorBuilder: (context, index) => const SizedBox(height: 4),
       itemBuilder: (context, index) {
+        // 如果是最后一项且有更多数据，显示加载指示器
+        if (index == widget.models.length && orderProvider.hasMore) {
+          return _buildLoadingIndicator();
+        }
+
         final order = widget.models[index];
         return _OrderListItem(
+          key: ValueKey(order.orderid),
           order: order,
           isRefundingMode: widget.isrefunding,
           isSelected: _selectionState[order.orderid] ?? false,
           onSelectionChanged: () => _toggleOrderSelection(order),
         );
       },
+    );
+  }
+
+  /// 构建加载指示器
+  Widget _buildLoadingIndicator() {
+    return Container(
+      height: 100,
+      alignment: Alignment.center,
+      child: const CircularProgressIndicator(),
     );
   }
 
@@ -287,6 +325,7 @@ class _OrderListItem extends StatelessWidget {
   final VoidCallback onSelectionChanged;
 
   const _OrderListItem({
+    super.key,
     required this.order,
     required this.isRefundingMode,
     required this.isSelected,

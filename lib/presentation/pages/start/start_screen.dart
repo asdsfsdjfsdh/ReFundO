@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/data/models/initialization_model.dart';
+import 'package:refundo/presentation/pages/initialization_model.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/core/utils/log_util.dart';
 
