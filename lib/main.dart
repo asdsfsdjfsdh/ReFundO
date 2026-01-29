@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:refundo/presentation/pages/home/main_screen_v2.dart';
+import 'package:refundo/presentation/pages/home/main_screen_simple.dart';
 import 'package:refundo/presentation/pages/initialization_model.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
             initialRoute: AppRoutes.start,
             // 初始化路由
             routes: {
-              AppRoutes.main: (context) => const MainScreenV2(),
+              AppRoutes.main: (context) => const MainScreenSimple(),
               AppRoutes.start: (context) => const StartScreen(),
             },
             locale: appProvider.locale,
