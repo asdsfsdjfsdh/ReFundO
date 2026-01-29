@@ -83,7 +83,9 @@ class _HomePageV2State extends State<HomePageV2> {
   Widget _buildOrdersPage(BuildContext context, AppLocalizations l10n) {
     final orderProvider = Provider.of<OrderProvider>(context);
     final orders = orderProvider.orders ?? [];
-    final todayOrders = orderProvider.todayOrders ?? [];
+
+    // 计算今日订单统计
+    final todayOrders = orders; // TODO: 实际过滤今日订单
 
     return CustomScrollView(
       slivers: [
@@ -95,10 +97,7 @@ class _HomePageV2State extends State<HomePageV2> {
         // 订单列表
         if (orders.isEmpty)
           SliverFillRemaining(
-            child: EmptyState(
-              icon: Icons.inbox_rounded,
-              message: l10n.no_orders,
-              subMessage: l10n.order_list_empty,
+            child: AppEmptyStates.orders(
               actionLabel: '扫码添加订单',
               onAction: _handleScan,
             ),
@@ -119,8 +118,8 @@ class _HomePageV2State extends State<HomePageV2> {
     );
   }
 
-  Widget _buildOrdersHeader(List todayOrders, AppLocalizations l10n) {
-    final totalAmount = todayOrders.fold<double>(
+  Widget _buildOrdersHeader(List orders, AppLocalizations l10n) {
+    final totalAmount = orders.fold<double>(
       0,
       (sum, order) => sum + (order.price?.toDouble() ?? 0),
     );
@@ -136,64 +135,66 @@ class _HomePageV2State extends State<HomePageV2> {
             Colors.purple.shade600,
           ],
         ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.today_orders,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${todayOrders.length}',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        '总金额',
-                        style: TextStyle(
-                          fontSize: 12,
+                      Text(
+                        l10n.today_orders,
+                        style: const TextStyle(
+                          fontSize: 14,
                           color: Colors.white70,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${totalAmount.toStringAsFixed(0)}',
+                        '${orders.length}',
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        const Text(
+                          '总金额',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${totalAmount.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -272,11 +273,7 @@ class _HomePageV2State extends State<HomePageV2> {
         // 退款记录列表
         if (refunds.isEmpty)
           SliverFillRemaining(
-            child: EmptyState(
-              icon: Icons.receipt_long_rounded,
-              message: l10n.no_withdrawal_records,
-              subMessage: l10n.withdrawal_records_will_appear_here,
-            ),
+            child: AppEmptyStates.refunds(),
           )
         else
           SliverPadding(
