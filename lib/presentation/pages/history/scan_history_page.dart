@@ -274,7 +274,7 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
                       Navigator.pop(context);
                     },
                     icon: const Icon(Icons.close_rounded),
-                    label: l10n.close,
+                    label: Text(l10n.close),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -290,7 +290,7 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
                       );
                     },
                     icon: const Icon(Icons.qr_code_scanner_rounded),
-                    label: l10n.rescan,
+                    label: Text(l10n.rescan),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green.shade600,
                     ),

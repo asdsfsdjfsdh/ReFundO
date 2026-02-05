@@ -72,35 +72,22 @@ class FloatingRegister {
     });
 
     try {
-      // TODO: 调用验证码发送接口（此处为占位实现）
-      if (kDebugMode) {
-        final message = await Provider.of<EmailProvider>(
-          context,
-          listen: false,
-        ).sendEmail(mail, context, 2);
-        if (message == 200) {
-          ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
-        } else if (message == 411) {
-          ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
-        } else if (message == 412) {
-          ShowToast.showCenterToast(context, "用户信息不唯一，请联系客服处理");
-        } else if (message == 400) {
-          ShowToast.showCenterToast(context, "未找到与该邮箱关联的用户账户");
-        } else {
-          ShowToast.showCenterToast(context, "邮件服务暂时不可用，请稍后重试");
-        }
-        print('向邮箱 $mail 发送验证码');
+      // 调用后端验证码发送接口: GET /api/email/registerCode
+      final message = await Provider.of<EmailProvider>(
+        context,
+        listen: false,
+      ).sendEmail(mail, context, 2);
+      if (message == 200) {
+        ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
+      } else if (message == 411) {
+        ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
+      } else if (message == 412) {
+        ShowToast.showCenterToast(context, "用户信息不唯一，请联系客服处理");
+      } else if (message == 400) {
+        ShowToast.showCenterToast(context, "未找到与该邮箱关联的用户账户");
+      } else {
+        ShowToast.showCenterToast(context, "邮件服务暂时不可用，请稍后重试");
       }
-
-      // 模拟API调用延迟
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // 这里替换为实际的验证码发送代码
-      // DataResponse res = await AuthController().getVerification(mail);
-      // if(res.code != 0) {
-      //   setState(() => _errorMessage = res.msg ?? "验证码发送失败");
-      //   return;
-      // }
 
       _startCountdownTimer(setState);
     } catch (e) {

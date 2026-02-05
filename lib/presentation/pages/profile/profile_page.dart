@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:refundo/core/utils/log_util.dart';
+import 'package:refundo/core/theme/app_theme.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/providers/app_provider.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
-import 'package:refundo/presentation/widgets/app_cards.dart';
 import 'package:refundo/presentation/widgets/app_buttons.dart';
 import 'package:refundo/presentation/widgets/callback_password.dart';
-import 'package:refundo/presentation/widgets/user_profile_card.dart';
 import 'package:refundo/presentation/widgets/user_update_cardnumber.dart';
 import 'package:refundo/presentation/widgets/user_update_email.dart';
+import 'package:refundo/presentation/widgets/user_profile_card.dart';
+import 'package:refundo/presentation/widgets/floating_login.dart';
 import 'package:refundo/presentation/pages/debug/complete_debug_panel.dart';
+import 'package:refundo/presentation/pages/help/help_and_feedback_page.dart';
+import 'package:refundo/presentation/pages/legal/privacy_policy_page.dart';
+import 'package:refundo/presentation/pages/legal/about_app_page.dart';
+import 'package:refundo/presentation/pages/history/scan_history_page.dart';
+import 'package:refundo/presentation/pages/profile/user_detail_page.dart';
 
-/// 个人中心页面
+/// 个人中心页面 - Material Design 3风格
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -33,8 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
     final isLogin = Provider.of<UserProvider>(context).isLogin;
+    final userProvider = Provider.of<UserProvider>(context);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -44,39 +49,28 @@ class _ProfilePageState extends State<ProfilePage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.blue.shade50.withOpacity(0.3),
-              Colors.grey.shade50,
-              Colors.white,
+              AppColors.primaryLight.withOpacity(0.15),
+              AppColors.secondaryLight.withOpacity(0.1),
+              AppColors.background,
             ],
           ),
         ),
         child: CustomScrollView(
           slivers: [
-            // 顶部应用栏
+            // 渐变AppBar - 标题固定在顶部，更紧凑
             SliverAppBar(
-              expandedHeight: 120,
+              expandedHeight: 60,
               floating: false,
               pinned: true,
+              automaticallyImplyLeading: false,
               elevation: 0,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  l10n.bottom_setting_page,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.blue.shade600,
-                        Colors.purple.shade600,
-                      ],
-                    ),
-                  ),
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              title: Text(
+                l10n.bottom_setting_page,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -84,35 +78,91 @@ class _ProfilePageState extends State<ProfilePage> {
             // 内容区域
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 用户信息卡片
-                    UserProfileCard(key: ValueKey(locale.languageCode)),
-                    const SizedBox(height: 24),
-
-                    // 账户设置（仅登录时显示）
-                    if (isLogin) ...[
-                      _buildSectionHeader(l10n.account_settings),
-                      const SizedBox(height: 12),
-                      _buildAccountSettings(context, l10n),
-                      const SizedBox(height: 24),
-                    ],
+                    // 用户信息卡片 - 可点击
+                    GestureDetector(
+                      onTap: () => _handleUserCardTap(context, isLogin),
+                      child: _buildUserHeaderCard(context, userProvider, isLogin),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
 
                     // 应用设置
-                    _buildSectionHeader(l10n.app_settings),
-                    const SizedBox(height: 12),
-                    _buildAppSettings(context, l10n, isLogin),
-                    const SizedBox(height: 24),
+                    _buildSettingsGroup(
+                      title: l10n.app_settings,
+                      icon: Icons.settings_rounded,
+                      color: AppColors.secondary,
+                      children: [
+                        _buildLanguageSettingTile(context, l10n),
+                        _buildSettingTile(
+                          icon: Icons.history_rounded,
+                          iconColor: AppColors.infoLight,
+                          title: l10n.scan_history,
+                          subtitle: l10n.view_scan_history,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ScanHistoryPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        _buildSettingTile(
+                          icon: Icons.help_outline_rounded,
+                          iconColor: AppColors.infoLight,
+                          title: l10n.help_and_feedback,
+                          subtitle: l10n.faq,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HelpAndFeedbackPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        _buildSettingTile(
+                          icon: Icons.privacy_tip_outlined,
+                          iconColor: AppColors.primaryLight,
+                          title: l10n.privacy_policy,
+                          subtitle: l10n.view_app_privacy_terms,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PrivacyPolicyPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        _buildSettingTile(
+                          icon: Icons.info_outline_rounded,
+                          iconColor: AppColors.textSecondary,
+                          title: l10n.about_app,
+                          subtitle: l10n.version_info_and_help,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AboutAppPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
 
                     // 调试工具（仅调试模式）
                     _buildDebugSection(context),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.lg),
 
                     // 退出/登录按钮
                     _buildAuthButton(context, isLogin, l10n),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
               ),
@@ -123,105 +173,295 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
-          letterSpacing: 0.5,
+  /// 处理用户卡片点击
+  void _handleUserCardTap(BuildContext context, bool isLogin) {
+    if (isLogin) {
+      // 已登录：跳转到个人详情页面（类似QQ）
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const UserDetailPage(),
+        ),
+      );
+    } else {
+      // 未登录：显示登录悬浮窗
+      FloatingLogin.show(context: context);
+    }
+  }
+
+  /// 用户信息头部卡片
+  Widget _buildUserHeaderCard(BuildContext context, UserProvider userProvider, bool isLogin) {
+    final l10n = AppLocalizations.of(context)!;
+    final userName = userProvider.user?.username ?? l10n.guest_user;
+    final userEmail = userProvider.user?.Email ?? l10n.not_logged_in;
+    final userBalance = userProvider.user?.AmountSum ?? 0.0;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primary,
+            AppColors.secondary,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // 头像
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 3),
+              boxShadow: AppShadows.medium,
+            ),
+            child: CircleAvatar(
+              backgroundColor: Colors.white.withOpacity(0.2),
+              child: isLogin
+                  ? Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : 'U',
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.person_outline_rounded,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          // 用户信息
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userName,
+                  style: AppTextStyles.titleLarge.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  userEmail,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (isLogin) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.account_balance_wallet_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${userBalance.toStringAsFixed(0)} FCFA',
+                          style: AppTextStyles.labelMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          // 编辑/登录提示图标
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isLogin ? Icons.edit_rounded : Icons.login_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 设置分组
+  Widget _buildSettingsGroup({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 分组标题
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xs),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              title,
+              style: AppTextStyles.titleMedium.copyWith(
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        // 设置卡片
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            boxShadow: AppShadows.card,
+          ),
+          child: Column(children: children),
+        ),
+      ],
+    );
+  }
+
+  /// 设置选项
+  Widget _buildSettingTile({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Icon(icon, color: iconColor, size: 24),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.titleSmall.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              if (trailing != null) trailing,
+              Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textHint,
+                size: 24,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAccountSettings(BuildContext context, AppLocalizations l10n) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-
-    return Column(
-      children: [
-        _buildSettingCard(
-          icon: Icons.email_outlined,
-          iconColor: Colors.orange.shade600,
-          title: l10n.email_address,
-          subtitle: userProvider.user?.Email ?? '',
-          onTap: () => _showCustomBottomSheet(context, 0),
-        ),
-        const SizedBox(height: 12),
-        _buildSettingCard(
-          icon: Icons.lock_outline_rounded,
-          iconColor: Colors.blue.shade600,
-          title: l10n.login_password,
-          subtitle: '********',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CallbackPassword()),
-            );
-          },
-        ),
-        const SizedBox(height: 12),
-        _buildSettingCard(
-          icon: Icons.credit_card_rounded,
-          iconColor: Colors.green.shade600,
-          title: l10n.bank_card_number,
-          subtitle: userProvider.user?.phoneNumber ?? '',
-          onTap: () => _showCustomBottomSheet(context, 1),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAppSettings(BuildContext context, AppLocalizations l10n, bool isLogin) {
-    final appProvider = Provider.of<AppProvider>(context, listen: false);
+  /// 语言设置选项
+  Widget _buildLanguageSettingTile(BuildContext context, AppLocalizations l10n) {
     final locale = Localizations.localeOf(context);
 
-    return Column(
-      children: [
-        // 语言设置
-        _buildSettingCard(
-          icon: Icons.language_rounded,
-          iconColor: Colors.purple.shade600,
-          title: l10n.language_settings,
-          subtitle: _getLanguageDisplayName(locale),
-          trailing: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.purple.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.purple.shade200),
-            ),
-            child: Text(
-              _getLanguageDisplayName(locale),
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.purple.shade700,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+    return _buildSettingTile(
+      icon: Icons.language_rounded,
+      iconColor: AppColors.secondary,
+      title: l10n.language_settings,
+      subtitle: _getLanguageDisplayName(locale),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.secondaryLight.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          border: Border.all(color: AppColors.secondaryLight),
+        ),
+        child: Text(
+          _getLanguageDisplayName(locale),
+          style: AppTextStyles.labelMedium.copyWith(
+            color: AppColors.secondaryDark,
+            fontWeight: FontWeight.w600,
           ),
-          onTap: () => _showLanguageDialog(context, l10n),
         ),
-        const SizedBox(height: 12),
-        _buildSettingCard(
-          icon: Icons.info_outline_rounded,
-          iconColor: Colors.grey.shade600,
-          title: l10n.about_app,
-          subtitle: l10n.version_info_and_help,
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.about_page_under_development),
-                duration: const Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          },
-        ),
-      ],
+      ),
+      onTap: () => _showLanguageDialog(context, l10n),
     );
   }
 
@@ -231,40 +471,68 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (!isDebug) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return _buildSettingsGroup(
+      title: '开发工具',
+      icon: Icons.bug_report_rounded,
+      color: AppColors.errorLight,
       children: [
-        _buildSectionHeader('开发工具'),
-        const SizedBox(height: 12),
-        AppCards.withHeader(
-          title: '调试面板',
-          leading: Icon(Icons.bug_report, color: Colors.red.shade700),
-          content: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '打开完整调试面板',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CompleteDebugPanelPage(),
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: AppColors.errorLight.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    ),
+                    child: Icon(
+                      Icons.bug_report_rounded,
+                      color: AppColors.errorLight,
+                      size: 24,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                AppButtons.secondary(
-                  text: '打开调试面板',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CompleteDebugPanelPage(),
-                      ),
-                    );
-                  },
-                  icon: Icons.bug_report,
-                ),
-              ],
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '调试面板',
+                          style: AppTextStyles.titleSmall.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '打开完整调试面板',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.textHint,
+                    size: 24,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -288,73 +556,12 @@ class _ProfilePageState extends State<ProfilePage> {
       return AppButtons.primaryLarge(
         text: l10n.login_your_account,
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.please_login_first),
-              duration: const Duration(seconds: 2),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          FloatingLogin.show(context: context);
         },
         icon: Icons.login_rounded,
         width: double.infinity,
       );
     }
-  }
-
-  Widget _buildSettingCard({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    required String subtitle,
-    Widget? trailing,
-    VoidCallback? onTap,
-  }) {
-    return AppCards.basic(
-      onTap: onTap,
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: iconColor, size: 24),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          if (trailing != null) trailing,
-          Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400),
-        ],
-      ),
-    );
   }
 
   String _getLanguageDisplayName(Locale locale) {
@@ -376,15 +583,17 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(l10n.select_language),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildLanguageOption('中文', 'zh', Icons.translate_rounded, Colors.red.shade600),
-              const SizedBox(height: 12),
-              _buildLanguageOption('English', 'en', Icons.language_rounded, Colors.blue.shade600),
-              const SizedBox(height: 12),
-              _buildLanguageOption('Français', 'fr', Icons.language_rounded, Colors.purple.shade600),
+              _buildLanguageOption('中文', 'zh', Icons.translate_rounded, AppColors.errorLight),
+              const SizedBox(height: AppSpacing.md),
+              _buildLanguageOption('English', 'en', Icons.language_rounded, AppColors.primaryLight),
+              const SizedBox(height: AppSpacing.md),
+              _buildLanguageOption('Français', 'fr', Icons.language_rounded, AppColors.secondaryLight),
             ],
           ),
         );
@@ -399,9 +608,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       decoration: BoxDecoration(
         color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         border: Border.all(
-          color: isSelected ? color : Colors.grey.shade300,
+          color: isSelected ? color : AppColors.divider,
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -413,19 +622,18 @@ class _ProfilePageState extends State<ProfilePage> {
             appProvider.changeLocale(code);
             Navigator.of(context).pop();
           },
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
               children: [
                 Icon(icon, color: color, size: 20),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
                 Text(
                   name,
-                  style: TextStyle(
-                    fontSize: 16,
+                  style: AppTextStyles.titleSmall.copyWith(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                    color: isSelected ? color : Colors.black87,
+                    color: isSelected ? color : AppColors.textPrimary,
                   ),
                 ),
                 const Spacer(),
@@ -437,5 +645,16 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+}
+
+/// 用户信息编辑底部弹窗
+/// 复用现有的UserProfileCard组件
+class UserProfileEditSheet extends StatelessWidget {
+  const UserProfileEditSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const UserProfileCard();
   }
 }

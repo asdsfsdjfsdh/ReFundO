@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/presentation/providers/network_provider.dart';
 import 'package:refundo/core/services/offline_sync_service.dart';
+import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/core/utils/storage/offline_order_storage.dart';
 import 'package:refundo/data/services/api_order_service.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
 import 'package:refundo/data/models/Product_model.dart';
 import 'package:refundo/data/models/order_model.dart';
 import 'package:refundo/data/models/refund_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // 订单的provider方法
 class OrderProvider with ChangeNotifier {
@@ -42,8 +42,8 @@ class OrderProvider with ChangeNotifier {
   // 获取订单信息（首次加载或刷新）
   Future<void> getOrders(BuildContext context) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString('access_token') ?? '';
+      // 使用 SecureStorageService 获取token
+      String token = await SecureStorageService.instance.getAccessToken();
       if (kDebugMode) {
         print("token: $token");
         print(token.isEmpty);
@@ -60,9 +60,10 @@ class OrderProvider with ChangeNotifier {
             pageSize: _pageSize,
           );
 
-          // 获取总数
-          _totalOrders = await _orderService.getOrdersCount(context, false);
-          _hasMore = _orders!.length < _totalOrders;
+          // 注释：后端暂未提供订单总数接口，使用返回的订单数量判断
+          // _totalOrders = await _orderService.getOrdersCount(context, false);
+          _totalOrders = _orders!.length;
+          _hasMore = false; // 暂时分页功能禁用
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);

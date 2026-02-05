@@ -251,7 +251,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_email => 'Enter email';
 
   @override
-  String get enter_password => 'Enter password';
+  String get enter_password => 'Enter Password';
 
   @override
   String get enter_new_card_number => 'Enter new bank card number';
@@ -611,7 +611,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password_set_success => 'Password set successfully';
 
   @override
-  String get sync_offline_orders => 'Sync offline orders';
+  String get sync_offline_orders => 'Sync Offline Orders';
 
   @override
   String get no_offline_orders => 'No offline orders to sync';
@@ -623,10 +623,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_completed => 'Sync completed';
 
   @override
-  String get orders_successfully => 'orders synced successfully';
+  String get orders_successfully => 'orders successfully';
 
   @override
-  String get orders_failed => 'orders failed to sync';
+  String get orders_failed => 'orders failed';
 
   @override
   String get sync_failed => 'Sync failed';
@@ -635,55 +635,588 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_error => 'Sync error';
 
   @override
+  String get statistics => 'Statistics';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get total_orders => 'Total Orders';
+
+  @override
+  String get balance => 'Balance';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get in_review => 'In Review';
+
+  @override
+  String submit_for_approval(Object count) {
+    return 'Submit for Approval ($count)';
+  }
+
+  @override
+  String get deselect_all => 'Deselect All';
+
+  @override
+  String get scan_to_add => 'Scan to Add';
+
+  @override
+  String selected_orders_count(Object count) {
+    return '$count orders selected';
+  }
+
+  @override
+  String estimated_refund(Object amount) {
+    return 'Estimated Refund: $amount FCFA';
+  }
+
+  @override
+  String order_number_with_hash(Object number) {
+    return 'Order #$number';
+  }
+
+  @override
+  String refund_amount_with_currency(Object amount) {
+    return 'Refund: $amount FCFA';
+  }
+
+  @override
+  String order_amount_with_currency(Object amount) {
+    return 'Order: $amount FCFA';
+  }
+
+  @override
+  String get order_details => 'Order Details';
+
+  @override
+  String get refund_details => 'Refund Details';
+
+  @override
+  String get product_id => 'Product ID';
+
+  @override
+  String get order_id_label => 'Order ID';
+
+  @override
+  String get creation_time => 'Creation Time';
+
+  @override
+  String get order_status_label => 'Order Status';
+
+  @override
+  String get refund_account => 'Refund Account';
+
+  @override
+  String get approval_status_label => 'Approval Status';
+
+  @override
+  String get refundable_status => 'Refundable';
+
+  @override
+  String get needs_multi_select => 'Needs Multi-Select';
+
+  @override
+  String get not_refundable => 'Not Refundable';
+
+  @override
+  String get already_refunded => 'Already Refunded';
+
+  @override
+  String wait_months(Object months) {
+    return 'Wait $months months';
+  }
+
+  @override
+  String get insufficient_amount_need_more => 'Insufficient Amount, Need More';
+
+  @override
+  String get got_it => 'Got it';
+
+  @override
+  String get insufficient_refund_amount_error => 'The order refund amount is less than 5000 FCFA, please select multiple orders for cumulative refund';
+
+  @override
+  String cumulative_amount_insufficient(Object amount) {
+    return 'Cumulative refund amount is less than 5000 FCFA, at least $amount FCFA more needed. Please select more orders.';
+  }
+
+  @override
+  String get contains_non_refundable_orders => 'Selected orders contain non-refundable orders, please check your selection';
+
+  @override
+  String get submitting_refund_application => 'Submitting refund application...';
+
+  @override
+  String get refund_application_submitted => 'Refund application submitted successfully!';
+
+  @override
+  String get network_error_check_connection => 'Network error, please check your connection';
+
+  @override
+  String get order_needs_5_months => 'Order must be 5 months old to apply for refund';
+
+  @override
+  String get refund_amount_less_than_5000 => 'Order refund amount is less than 5000, does not meet refund conditions';
+
+  @override
+  String get please_select_orders_first => 'Please select orders to refund first';
+
+  @override
+  String refund_failed_with_code(Object code) {
+    return 'Refund application failed, error code: $code';
+  }
+
+  @override
+  String get select_refund_method => 'Select Refund Method';
+
+  @override
+  String order_count_label(Object count) {
+    return 'Order Count: $count';
+  }
+
+  @override
+  String total_refund_amount_label(Object amount) {
+    return 'Total Refund: $amount FCFA';
+  }
+
+  @override
+  String get refund_method_label => 'Refund Method:';
+
+  @override
+  String get refund_account_optional => 'Refund Account (Optional)';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get direct_submit_approval => 'Submit for Approval';
+
+  @override
+  String get orange_money => 'Orange Money';
+
+  @override
+  String get wave => 'Wave';
+
+  @override
+  String get phone_number_label => 'Phone Number';
+
+  @override
+  String get data_statistics => 'Data Statistics';
+
+  @override
+  String get order_heatmap => 'Order Heatmap';
+
+  @override
+  String get detailed_statistics => 'Detailed Statistics';
+
+  @override
+  String get average_order_amount => 'Average Order Amount';
+
+  @override
+  String get max_order_amount => 'Max Order Amount';
+
+  @override
+  String get total_orders_count => 'Total Orders Count';
+
+  @override
+  String get weekday_mon => 'Mon';
+
+  @override
+  String get weekday_tue => 'Tue';
+
+  @override
+  String get weekday_wed => 'Wed';
+
+  @override
+  String get weekday_thu => 'Thu';
+
+  @override
+  String get weekday_fri => 'Fri';
+
+  @override
+  String get weekday_sat => 'Sat';
+
+  @override
+  String get weekday_sun => 'Sun';
+
+  @override
+  String get heatmap_few => 'Few';
+
+  @override
+  String get heatmap_medium => 'Medium';
+
+  @override
+  String get heatmap_many => 'Many';
+
+  @override
+  String get heatmap_many_many => 'Very Many';
+
+  @override
+  String get guest_user => 'Guest User';
+
+  @override
+  String version_info(Object build, Object version) {
+    return 'Version $version ($build)';
+  }
+
+  @override
+  String get main_features => 'Main Features';
+
+  @override
+  String get open_source_license => 'Open Source License';
+
+  @override
+  String get view_third_party_licenses => 'View Third-Party Licenses';
+
+  @override
+  String get quick_links => 'Quick Links';
+
+  @override
+  String get feature_scan_orders => 'Scan to Add Orders';
+
+  @override
+  String get feature_manage_orders => 'Order Management & Filtering';
+
+  @override
+  String get feature_smart_refund => 'Smart Refund System';
+
+  @override
+  String get feature_data_statistics => 'Data Statistics & Analysis';
+
+  @override
+  String last_updated_date(Object date) {
+    return 'Last Updated: $date';
+  }
+
+  @override
+  String get invalid_qr_code => 'Invalid QR Code';
+
+  @override
+  String get illegal_qr_content => 'Illegal QR Content';
+
+  @override
+  String get qr_content_not_json => 'QR content is not valid JSON format';
+
+  @override
+  String get statistical_analysis => 'Statistical Analysis';
+
+  @override
+  String get this_week => 'This Week';
+
+  @override
+  String get this_month => 'This Month';
+
+  @override
+  String get this_quarter => 'This Quarter';
+
+  @override
+  String get this_year => 'This Year';
+
+  @override
+  String get orders_count => 'orders';
+
+  @override
+  String get fcfa => 'FCFA';
+
+  @override
+  String get order_statistics => 'Order Statistics';
+
+  @override
+  String get refund_statistics => 'Refund Statistics';
+
+  @override
+  String get smart_refund_management_system => 'Smart Refund Management System';
+
+  @override
+  String get refundo_app_name => 'RefundO';
+
+  @override
+  String get all_rights_reserved => 'All rights reserved';
+
+  @override
+  String get scan_history => 'Scan History';
+
+  @override
+  String get view_scan_history => 'View Scan History';
+
+  @override
   String get help_and_feedback => 'Help & Feedback';
-
-  @override
-  String get search_help => 'Search help...';
-
-  @override
-  String get frequently_asked_questions => 'Frequently Asked Questions';
 
   @override
   String get faq => 'FAQ';
 
   @override
-  String get faq1_question => 'How do I apply for a refund?';
+  String get clear_all => 'Clear All';
 
   @override
-  String get faq1_answer => 'On the order page, select the items you want to refund, then click the "Refund" button. Follow the instructions to complete your refund application.';
+  String get delete => 'Delete';
 
   @override
-  String get faq2_question => 'How long does the refund process take?';
+  String get product_details => 'Product Details';
 
   @override
-  String get faq2_answer => 'Typically takes 5-15 business days. The processing time depends on your payment method and bank.';
+  String get price => 'Price';
 
   @override
-  String get faq3_question => 'What if my refund is rejected?';
+  String get refund_percent => 'Refund Percent';
 
   @override
-  String get faq3_answer => 'You can view the rejection reason in the refund details. Modify your application according to the feedback and resubmit.';
+  String get rescan => 'Rescan';
 
   @override
-  String get faq4_question => 'How to check refund status?';
+  String get delete_history_item => 'Delete History Item';
 
   @override
-  String get faq4_answer => 'Go to the "Refunds" page to view all your refund records and their current status.';
+  String get confirm_delete_scan_history => 'Confirm delete this scan history?';
+
+  @override
+  String get clear_all_history => 'Clear All History';
+
+  @override
+  String get confirm_clear_all_history => 'Confirm clear all scan history?';
+
+  @override
+  String get deleted_successfully => 'Deleted Successfully';
+
+  @override
+  String get history_cleared => 'History Cleared';
+
+  @override
+  String get no_scan_history => 'No Scan History';
+
+  @override
+  String get scan_products_to_see_history => 'Scan products to see history here';
+
+  @override
+  String get rescan_function_coming_soon => 'Rescan function coming soon';
+
+  @override
+  String get privacy_policy_title => 'Privacy Policy';
+
+  @override
+  String get info_collection => 'Information Collection';
+
+  @override
+  String get info_collection_1 => 'We collect the following types of information:';
+
+  @override
+  String get info_collection_2 => '• Personal Information: Including name, email address, phone number and bank card information';
+
+  @override
+  String get info_collection_3 => '• Order Information: Including purchase records, refund applications and transaction history';
+
+  @override
+  String get info_collection_4 => '• Usage Data: Including app usage and preferences';
+
+  @override
+  String get info_collection_5 => '• Device Information: Including device model, operating system version and unique identifier';
+
+  @override
+  String get info_usage => 'Information Usage';
+
+  @override
+  String get info_usage_1 => 'We use the collected information for:';
+
+  @override
+  String get info_usage_2 => '• Processing your orders and refund applications';
+
+  @override
+  String get info_usage_3 => '• Improving our services and features';
+
+  @override
+  String get info_usage_4 => '• Communicating with you, including customer support';
+
+  @override
+  String get info_usage_5 => '• Analyzing app usage to optimize user experience';
+
+  @override
+  String get info_usage_6 => '• Preventing fraud and ensuring security';
+
+  @override
+  String get info_sharing => 'Information Sharing';
+
+  @override
+  String get info_sharing_1 => 'We do not sell, rent or trade your personal information. We only share information in the following cases:';
+
+  @override
+  String get info_sharing_2 => '• With your explicit consent';
+
+  @override
+  String get info_sharing_3 => '• Necessary for processing transactions and services';
+
+  @override
+  String get info_sharing_4 => '• To comply with legal requirements or court orders';
+
+  @override
+  String get info_sharing_5 => '• To protect our rights, property or safety';
+
+  @override
+  String get info_sharing_6 => '• With trusted service providers (under confidentiality agreements)';
+
+  @override
+  String get data_security => 'Data Security';
+
+  @override
+  String get data_security_1 => 'We take the following measures to protect your information:';
+
+  @override
+  String get data_security_2 => '• Using SSL/TLS encryption to transmit data';
+
+  @override
+  String get data_security_3 => '• Secure storage of your password (encrypted hash)';
+
+  @override
+  String get data_security_4 => '• Regular security audits and vulnerability scanning';
+
+  @override
+  String get data_security_5 => '• Restricting employee access to personal information';
+
+  @override
+  String get data_security_6 => '• Requiring service providers to comply with strict security standards';
+
+  @override
+  String get your_rights => 'Your Rights';
+
+  @override
+  String get your_rights_1 => 'You have the following rights regarding your personal information:';
+
+  @override
+  String get your_rights_2 => '• Access Right: View information we hold about you';
+
+  @override
+  String get your_rights_3 => '• Correction Right: Update or correct inaccurate information';
+
+  @override
+  String get your_rights_4 => '• Deletion Right: Request deletion of your personal information';
+
+  @override
+  String get your_rights_5 => '• Objection Right: Object to certain data processing activities';
+
+  @override
+  String get your_rights_6 => '• Withdraw Consent: Withdraw previously given consent';
+
+  @override
+  String get your_rights_7 => '• Data Portability: Receive your data in a structured format';
+
+  @override
+  String get cookie_policy => 'Cookie Policy';
+
+  @override
+  String get cookie_policy_1 => 'We use cookies and similar technologies to:';
+
+  @override
+  String get cookie_policy_2 => '• Remember your login credentials';
+
+  @override
+  String get cookie_policy_3 => '• Remember your preferences';
+
+  @override
+  String get cookie_policy_4 => '• Analyze app performance';
+
+  @override
+  String get cookie_policy_5 => '• Provide personalized content';
+
+  @override
+  String get cookie_policy_6 => 'You can manage cookie preferences through your device settings';
+
+  @override
+  String get child_privacy => 'Child Privacy';
+
+  @override
+  String get child_privacy_1 => 'Our services are not directed at children under 13.';
+
+  @override
+  String get child_privacy_2 => 'If we discover we have collected personal information from children under 13,';
+
+  @override
+  String get child_privacy_3 => 'we will take steps to delete that information.';
+
+  @override
+  String get policy_changes => 'Policy Changes';
+
+  @override
+  String get policy_changes_1 => 'We may update this privacy policy from time to time.';
+
+  @override
+  String get policy_changes_2 => 'After changes, we will notify you within the app.';
+
+  @override
+  String get policy_changes_3 => 'Continued use of our services indicates acceptance of the updated policy.';
+
+  @override
+  String get policy_changes_4 => 'We recommend checking this page regularly for the latest information.';
+
+  @override
+  String get contact_us_section => 'Contact Us';
+
+  @override
+  String get contact_us_1 => 'If you have any questions or concerns about this privacy policy, please contact us:';
+
+  @override
+  String get contact_us_2 => '• Email: support@refundo.com';
+
+  @override
+  String get contact_us_3 => '• In-App Feedback: Settings > Help & Feedback';
+
+  @override
+  String get contact_us_4 => '• We will respond within 30 days';
+
+  @override
+  String get view_privacy_policy => 'View Privacy Policy';
+
+  @override
+  String get get_help_and_feedback => 'Get Help and Feedback';
+
+  @override
+  String get not_set => 'Not Set';
+
+  @override
+  String get search_help => 'Search help topics...';
+
+  @override
+  String get frequently_asked_questions => 'Frequently Asked Questions';
+
+  @override
+  String get faq1_question => 'How do I scan an order?';
+
+  @override
+  String get faq1_answer => 'Tap the scan button on the orders page and point your camera at the QR code on your receipt.';
+
+  @override
+  String get faq2_question => 'What are the refund requirements?';
+
+  @override
+  String get faq2_answer => 'Orders must be at least 5 months old and have a minimum refund amount of 5000 FCFA.';
+
+  @override
+  String get faq3_question => 'How long does refund processing take?';
+
+  @override
+  String get faq3_answer => 'Refund applications are typically processed within 3-5 business days.';
+
+  @override
+  String get faq4_question => 'Can I track my refund status?';
+
+  @override
+  String get faq4_answer => 'Yes, you can track your refund status in the Refunds section of the app.';
 
   @override
   String get video_tutorials => 'Video Tutorials';
 
   @override
-  String get tutorial1_title => 'How to Scan Products';
+  String get tutorial1_title => 'Getting Started with RefundO';
 
   @override
-  String get tutorial1_desc => 'Learn how to use the scanning feature to quickly add products to your orders.';
+  String get tutorial1_desc => 'Learn the basics of scanning orders and requesting refunds';
 
   @override
-  String get tutorial2_title => 'How to Apply for Refund';
+  String get tutorial2_title => 'Advanced Features Guide';
 
   @override
-  String get tutorial2_desc => 'Step-by-step guide on submitting a refund application and tracking its progress.';
+  String get tutorial2_desc => 'Explore advanced features like batch refunds and statistics';
 
   @override
   String get contact_us => 'Contact Us';
@@ -698,19 +1231,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phone_support => 'Phone Support';
 
   @override
-  String get phone_support_number => '+1234567890';
+  String get phone_support_number => '+237 XXX XXX XXX';
 
   @override
   String get whatsapp_support => 'WhatsApp Support';
 
   @override
-  String get whatsapp_available => 'Available Mon-Fri, 9:00-18:00';
+  String get whatsapp_available => 'Available Mon-Fri 9:00-17:00';
 
   @override
   String get send_feedback => 'Send Feedback';
 
   @override
-  String get feedback_description => 'Your feedback helps us improve our service';
+  String get feedback_description => 'We value your feedback! Please let us know how we can improve our services.';
 
   @override
   String get enter_your_feedback => 'Enter your feedback here...';
@@ -720,4 +1253,147 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedback_submitted_successfully => 'Thank you! Your feedback has been submitted successfully.';
+
+  @override
+  String get verify_identity => 'Verify Your Identity';
+
+  @override
+  String get new_email => 'New Email';
+
+  @override
+  String get confirm_new_email => 'Confirm Email';
+
+  @override
+  String get enter_old_password => 'Enter Old Password';
+
+  @override
+  String get please_enter_new_password => 'Please enter new password';
+
+  @override
+  String get please_enter_password => 'Please enter password';
+
+  @override
+  String get enter_password_to_verify => 'Please enter your password to verify your identity';
+
+  @override
+  String get enter_old_password_tip => 'Enter your current password to confirm the change';
+
+  @override
+  String get email_format_tip => 'Please enter a valid email address (e.g., example@domain.com)';
+
+  @override
+  String get emails_do_not_match => 'The email addresses do not match';
+
+  @override
+  String get tips => 'Tips';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get no_orders_yet => 'No Orders Yet';
+
+  @override
+  String get scan_products_to_add_orders => 'Scan products to add orders';
+
+  @override
+  String get scan_now => 'Scan Now';
+
+  @override
+  String get no_refunds_yet => 'No Refunds Yet';
+
+  @override
+  String get submit_refund_requests_here => 'Submit refund requests here';
+
+  @override
+  String get date_range => 'Date Range';
+
+  @override
+  String get sort_by => 'Sort By';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get transaction_failed => 'Transaction Failed';
+
+  @override
+  String get transaction_receipt => 'Transaction Receipt';
+
+  @override
+  String get few_label => 'Few';
+
+  @override
+  String get withdrawn => 'Withdrawn';
+
+  @override
+  String get pending_withdrawal => 'Pending Withdrawal';
+
+  @override
+  String get click_to_view_full_image => 'Tap to view full image';
+
+  @override
+  String get image_load_failed => 'Failed to load';
+
+  @override
+  String get no_orders_yet_detail => 'Scan QR code to add your first order';
+
+  @override
+  String get no_refunds_yet_detail => 'Your refund applications will appear here';
+
+  @override
+  String get no_search_results => 'No results found';
+
+  @override
+  String no_search_results_detail(Object query) {
+    return 'No content found matching \"$query\"';
+  }
+
+  @override
+  String get clear_search => 'Clear Search';
+
+  @override
+  String get network_connection_failed => 'Network Connection Failed';
+
+  @override
+  String get check_network_settings => 'Please check your network settings and try again';
+
+  @override
+  String get server_error_title => 'Server Error';
+
+  @override
+  String get server_error_detail => 'Server temporarily unavailable, please try again later';
+
+  @override
+  String get no_more_data => 'No more data';
+
+  @override
+  String get total_orders_label => 'Total Orders';
+
+  @override
+  String get orders_count_label => 'orders';
+
+  @override
+  String get total_amount_label => 'Total Amount';
+
+  @override
+  String get order_statistics_section => 'Order Statistics';
+
+  @override
+  String get todays_orders => 'Today\'s Orders';
+
+  @override
+  String get refund_statistics_section => 'Refund Statistics';
+
+  @override
+  String get pending_label => 'Pending';
+
+  @override
+  String get completed_label => 'Completed';
 }

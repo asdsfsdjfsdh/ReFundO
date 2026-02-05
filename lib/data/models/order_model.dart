@@ -24,6 +24,9 @@ class OrderModel {
 
   final String errorMessage;
 
+  // Getter for backward compatibility (orderTime -> OrderTime)
+  String get orderTime => OrderTime;
+
   // 初始化方法
   OrderModel({
     required this.orderid,
@@ -44,12 +47,10 @@ class OrderModel {
     'orderid': orderid,
     'orderNumber': orderNumber,
     'productid': ProductId,
-    'price': price,
-    'refundAmount': refundAmount,
-    'refundpercent': refundpercent,
+    'price': price.toString(),
+    'refundamount': refundAmount.toString(),
+    'refundpercent': refundpercent.toDouble(),
     'isrefund': isRefund,
-    'OrderTime': OrderTime,
-    'isRefund': isRefund,
     'refundState': refundState,
   };
 

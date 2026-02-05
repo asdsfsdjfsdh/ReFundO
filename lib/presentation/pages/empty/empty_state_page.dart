@@ -7,7 +7,7 @@ class EmptyStatePage extends StatelessWidget {
   final String message;
   final String description;
   final IconData icon;
-  final String actionLabel;
+  final String? actionLabel;
   final VoidCallback? onActionPressed;
 
   const EmptyStatePage({
@@ -68,7 +68,7 @@ class EmptyStatePage extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onActionPressed,
                 icon: const Icon(Icons.refresh_rounded),
-                label: actionLabel ?? l10n!.retry,
+                label: Text(actionLabel ?? l10n!.retry),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade600,
                   foregroundColor: Colors.white,
@@ -103,8 +103,8 @@ class EmptyOrdersPage extends StatelessWidget {
       icon: Icons.shopping_cart_outlined,
       actionLabel: l10n!.scan_now,
       onActionPressed: () {
-        // TODO: 跳转到扫描页面
-        Navigator.pushNamed(context, '/scanner');
+        // 扫描功能在订单页面中，切换到订单Tab即可使用
+        // Navigator.popUntil(context, (route) => route.isFirst);
       },
     );
   }

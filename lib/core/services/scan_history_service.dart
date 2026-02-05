@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:refundo/data/models/Product_model.dart';
 
@@ -13,7 +14,7 @@ class ScanHistoryService {
       List<String> history = prefs.getStringList(_scanHistoryKey) ?? [];
 
       // 添加到历史记录开头
-      final json = product.toJson();
+      final json = jsonEncode(product.toJson());
       history.insert(0, json);
 
       // 限制历史记录数量
@@ -35,7 +36,7 @@ class ScanHistoryService {
       List<String> history = prefs.getStringList(_scanHistoryKey) ?? [];
 
       return history
-          .map((json) => ProductModel.fromJson(json))
+          .map((json) => ProductModel.fromJson(jsonDecode(json)))
           .toList();
     } catch (e) {
       print('获取扫描历史失败: $e');
@@ -61,7 +62,7 @@ class ScanHistoryService {
       List<String> history = prefs.getStringList(_scanHistoryKey) ?? [];
 
       history.removeWhere((json) {
-        final product = ProductModel.fromJson(json);
+        final product = ProductModel.fromJson(jsonDecode(json));
         return product.Hash == hash;
       });
 

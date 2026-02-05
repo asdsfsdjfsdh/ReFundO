@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/core/utils/storage/setting_storage.dart';
@@ -10,14 +11,15 @@ import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
 import 'package:refundo/data/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? _user;
   final ApiUserLogicService _service = ApiUserLogicService();
   bool _isLogin = false;
-  bool _isManager = true;
   String _errorMessage = "";
+  bool _isLoggingIn = false;  // 防止重复登录
 
   Function(double)? onloginSuccess;
   Function()? onlogout;
@@ -26,10 +28,15 @@ class UserProvider with ChangeNotifier {
   UserModel? get user => _user;
   bool get isLogin => _isLogin;
   String get errorMessage => _errorMessage;
-  bool get isManager => _isManager;
 
   // 初始化用户系统
   Future<void> initProvider(BuildContext context) async {
+    // 如果已经登录，直接返回
+    if (_isLogin && _user != null) {
+      LogUtil.d("初始化：", "用户已登录，跳过自动登入");
+      return;
+    }
+
     bool? isRemember = await SettingStorage.getRememberAccount();
     try {
       if (isRemember!) {
@@ -37,8 +44,7 @@ class UserProvider with ChangeNotifier {
         String? password = await UserStorage.getPassword();
         String? Email = await UserStorage.getEmail();
         LogUtil.d("初始化：", "自动登入");
-        login(username!, password!,context);
-
+        await login(username!, password!, context);
       }else{
         // 使用安全存储清除认证信息
         await SecureStorageService.instance.clearAuthData();
@@ -50,24 +56,54 @@ class UserProvider with ChangeNotifier {
 
   // 向后端请求登入
   Future<UserModel> login(String username, String password,BuildContext context) async {
+    // 防止并发登录
+    if (_isLoggingIn) {
+      LogUtil.d("登入", "登录正在进行中，跳过重复请求");
+      return _user ?? UserModel.fromJson({}, errorMessage: "登录正在进行中");
+    }
+
+    _isLoggingIn = true;
+
     try {
+      LogUtil.d("登入", "开始登录请求");
       UserModel User = await _service.logic(username, password,context);
-      if (User!.errorMessage.isNotEmpty) {
-        LogUtil.e("登入", _user!.errorMessage);
+      if (User.errorMessage.isNotEmpty) {
+        LogUtil.e("登入", User.errorMessage);
         _isLogin = false;
       } else {
         LogUtil.d("登入", "成功登入");
         _isLogin = true;
         _user = User;
+
+        // 等待CSRF Token获取完成（通过短暂延迟确保异步操作完成）
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        // 在context还有效时获取provider引用
+        final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+        final refundProvider = Provider.of<RefundProvider>(context, listen: false);
+
+        // 使用WidgetsBinding确保在下一帧加载数据
+        LogUtil.d("登入", "安排post-frame callback加载数据");
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          LogUtil.d("登入", "Post-frame callback执行，开始加载订单和退款");
+          // 先加载订单（不需要CSRF Token）
+          orderProvider.getOrders(context).then((_) {
+            // 订单加载完成后，直接加载退款（使用登录时获取的CSRF Token）
+            LogUtil.d("登入", "订单加载完成，开始加载退款（使用现有CSRF Token）");
+            refundProvider.getRefunds(context).catchError((e) {
+              LogUtil.e("登入", "退款加载失败: $e");
+            });
+          });
+        });
       }
-      Provider.of<OrderProvider>(context, listen: false).getOrders(context);
-      Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
+
       return User;
     } catch (e) {
       LogUtil.e("登入", e.toString());
       print(e.toString());
       return UserModel.fromJson({}, errorMessage: "Error");
     } finally {
+      _isLoggingIn = false;
       notifyListeners();
     }
   }

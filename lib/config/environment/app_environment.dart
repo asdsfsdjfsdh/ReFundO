@@ -33,13 +33,15 @@ class AppEnvironment {
   static String get apiBaseUrl {
     switch (_currentEnvironment) {
       case dev:
-        return 'http://localhost:8080';
+        // Android模拟器使用10.0.2.2访问主机localhost
+        // iOS模拟器和真机可以使用localhost
+        return 'http://10.0.2.2:8080'; // 开发环境 - 指向本地后端服务器
       case test:
-        return 'http://localhost:8080'; // 测试环境 URL
+        return 'http://120.26.110.204:8080'; // 测试环境
       case prod:
-        return 'https://api.production.com'; // 生产环境 URL（需要配置）
+        return 'https://api.production.com'; // 生产环境（需要配置）
       default:
-        return 'http://localhost:8080';
+        return 'http://10.0.2.2:8080';
     }
   }
 
@@ -69,3 +71,4 @@ class EnvironmentManager {
     // 可以保存到 SecureStorageService
   }
 }
+

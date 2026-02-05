@@ -59,18 +59,54 @@ class UserModel{
   //   );
   // }
 
-  // 从Json的转化方法
+  // 从Json的转化方法 - 更健壮的处理null值和类型转换，支持多种后端字段名
 factory UserModel.fromJson(Map<String,dynamic> json, {String errorMessage = ''}) {
+  // 辅助函数：安全地从dynamic获取字符串，支持多个可能的字段名
+  String getString(List<String> keys) {
+    for (String key in keys) {
+      final value = json[key];
+      if (value != null && value.toString().isNotEmpty) {
+        return value.toString();
+      }
+    }
+    return '';
+  }
+
+  // 辅助函数：安全地从dynamic获取数字，支持多个可能的字段名
+  double getDouble(List<String> keys) {
+    for (String key in keys) {
+      final value = json[key];
+      if (value != null) {
+        if (value is num) return value.toDouble();
+        if (value is String) return double.tryParse(value) ?? 0.0;
+      }
+    }
+    return 0.0;
+  }
+
+  // 辅助函数：安全地从dynamic获取布尔值，支持多个可能的字段名
+  bool getBool(List<String> keys) {
+    for (String key in keys) {
+      final value = json[key];
+      if (value != null) {
+        if (value is bool) return value;
+        if (value is String) return value.toLowerCase() == 'true';
+        if (value is num) return value != 0;
+      }
+    }
+    return false;
+  }
+
   return UserModel(
-      username: json['name'] as String? ?? '',
-      userAccount: (json['uid'] as num?)?.toString() ?? '',
-      AmountSum: (json['amountSum'] as num?)?.toDouble() ?? 0.0,
-      RefundedAmount: (json['refundedAmount'] as num?)?.toDouble() ?? 0.0,
-      Email: json['email'] as String? ?? '',
-      phoneNumber: json['phoneNumber'] as String? ?? '',
-      password: json['password'] as String? ?? '',
+      username: getString(['username', 'name', 'nickName']),
+      userAccount: getString(['userId', 'uid', 'userid', 'userAccount']),
+      AmountSum: getDouble(['balance', 'amountSum', 'AmountSum']),
+      RefundedAmount: getDouble(['refundedAmount', 'RefundedAmount']),
+      Email: getString(['email', 'Email']),
+      phoneNumber: getString(['phoneNumber', 'cardNumber', 'CardNumber']),
+      password: getString(['password', 'Password']),
       errorMessage: errorMessage,
-      role: json['role'] as bool? ?? false
+      role: getBool(['isAdmin', 'role', 'isManager', 'isManager'])
   );
 }
 

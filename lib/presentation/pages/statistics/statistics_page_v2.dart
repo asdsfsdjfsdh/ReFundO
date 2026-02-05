@@ -4,7 +4,6 @@ import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
 import 'package:refundo/presentation/widgets/app_cards.dart';
-import 'package:refundo/presentation/widgets/app_states.dart';
 
 /// 统计分析页面
 class StatisticsPage extends StatefulWidget {
@@ -49,7 +48,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                  '统计分析',
+                  l10n.statistical_analysis,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -114,13 +113,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
   Widget _buildPeriodSelector(AppLocalizations l10n) {
     return Row(
       children: [
-        _buildPeriodOption('本周', 'week', Icons.calendar_view_week_rounded),
+        _buildPeriodOption(l10n.this_week, 'week', Icons.calendar_view_week_rounded),
         const SizedBox(width: 12),
-        _buildPeriodOption('本月', 'month', Icons.calendar_month_rounded),
+        _buildPeriodOption(l10n.this_month, 'month', Icons.calendar_month_rounded),
         const SizedBox(width: 12),
-        _buildPeriodOption('本季', 'quarter', Icons.date_range_rounded),
+        _buildPeriodOption(l10n.this_quarter, 'quarter', Icons.date_range_rounded),
         const SizedBox(width: 12),
-        _buildPeriodOption('本年', 'year', Icons.calendar_today_rounded),
+        _buildPeriodOption(l10n.this_year, 'year', Icons.calendar_today_rounded),
       ],
     );
   }
@@ -192,9 +191,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
           child: _buildStatCard(
             icon: Icons.shopping_cart_rounded,
             iconColor: Colors.blue.shade600,
-            title: '总订单',
+            title: l10n.total_orders_label,
             value: '$totalOrders',
-            subtitle: '个订单',
+            subtitle: l10n.orders_count_label,
           ),
         ),
         const SizedBox(width: 12),
@@ -202,7 +201,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           child: _buildStatCard(
             icon: Icons.payments_rounded,
             iconColor: Colors.green.shade600,
-            title: '总金额',
+            title: l10n.total_amount_label,
             value: '${totalAmount.toStringAsFixed(0)}',
             subtitle: 'FCFA',
           ),
@@ -275,7 +274,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '订单统计',
+          l10n.order_statistics_section,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -284,9 +283,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
         ),
         const SizedBox(height: 12),
         AppCards.withHeader(
-          title: '今日订单',
+          title: l10n.todays_orders,
           trailing: Text(
-            '${orders.length} 个',
+            '${orders.length} ${l10n.orders_count}',
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -305,7 +304,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   child: Icon(Icons.receipt_long_rounded, color: Colors.blue.shade700, size: 20),
                 ),
                 title: Text(
-                  '订单 #${order.orderNumber ?? index}',
+                  '${l10n.order_number_with_hash(order.orderNumber ?? index.toString())}',
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(order.time?.toString() ?? ''),
@@ -332,7 +331,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '退款统计',
+          l10n.refund_statistics_section,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -344,7 +343,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           children: [
             Expanded(
               child: _buildRefundStatCard(
-                label: '待处理',
+                label: l10n.pending_label,
                 count: pendingCount,
                 color: Colors.orange,
                 icon: Icons.pending_rounded,
@@ -353,7 +352,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
             const SizedBox(width: 12),
             Expanded(
               child: _buildRefundStatCard(
-                label: '已完成',
+                label: l10n.completed_label,
                 count: completedCount,
                 color: Colors.green,
                 icon: Icons.check_circle_rounded,

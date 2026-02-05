@@ -3,13 +3,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/data/services/api_order_service.dart';
 import 'package:refundo/data/services/api_refund_service.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
+import 'package:refundo/presentation/providers/dio_provider.dart';
 import 'package:refundo/data/models/order_model.dart';
 import 'package:refundo/data/models/refund_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // 订单的provider方法
 class RefundProvider with ChangeNotifier {
@@ -45,27 +46,38 @@ class RefundProvider with ChangeNotifier {
     if (_refunds == null) return 0;
     
     return _refunds!.where((refund) {
-      return refund.refundState == RefundStates.padding;
+      return refund.refundState == RefundStates.pending;
     }).length;
   }
 
   // 获取订单信息
   Future<void> getRefunds(BuildContext context) async {
     try {
-      bool isAdmin = Provider.of<UserProvider>(context,listen: false).user!.role;
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString('access_token') ?? '';
+      // 使用 SecureStorageService 获取token
+      String token = await SecureStorageService.instance.getAccessToken();
       if (kDebugMode) {
         print("token: $token");
         print(token.isEmpty);
       }
       if (token.isNotEmpty) {
         try {
-          if(!isAdmin) {
-            _refunds = await refundService.getRefunds(context);
-          } else {
-            _refunds = await refundService.getAllRefunds(context);
+          // 刷新CSRF Token（因为CSRF token是一次性使用的）
+          try {
+            if (kDebugMode) {
+              print('🔄 获取退款列表前刷新CSRF Token...');
+            }
+            await DioProvider.globalInstance.refreshCsrfToken();
+            if (kDebugMode) {
+              print('✅ CSRF Token刷新成功');
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              print('⚠️ CSRF Token刷新失败: $e');
+            }
+            // CSRF Token刷新失败不阻止获取，继续尝试
           }
+
+          _refunds = await refundService.getRefunds(context);
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);
@@ -131,15 +143,28 @@ class RefundProvider with ChangeNotifier {
   Future<int> Refund(BuildContext context,int refundType,String refundAccount) async {
     try {
       if (_orders!.isNotEmpty) {
-        // 先检查退款条件
-        // final statusCode = await checkRefundConditions(context);
-        // if (statusCode != 200) {
-        //   // 条件不满足，返回状态码
-        //   return statusCode; // 直接返回状态码
-        // }
-        
+        // 刷新CSRF Token（因为CSRF token是一次性使用的）
+        try {
+          if (kDebugMode) {
+            print('🔄 提交前刷新CSRF Token...');
+          }
+          await DioProvider.globalInstance.refreshCsrfToken();
+          if (kDebugMode) {
+            print('✅ CSRF Token刷新成功');
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('⚠️ CSRF Token刷新失败: $e');
+          }
+          // CSRF Token刷新失败不阻止提交，后端会处理
+        }
+
         int message = await _orderService.Refund(context, _orders!,refundType,refundAccount);
         if(message == 1){
+          // 退款成功后清除选中的订单
+          _orders!.clear();
+          notifyListeners();
+
           Provider.of<OrderProvider>(context,listen: false).getOrders(context);
           this.getRefunds(context);
           Provider.of<UserProvider>(context,listen: false).Info(context);

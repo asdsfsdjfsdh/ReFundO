@@ -5,7 +5,26 @@
       "Bash(find:*)",
       "Bash(flutter build:*)",
       "Bash(flutter clean:*)",
-      "Bash(flutter pub get:*)"
+      "Bash(flutter pub get:*)",
+      "Bash(del:*)",
+      "Bash(git log:*)",
+      "Bash(mvn:*)",
+      "Bash(cmd /c \"mvn clean compile -DskipTests 2>&1 | tail -50\")",
+      "Bash(grep:*)",
+      "Bash(where mvn)",
+      "Bash(flutter gen-l10n:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(curl:*)",
+      "Bash(git restore:*)",
+      "Bash(mvnw.cmd clean package:*)",
+      "Bash(cmd:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(mysql:*)",
+      "Bash(flutter run:*)",
+      "Bash(nc:*)",
+      "Bash(tasklist:*)"
     ]
   }
 }

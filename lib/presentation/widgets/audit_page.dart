@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/showToast.dart';
-import 'package:refundo/presentation/providers/approval_provider.dart';
+// import 'package:refundo/presentation/providers/approval_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/data/models/refund_model.dart';
@@ -112,38 +112,13 @@ class _AuditPageState extends State<AuditPage> {
   }
 
   Future<void> _approveRefund(RefundModel? refund_approval ) async {
-    // TODO: 实现审批通过的实际API调用
-    // print('审批通过: $recordId');
-    int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,true); 
-    if(message == 200){
-      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_success);
-      // 修改这部分代码以正确刷新页面
-      await Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
-      setState(() {
-        _refunds = Provider.of<RefundProvider>(context, listen: false).refunds;
-        _applyFilters();
-      });
-    }else{
-      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_failed);
-    }
+    // 审批功能已迁移至 ruoyi 后台管理系统
+    ShowToast.showCenterToast(context, "Approval feature moved to admin panel");
   }
 
   Future<void> _rejectRefund(RefundModel refund_approval) async {
-    // TODO: 实现拒绝审批的实际API调用
-    // print('拒绝审批: $recordId');
-
-    int? message =  await Provider.of<ApprovalProvider>(context, listen: false).Approval(context,refund_approval,false); 
-    if(message == 200){
-      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_success);
-      // 修改这部分代码以正确刷新页面
-      await Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
-      setState(() {
-        _refunds = Provider.of<RefundProvider>(context, listen: false).refunds;
-        _applyFilters();
-      });
-    }else{
-      ShowToast.showCenterToast(context,AppLocalizations.of(context)!.approve_failed);
-    }
+    // 审批功能已迁移至 ruoyi 后台管理系统
+    ShowToast.showCenterToast(context, "Approval feature moved to admin panel");
   }
 
   // 显示详细信息悬浮窗

@@ -11,20 +11,40 @@ class ApiUserLogicService {
   Future<UserModel> logic(String username, String password, BuildContext context) async {
     try {
       LogUtil.n('API User Service', 'Login attempt: $username');
-      DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
+      DioProvider dioProvider = DioProvider.globalInstance;
       Response response = await dioProvider.dio.post(
         "/api/user/login",
         data: {"name": username, "password": password, "email": username},
       );
       final Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] == null) {
-        return UserModel.fromJson({}, errorMessage: message);
-      } else {
-        await dioProvider.saveToken(responseData['result']['token']);
+      LogUtil.d('API Response', 'Full response: ${response.data}');
 
-        UserModel user = UserModel.fromJson(responseData['result']['user']);
+      // 处理后端返回的数据结构: {msg, code, data: {result: {token, user}}}
+      final data = responseData['data'];
+      final result = data?['result'];
+      final message = responseData['msg'] ?? data?['message'] ?? 'Unknown error';
+
+      if (result == null) {
+        LogUtil.e('API User Service', 'Login failed: $message');
+        return UserModel.fromJson({}, errorMessage: message);
+      }
+
+      // 安全地访问token和user
+      final token = result['token'];
+      final userData = result['user'];
+
+      if (token != null) {
+        await dioProvider.saveToken(token);
+        LogUtil.d('API User Service', 'Token saved: ${token.substring(0, 20)}...');
+      }
+
+      if (userData != null) {
+        UserModel user = UserModel.fromJson(userData);
+        LogUtil.d('API User Service', 'Login successful for user: ${user.username}');
         return user;
+      } else {
+        LogUtil.e('API User Service', 'User data is null in response');
+        return UserModel.fromJson({}, errorMessage: '用户数据为空');
       }
     } on DioException catch (e) {
       String message = '占位错误';
@@ -70,14 +90,20 @@ class ApiUserLogicService {
   //获取用户信息
   Future<UserModel> getUserInfo(BuildContext context) async {
     try {
-      DioProvider dioProvider = Provider.of<DioProvider>(context, listen: false);
+      DioProvider dioProvider = DioProvider.globalInstance;
       Response response = await dioProvider.dio.post(
         "/api/user/info",
       );
       Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] != null) {
-        return UserModel.fromJson(responseData['result']);
+      LogUtil.d('API Response', 'getUserInfo response: ${response.data}');
+
+      // 处理后端返回的数据结构: {msg, code, data: {result: {...}}}
+      final data = responseData['data'];
+      final result = data?['result'];
+      final message = responseData['msg'] ?? data?['message'] ?? 'Unknown error';
+
+      if (result != null) {
+        return UserModel.fromJson(result);
       } else {
         return UserModel.fromJson({}, errorMessage: message);
       }
@@ -130,13 +156,16 @@ class ApiUserLogicService {
     BuildContext context
   ) async {
     try {
-      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+      Response response = await DioProvider.globalInstance.dio.post(
         "/api/user/register",
         data: {"name": username, "email": userEmail, "password": password},
       );
-      final String responseData = response.data;
-      print(responseData);
-      return UserModel.fromJson({}, errorMessage: responseData);
+      Map<String, dynamic> responseData = response.data;
+      LogUtil.d('API Response', 'Register response: ${response.data}');
+
+      // 处理后端返回的数据结构: {msg, code, data}
+      final message = responseData['msg'] ?? responseData['message'] ?? '注册成功';
+      return UserModel.fromJson({}, errorMessage: message);
     } on DioException catch (e) {
       String message = '占位错误';
       if (kDebugMode) {
@@ -185,7 +214,7 @@ class ApiUserLogicService {
     BuildContext context
   ) async {
     try {
-      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+      Response response = await DioProvider.globalInstance.dio.post(
         "/api/user/update",
         data: {
           "user": userModel.toJson(),
@@ -193,9 +222,15 @@ class ApiUserLogicService {
         }
       );
       Map<String, dynamic> responseData = response.data;
-      String message = responseData['message'];
-      if (responseData['result'] != null) {
-        return UserModel.fromJson(responseData['result']);
+      LogUtil.d('API Response', 'Update user response: ${response.data}');
+
+      // 处理后端返回的数据结构: {msg, code, data: {result: {...}}}
+      final data = responseData['data'];
+      final result = data?['result'];
+      final message = responseData['msg'] ?? data?['message'] ?? '更新成功';
+
+      if (result != null) {
+        return UserModel.fromJson(result);
       } else {
         return UserModel.fromJson({}, errorMessage: message);
       }
@@ -247,7 +282,7 @@ class ApiUserLogicService {
     BuildContext context
   ) async {
     try {
-      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+      Response response = await DioProvider.globalInstance.dio.post(
         "/api/user/check",
         data: {
           "email": email,

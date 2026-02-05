@@ -11,20 +11,21 @@ class ApiRefundService {
   //用户获取退款记录
   Future<List<RefundModel>> getRefunds(BuildContext context) async {
     try {
-      DioProvider dioProvider = Provider.of<DioProvider>(
-        context,
-        listen: false,
-      );
+      DioProvider dioProvider = DioProvider.globalInstance;
       List<RefundModel> refunds = [];
 
       Response response = await dioProvider.dio.post('/api/refund/get');
-      // print(response);
-      String message = response.data['message'];
-      List<dynamic> ordersRequest = response.data['result'];
-      for (var i = 0; i < ordersRequest.length; i++) {
-        Map<String, dynamic> ordersresult = ordersRequest[i];
-        RefundModel refund = RefundModel.fromJson(ordersresult);
-        refunds.add(refund);
+
+      // 处理后端返回的数据结构: {msg, code, data: {result: [...]}}
+      final data = response.data['data'];
+      final result = data?['result'];
+
+      if (result != null && result is List) {
+        for (var refundData in result) {
+          Map<String, dynamic> refundResult = refundData;
+          RefundModel refund = RefundModel.fromJson(refundResult);
+          refunds.add(refund);
+        }
       }
 
       return refunds;
@@ -71,21 +72,23 @@ class ApiRefundService {
   // 管理员获取退款记录
   Future<List<RefundModel>> getAllRefunds(BuildContext context) async {
     try {
-      DioProvider dioProvider = Provider.of<DioProvider>(
-        context,
-        listen: false,
-      );
+      DioProvider dioProvider = DioProvider.globalInstance;
       List<RefundModel> refunds = [];
 
       Response response = await dioProvider.dio.post('/api/refund/getAll');
-      // print(response);
-      String message = response.data['message'];
-      List<dynamic> ordersRequest = response.data['result'];
-      for (var i = 0; i < ordersRequest.length; i++) {
-        Map<String, dynamic> ordersresult = ordersRequest[i];
-        RefundModel refund = RefundModel.fromJson(ordersresult);
-        refunds.add(refund);
+
+      // 处理后端返回的数据结构: {msg, code, data: {result: [...]}}
+      final data = response.data['data'];
+      final result = data?['result'];
+
+      if (result != null && result is List) {
+        for (var refundData in result) {
+          Map<String, dynamic> refundResult = refundData;
+          RefundModel refund = RefundModel.fromJson(refundResult);
+          refunds.add(refund);
+        }
       }
+
       return refunds;
     } on DioException catch (e) {
       String message = '占位错误';

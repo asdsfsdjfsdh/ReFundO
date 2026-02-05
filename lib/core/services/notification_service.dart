@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:refundo/core/utils/log_util.dart';
 
@@ -22,8 +20,8 @@ class NotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
 
-    const IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings(
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
@@ -31,7 +29,7 @@ class NotificationService {
 
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
+      iOS: initializationSettingsDarwin,
     );
 
     await _notifications.initialize(initializationSettings);
@@ -74,19 +72,19 @@ class NotificationService {
       showWhen: true,
     );
 
-    const IOSNotificationDetails iosPlatformChannelSpecifics =
-        IOSNotificationDetails();
+    const DarwinNotificationDetails darwinPlatformChannelSpecifics =
+        DarwinNotificationDetails();
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: iosPlatformChannelSpecifics,
+      iOS: darwinPlatformChannelSpecifics,
     );
 
     await _notifications.show(
       0,
       title,
       body,
-      notificationDetails: platformChannelSpecifics,
+      platformChannelSpecifics,
       payload: payload,
     );
 

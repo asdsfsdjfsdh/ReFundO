@@ -65,6 +65,13 @@ class AppColors {
     colors: [secondaryLight, secondary],
   );
 
+  /// 橙色渐变
+  static const LinearGradient gradientOrange = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [warningLight, warning],
+  );
+
   /// 蓝紫渐变（用于金额卡片）
   static LinearGradient gradientBluePurple(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;

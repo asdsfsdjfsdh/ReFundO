@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
@@ -14,6 +14,7 @@ import 'package:refundo/presentation/providers/dio_provider.dart';
 import 'package:refundo/core/utils/storage/offline_order_storage.dart';
 import 'package:refundo/core/performance/performance_optimizer.dart';
 import 'package:refundo/data/models/order_model.dart';
+import 'package:refundo/core/utils/showToast.dart';
 
 /// 高级调试面板页面
 class AdvancedDebugPanelPage extends StatefulWidget {
@@ -221,13 +222,33 @@ class _AdvancedDebugPanelPageState extends State<AdvancedDebugPanelPage>
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _ProviderDetailCard(userProvider: Provider.of<UserProvider>(context)),
+            _ProviderDetailCard(
+              userProvider: Provider.of<UserProvider>(context),
+              orderProvider: null,
+              refundProvider: null,
+              appProvider: null,
+            ),
             const SizedBox(height: 12),
-            _ProviderDetailCard(orderProvider: Provider.of<OrderProvider>(context)),
+            _ProviderDetailCard(
+              userProvider: null,
+              orderProvider: Provider.of<OrderProvider>(context),
+              refundProvider: null,
+              appProvider: null,
+            ),
             const SizedBox(height: 12),
-            _ProviderDetailCard(refundProvider: Provider.of<RefundProvider>(context)),
+            _ProviderDetailCard(
+              userProvider: null,
+              orderProvider: null,
+              refundProvider: Provider.of<RefundProvider>(context),
+              appProvider: null,
+            ),
             const SizedBox(height: 12),
-            _ProviderDetailCard(appProvider: Provider.of<AppProvider>(context)),
+            _ProviderDetailCard(
+              userProvider: null,
+              orderProvider: null,
+              refundProvider: null,
+              appProvider: Provider.of<AppProvider>(context),
+            ),
           ],
         ),
       ),
@@ -457,10 +478,30 @@ class _AdvancedDebugPanelPageState extends State<AdvancedDebugPanelPage>
 
   // ==================== 设备标签页 ====================
   Widget _buildDeviceTab(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _DeviceInfoCard(context),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '设备信息',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                _InfoRow(label: '屏幕宽度', value: '${mediaQuery.size.width.toInt()} px'),
+                _InfoRow(label: '屏幕高度', value: '${mediaQuery.size.height.toInt()} px'),
+                _InfoRow(label: '像素密度', value: '${mediaQuery.devicePixelRatio.toStringAsFixed(2)}x'),
+                _InfoRow(label: '平台', value: Theme.of(context).platform.toString()),
+                _InfoRow(label: '深色模式', value: mediaQuery.platformBrightness.toString()),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -503,6 +544,135 @@ class _AdvancedDebugPanelPageState extends State<AdvancedDebugPanelPage>
         ),
       ],
     );
+  }
+
+  // ==================== 缺失的方法实现 ====================
+  void _simulateLogin(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟登录功能暂不可用");
+  }
+
+  void _simulateLogout(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟登出功能暂不可用");
+  }
+
+  void _toggleDarkMode(BuildContext context) {
+    ShowToast.showCenterToast(context, "切换深色模式功能暂不可用");
+  }
+
+  void _clearAllData(BuildContext context) {
+    ShowToast.showCenterToast(context, "清空数据功能暂不可用");
+  }
+
+  void _testApiConnection(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试API连接功能暂不可用");
+  }
+
+  Widget _NetworkStatsCard(BuildContext context) {
+    return const Card(child: Padding(padding: EdgeInsets.all(16), child: Text("网络统计")));
+  }
+
+  Widget _NetworkRequestsList(BuildContext context) {
+    return const Card(child: Padding(padding: EdgeInsets.all(16), child: Text("网络请求列表")));
+  }
+
+  void _showSharedPreferencesViewer(BuildContext context) {
+    ShowToast.showCenterToast(context, "SharedPrefs查看器暂不可用");
+  }
+
+  void _showOfflineOrdersViewer(BuildContext context) {
+    ShowToast.showCenterToast(context, "离线订单查看器暂不可用");
+  }
+
+  void _showFileSystemViewer(BuildContext context) {
+    ShowToast.showCenterToast(context, "文件系统查看器暂不可用");
+  }
+
+  void _showCacheViewer(BuildContext context) {
+    ShowToast.showCenterToast(context, "缓存查看器暂不可用");
+  }
+
+  void _testLoginFlow(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试登录流程暂不可用");
+  }
+
+  void _testLogoutFlow(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试登出流程暂不可用");
+  }
+
+  void _testUpdateUserInfo(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试更新用户信息暂不可用");
+  }
+
+  void _testLoadOrders(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试加载订单暂不可用");
+  }
+
+  void _testAddOrder(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试添加订单暂不可用");
+  }
+
+  void _testSyncOffline(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试同步离线暂不可用");
+  }
+
+  void _testClearOrders(BuildContext context) {
+    ShowToast.showCenterToast(context, "测试清空订单暂不可用");
+  }
+
+  void _simulateNetworkError(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟网络错误暂不可用");
+  }
+
+  void _simulateServerError(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟服务器错误暂不可用");
+  }
+
+  void _simulateTimeoutError(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟超时错误暂不可用");
+  }
+
+  void _simulateAuthError(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟认证错误暂不可用");
+  }
+
+  void _simulateEmptyData(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟空数据暂不可用");
+  }
+
+  void _simulateLargeData(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟大数据暂不可用");
+  }
+
+  void _simulateSpecialChars(BuildContext context) {
+    ShowToast.showCenterToast(context, "模拟特殊字符暂不可用");
+  }
+
+  void _showPerformanceReport(BuildContext context) {
+    ShowToast.showCenterToast(context, "性能报告暂不可用");
+  }
+
+  void _showFrameMetrics(BuildContext context) {
+    ShowToast.showCenterToast(context, "帧指标暂不可用");
+  }
+
+  void _showMemoryAnalysis(BuildContext context) {
+    ShowToast.showCenterToast(context, "内存分析暂不可用");
+  }
+
+  void _generateTestData(BuildContext context) {
+    ShowToast.showCenterToast(context, "生成测试数据暂不可用");
+  }
+
+  void _exportLogs(BuildContext context) {
+    ShowToast.showCenterToast(context, "导出日志暂不可用");
+  }
+
+  void _resetApp(BuildContext context) {
+    ShowToast.showCenterToast(context, "重置应用暂不可用");
+  }
+
+  void _switchEnvironment(BuildContext context) {
+    ShowToast.showCenterToast(context, "切换环境暂不可用");
   }
 
   // ==================== 辅助组件 ====================
@@ -554,8 +724,6 @@ class _StatusItem extends StatelessWidget {
 }
 
 class _ProviderDetailCard extends StatelessWidget {
-  final dynamic provider;
-
   const _ProviderDetailCard({
     required this.userProvider,
     required this.orderProvider,
@@ -806,38 +974,6 @@ class _PerformanceCard extends StatelessWidget {
         title: Text(title),
         trailing: const Icon(Icons.chevron_right),
         onTap: onTap,
-      ),
-    );
-  }
-}
-
-class _DeviceInfoCard extends StatelessWidget {
-  final BuildContext context;
-
-  const _DeviceInfoCard({required this.context});
-
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '设备信息',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            _InfoRow(label: '屏幕宽度', value: '${mediaQuery.size.width.toInt()} px'),
-            _InfoRow(label: '屏幕高度', value: '${mediaQuery.size.height.toInt()} px'),
-            _InfoRow(label: '像素密度', value: '${mediaQuery.devicePixelRatio.toStringAsFixed(2)}x'),
-            _InfoRow(label: '平台', value: Theme.of(context).platform.toString()),
-            _InfoRow(label: '深色模式', value: mediaQuery.platformBrightness.toString()),
-          ],
-        ),
       ),
     );
   }

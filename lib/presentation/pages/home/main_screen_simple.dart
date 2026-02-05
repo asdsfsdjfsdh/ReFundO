@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/l10n/app_localizations.dart';
-import 'package:refundo/presentation/pages/home/home_page_colorful.dart';
+import 'package:refundo/presentation/pages/orders/orders_page.dart';
+import 'package:refundo/presentation/pages/refunds/refunds_page.dart';
 import 'package:refundo/presentation/pages/profile/profile_page.dart';
 import 'package:refundo/presentation/pages/initialization_model.dart';
+import 'package:refundo/presentation/pages/statistics/statistics_page.dart';
 
-/// 简化的主屏幕 - 2个Tab
+/// 简化的主屏幕 - 4个Tab（订单、退款、统计、我的）
 class MainScreenSimple extends StatefulWidget {
   const MainScreenSimple({super.key});
 
@@ -24,6 +26,8 @@ class _MainScreenSimpleState extends State<MainScreenSimple> {
     _pages = [
       const _LoadingPage(),
       const _LoadingPage(),
+      const _LoadingPage(),
+      const _LoadingPage(),
     ];
 
     // 等待初始化完成后加载真实页面
@@ -33,7 +37,9 @@ class _MainScreenSimpleState extends State<MainScreenSimple> {
         setState(() {
           _isInitialized = true;
           _pages = [
-            const HomePageColorful(),
+            const OrdersPage(),
+            const RefundsPage(),
+            const StatisticsPage(),
             const ProfilePage(),
           ];
         });
@@ -64,14 +70,24 @@ class _MainScreenSimpleState extends State<MainScreenSimple> {
         unselectedFontSize: 12,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home_rounded),
-            activeIcon: const Icon(Icons.home_rounded),
-            label: l10n.bottom_home_page,
+            icon: const Icon(Icons.list_alt_rounded),
+            activeIcon: const Icon(Icons.list_alt_rounded),
+            label: l10n.orders,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.account_balance_wallet_rounded),
+            activeIcon: const Icon(Icons.account_balance_wallet_rounded),
+            label: l10n.refunds,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.bar_chart_rounded),
+            activeIcon: const Icon(Icons.bar_chart_rounded),
+            label: l10n.statistics,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person_rounded),
             activeIcon: const Icon(Icons.person_rounded),
-            label: '我的',
+            label: l10n.profile,
           ),
         ],
       ),

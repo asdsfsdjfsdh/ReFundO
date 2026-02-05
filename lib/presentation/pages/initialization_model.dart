@@ -33,9 +33,13 @@ class InitializationModel with ChangeNotifier {
     notifyListeners();
     _currentStatus = InitializationStatus.loadingData;
 
-    Provider.of<OrderProvider>(context, listen: false).getOrders(context);
-    Provider.of<RefundProvider>(context, listen: false).getRefunds(context);
-    Provider.of<UserProvider>(context, listen: false).initProvider(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    // 先执行初始化（如果记住密码，会自动登录并加载订单和退款）
+    await userProvider.initProvider(context);
+
+    // 如果用户已登录（初始化前就登录或刚登录成功），数据已由 login 加载
+    // 不需要在这里重复加载
 
     await Future.delayed(const Duration(seconds: 3));
     _isInitial = true;

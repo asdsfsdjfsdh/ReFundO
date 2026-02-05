@@ -580,7 +580,7 @@ abstract class AppLocalizations {
   /// No description provided for @enter_password.
   ///
   /// In en, this message translates to:
-  /// **'Enter password'**
+  /// **'Enter Password'**
   String get enter_password;
 
   /// No description provided for @enter_new_card_number.
@@ -1288,7 +1288,7 @@ abstract class AppLocalizations {
   /// No description provided for @sync_offline_orders.
   ///
   /// In en, this message translates to:
-  /// **'Sync offline orders'**
+  /// **'Sync Offline Orders'**
   String get sync_offline_orders;
 
   /// No description provided for @no_offline_orders.
@@ -1312,13 +1312,13 @@ abstract class AppLocalizations {
   /// No description provided for @orders_successfully.
   ///
   /// In en, this message translates to:
-  /// **'orders synced successfully'**
+  /// **'orders successfully'**
   String get orders_successfully;
 
   /// No description provided for @orders_failed.
   ///
   /// In en, this message translates to:
-  /// **'orders failed to sync'**
+  /// **'orders failed'**
   String get orders_failed;
 
   /// No description provided for @sync_failed.
@@ -1333,181 +1333,1475 @@ abstract class AppLocalizations {
   /// **'Sync error'**
   String get sync_error;
 
-  // ==================== FAQ / 帮助与反馈 ====================
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
 
-  /// 帮助与反馈页面标题
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @total_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders'**
+  String get total_orders;
+
+  /// No description provided for @balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @in_review.
+  ///
+  /// In en, this message translates to:
+  /// **'In Review'**
+  String get in_review;
+
+  /// No description provided for @submit_for_approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for Approval ({count})'**
+  String submit_for_approval(Object count);
+
+  /// No description provided for @deselect_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselect_all;
+
+  /// No description provided for @scan_to_add.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to Add'**
+  String get scan_to_add;
+
+  /// No description provided for @selected_orders_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} orders selected'**
+  String selected_orders_count(Object count);
+
+  /// No description provided for @estimated_refund.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Refund: {amount} FCFA'**
+  String estimated_refund(Object amount);
+
+  /// No description provided for @order_number_with_hash.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{number}'**
+  String order_number_with_hash(Object number);
+
+  /// No description provided for @refund_amount_with_currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund: {amount} FCFA'**
+  String refund_amount_with_currency(Object amount);
+
+  /// No description provided for @order_amount_with_currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Order: {amount} FCFA'**
+  String order_amount_with_currency(Object amount);
+
+  /// No description provided for @order_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Details'**
+  String get order_details;
+
+  /// No description provided for @refund_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Details'**
+  String get refund_details;
+
+  /// No description provided for @product_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Product ID'**
+  String get product_id;
+
+  /// No description provided for @order_id_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Order ID'**
+  String get order_id_label;
+
+  /// No description provided for @creation_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Creation Time'**
+  String get creation_time;
+
+  /// No description provided for @order_status_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Status'**
+  String get order_status_label;
+
+  /// No description provided for @refund_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Account'**
+  String get refund_account;
+
+  /// No description provided for @approval_status_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval Status'**
+  String get approval_status_label;
+
+  /// No description provided for @refundable_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Refundable'**
+  String get refundable_status;
+
+  /// No description provided for @needs_multi_select.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Multi-Select'**
+  String get needs_multi_select;
+
+  /// No description provided for @not_refundable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Refundable'**
+  String get not_refundable;
+
+  /// No description provided for @already_refunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Already Refunded'**
+  String get already_refunded;
+
+  /// No description provided for @wait_months.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait {months} months'**
+  String wait_months(Object months);
+
+  /// No description provided for @insufficient_amount_need_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient Amount, Need More'**
+  String get insufficient_amount_need_more;
+
+  /// No description provided for @got_it.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get got_it;
+
+  /// No description provided for @insufficient_refund_amount_error.
+  ///
+  /// In en, this message translates to:
+  /// **'The order refund amount is less than 5000 FCFA, please select multiple orders for cumulative refund'**
+  String get insufficient_refund_amount_error;
+
+  /// No description provided for @cumulative_amount_insufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Cumulative refund amount is less than 5000 FCFA, at least {amount} FCFA more needed. Please select more orders.'**
+  String cumulative_amount_insufficient(Object amount);
+
+  /// No description provided for @contains_non_refundable_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected orders contain non-refundable orders, please check your selection'**
+  String get contains_non_refundable_orders;
+
+  /// No description provided for @submitting_refund_application.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting refund application...'**
+  String get submitting_refund_application;
+
+  /// No description provided for @refund_application_submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund application submitted successfully!'**
+  String get refund_application_submitted;
+
+  /// No description provided for @network_error_check_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error, please check your connection'**
+  String get network_error_check_connection;
+
+  /// No description provided for @order_needs_5_months.
+  ///
+  /// In en, this message translates to:
+  /// **'Order must be 5 months old to apply for refund'**
+  String get order_needs_5_months;
+
+  /// No description provided for @refund_amount_less_than_5000.
+  ///
+  /// In en, this message translates to:
+  /// **'Order refund amount is less than 5000, does not meet refund conditions'**
+  String get refund_amount_less_than_5000;
+
+  /// No description provided for @please_select_orders_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select orders to refund first'**
+  String get please_select_orders_first;
+
+  /// No description provided for @refund_failed_with_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund application failed, error code: {code}'**
+  String refund_failed_with_code(Object code);
+
+  /// No description provided for @select_refund_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Refund Method'**
+  String get select_refund_method;
+
+  /// No description provided for @order_count_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Count: {count}'**
+  String order_count_label(Object count);
+
+  /// No description provided for @total_refund_amount_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Refund: {amount} FCFA'**
+  String total_refund_amount_label(Object amount);
+
+  /// No description provided for @refund_method_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Method:'**
+  String get refund_method_label;
+
+  /// No description provided for @refund_account_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Account (Optional)'**
+  String get refund_account_optional;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @direct_submit_approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for Approval'**
+  String get direct_submit_approval;
+
+  /// No description provided for @orange_money.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange Money'**
+  String get orange_money;
+
+  /// No description provided for @wave.
+  ///
+  /// In en, this message translates to:
+  /// **'Wave'**
+  String get wave;
+
+  /// No description provided for @phone_number_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone_number_label;
+
+  /// No description provided for @data_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Statistics'**
+  String get data_statistics;
+
+  /// No description provided for @order_heatmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Heatmap'**
+  String get order_heatmap;
+
+  /// No description provided for @detailed_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Statistics'**
+  String get detailed_statistics;
+
+  /// No description provided for @average_order_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Order Amount'**
+  String get average_order_amount;
+
+  /// No description provided for @max_order_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Order Amount'**
+  String get max_order_amount;
+
+  /// No description provided for @total_orders_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders Count'**
+  String get total_orders_count;
+
+  /// No description provided for @weekday_mon.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get weekday_mon;
+
+  /// No description provided for @weekday_tue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get weekday_tue;
+
+  /// No description provided for @weekday_wed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get weekday_wed;
+
+  /// No description provided for @weekday_thu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get weekday_thu;
+
+  /// No description provided for @weekday_fri.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get weekday_fri;
+
+  /// No description provided for @weekday_sat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get weekday_sat;
+
+  /// No description provided for @weekday_sun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get weekday_sun;
+
+  /// No description provided for @heatmap_few.
+  ///
+  /// In en, this message translates to:
+  /// **'Few'**
+  String get heatmap_few;
+
+  /// No description provided for @heatmap_medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get heatmap_medium;
+
+  /// No description provided for @heatmap_many.
+  ///
+  /// In en, this message translates to:
+  /// **'Many'**
+  String get heatmap_many;
+
+  /// No description provided for @heatmap_many_many.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Many'**
+  String get heatmap_many_many;
+
+  /// No description provided for @guest_user.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest User'**
+  String get guest_user;
+
+  /// No description provided for @version_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} ({build})'**
+  String version_info(Object build, Object version);
+
+  /// No description provided for @main_features.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Features'**
+  String get main_features;
+
+  /// No description provided for @open_source_license.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source License'**
+  String get open_source_license;
+
+  /// No description provided for @view_third_party_licenses.
+  ///
+  /// In en, this message translates to:
+  /// **'View Third-Party Licenses'**
+  String get view_third_party_licenses;
+
+  /// No description provided for @quick_links.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Links'**
+  String get quick_links;
+
+  /// No description provided for @feature_scan_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to Add Orders'**
+  String get feature_scan_orders;
+
+  /// No description provided for @feature_manage_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Management & Filtering'**
+  String get feature_manage_orders;
+
+  /// No description provided for @feature_smart_refund.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Refund System'**
+  String get feature_smart_refund;
+
+  /// No description provided for @feature_data_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Statistics & Analysis'**
+  String get feature_data_statistics;
+
+  /// No description provided for @last_updated_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: {date}'**
+  String last_updated_date(Object date);
+
+  /// No description provided for @invalid_qr_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR Code'**
+  String get invalid_qr_code;
+
+  /// No description provided for @illegal_qr_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Illegal QR Content'**
+  String get illegal_qr_content;
+
+  /// No description provided for @qr_content_not_json.
+  ///
+  /// In en, this message translates to:
+  /// **'QR content is not valid JSON format'**
+  String get qr_content_not_json;
+
+  /// No description provided for @statistical_analysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistical Analysis'**
+  String get statistical_analysis;
+
+  /// No description provided for @this_week.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get this_week;
+
+  /// No description provided for @this_month.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get this_month;
+
+  /// No description provided for @this_quarter.
+  ///
+  /// In en, this message translates to:
+  /// **'This Quarter'**
+  String get this_quarter;
+
+  /// No description provided for @this_year.
+  ///
+  /// In en, this message translates to:
+  /// **'This Year'**
+  String get this_year;
+
+  /// No description provided for @orders_count.
+  ///
+  /// In en, this message translates to:
+  /// **'orders'**
+  String get orders_count;
+
+  /// No description provided for @fcfa.
+  ///
+  /// In en, this message translates to:
+  /// **'FCFA'**
+  String get fcfa;
+
+  /// No description provided for @order_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Statistics'**
+  String get order_statistics;
+
+  /// No description provided for @refund_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Statistics'**
+  String get refund_statistics;
+
+  /// No description provided for @smart_refund_management_system.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Refund Management System'**
+  String get smart_refund_management_system;
+
+  /// No description provided for @refundo_app_name.
+  ///
+  /// In en, this message translates to:
+  /// **'RefundO'**
+  String get refundo_app_name;
+
+  /// No description provided for @all_rights_reserved.
+  ///
+  /// In en, this message translates to:
+  /// **'All rights reserved'**
+  String get all_rights_reserved;
+
+  /// No description provided for @scan_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan History'**
+  String get scan_history;
+
+  /// No description provided for @view_scan_history.
+  ///
+  /// In en, this message translates to:
+  /// **'View Scan History'**
+  String get view_scan_history;
+
+  /// No description provided for @help_and_feedback.
   ///
   /// In en, this message translates to:
   /// **'Help & Feedback'**
   String get help_and_feedback;
 
-  /// 搜索帮助提示
-  ///
-  /// In en, this message translates to:
-  /// **'Search help...'**
-  String get search_help;
-
-  /// 常见问题标题
-  ///
-  /// In en, this message translates to:
-  /// **'Frequently Asked Questions'**
-  String get frequently_asked_questions;
-
-  /// FAQ缩写标题
+  /// No description provided for @faq.
   ///
   /// In en, this message translates to:
   /// **'FAQ'**
   String get faq;
 
-  /// FAQ 1: 如何申请退款？
+  /// No description provided for @clear_all.
   ///
   /// In en, this message translates to:
-  /// **'How do I apply for a refund?'**
+  /// **'Clear All'**
+  String get clear_all;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @product_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Details'**
+  String get product_details;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @refund_percent.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Percent'**
+  String get refund_percent;
+
+  /// No description provided for @rescan.
+  ///
+  /// In en, this message translates to:
+  /// **'Rescan'**
+  String get rescan;
+
+  /// No description provided for @delete_history_item.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete History Item'**
+  String get delete_history_item;
+
+  /// No description provided for @confirm_delete_scan_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm delete this scan history?'**
+  String get confirm_delete_scan_history;
+
+  /// No description provided for @clear_all_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All History'**
+  String get clear_all_history;
+
+  /// No description provided for @confirm_clear_all_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm clear all scan history?'**
+  String get confirm_clear_all_history;
+
+  /// No description provided for @deleted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted Successfully'**
+  String get deleted_successfully;
+
+  /// No description provided for @history_cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'History Cleared'**
+  String get history_cleared;
+
+  /// No description provided for @no_scan_history.
+  ///
+  /// In en, this message translates to:
+  /// **'No Scan History'**
+  String get no_scan_history;
+
+  /// No description provided for @scan_products_to_see_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan products to see history here'**
+  String get scan_products_to_see_history;
+
+  /// No description provided for @rescan_function_coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Rescan function coming soon'**
+  String get rescan_function_coming_soon;
+
+  /// No description provided for @privacy_policy_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy_title;
+
+  /// No description provided for @info_collection.
+  ///
+  /// In en, this message translates to:
+  /// **'Information Collection'**
+  String get info_collection;
+
+  /// No description provided for @info_collection_1.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect the following types of information:'**
+  String get info_collection_1;
+
+  /// No description provided for @info_collection_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Personal Information: Including name, email address, phone number and bank card information'**
+  String get info_collection_2;
+
+  /// No description provided for @info_collection_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• Order Information: Including purchase records, refund applications and transaction history'**
+  String get info_collection_3;
+
+  /// No description provided for @info_collection_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• Usage Data: Including app usage and preferences'**
+  String get info_collection_4;
+
+  /// No description provided for @info_collection_5.
+  ///
+  /// In en, this message translates to:
+  /// **'• Device Information: Including device model, operating system version and unique identifier'**
+  String get info_collection_5;
+
+  /// No description provided for @info_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Information Usage'**
+  String get info_usage;
+
+  /// No description provided for @info_usage_1.
+  ///
+  /// In en, this message translates to:
+  /// **'We use the collected information for:'**
+  String get info_usage_1;
+
+  /// No description provided for @info_usage_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Processing your orders and refund applications'**
+  String get info_usage_2;
+
+  /// No description provided for @info_usage_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• Improving our services and features'**
+  String get info_usage_3;
+
+  /// No description provided for @info_usage_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• Communicating with you, including customer support'**
+  String get info_usage_4;
+
+  /// No description provided for @info_usage_5.
+  ///
+  /// In en, this message translates to:
+  /// **'• Analyzing app usage to optimize user experience'**
+  String get info_usage_5;
+
+  /// No description provided for @info_usage_6.
+  ///
+  /// In en, this message translates to:
+  /// **'• Preventing fraud and ensuring security'**
+  String get info_usage_6;
+
+  /// No description provided for @info_sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Information Sharing'**
+  String get info_sharing;
+
+  /// No description provided for @info_sharing_1.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not sell, rent or trade your personal information. We only share information in the following cases:'**
+  String get info_sharing_1;
+
+  /// No description provided for @info_sharing_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• With your explicit consent'**
+  String get info_sharing_2;
+
+  /// No description provided for @info_sharing_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• Necessary for processing transactions and services'**
+  String get info_sharing_3;
+
+  /// No description provided for @info_sharing_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• To comply with legal requirements or court orders'**
+  String get info_sharing_4;
+
+  /// No description provided for @info_sharing_5.
+  ///
+  /// In en, this message translates to:
+  /// **'• To protect our rights, property or safety'**
+  String get info_sharing_5;
+
+  /// No description provided for @info_sharing_6.
+  ///
+  /// In en, this message translates to:
+  /// **'• With trusted service providers (under confidentiality agreements)'**
+  String get info_sharing_6;
+
+  /// No description provided for @data_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Security'**
+  String get data_security;
+
+  /// No description provided for @data_security_1.
+  ///
+  /// In en, this message translates to:
+  /// **'We take the following measures to protect your information:'**
+  String get data_security_1;
+
+  /// No description provided for @data_security_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Using SSL/TLS encryption to transmit data'**
+  String get data_security_2;
+
+  /// No description provided for @data_security_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• Secure storage of your password (encrypted hash)'**
+  String get data_security_3;
+
+  /// No description provided for @data_security_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• Regular security audits and vulnerability scanning'**
+  String get data_security_4;
+
+  /// No description provided for @data_security_5.
+  ///
+  /// In en, this message translates to:
+  /// **'• Restricting employee access to personal information'**
+  String get data_security_5;
+
+  /// No description provided for @data_security_6.
+  ///
+  /// In en, this message translates to:
+  /// **'• Requiring service providers to comply with strict security standards'**
+  String get data_security_6;
+
+  /// No description provided for @your_rights.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rights'**
+  String get your_rights;
+
+  /// No description provided for @your_rights_1.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the following rights regarding your personal information:'**
+  String get your_rights_1;
+
+  /// No description provided for @your_rights_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Access Right: View information we hold about you'**
+  String get your_rights_2;
+
+  /// No description provided for @your_rights_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• Correction Right: Update or correct inaccurate information'**
+  String get your_rights_3;
+
+  /// No description provided for @your_rights_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• Deletion Right: Request deletion of your personal information'**
+  String get your_rights_4;
+
+  /// No description provided for @your_rights_5.
+  ///
+  /// In en, this message translates to:
+  /// **'• Objection Right: Object to certain data processing activities'**
+  String get your_rights_5;
+
+  /// No description provided for @your_rights_6.
+  ///
+  /// In en, this message translates to:
+  /// **'• Withdraw Consent: Withdraw previously given consent'**
+  String get your_rights_6;
+
+  /// No description provided for @your_rights_7.
+  ///
+  /// In en, this message translates to:
+  /// **'• Data Portability: Receive your data in a structured format'**
+  String get your_rights_7;
+
+  /// No description provided for @cookie_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Cookie Policy'**
+  String get cookie_policy;
+
+  /// No description provided for @cookie_policy_1.
+  ///
+  /// In en, this message translates to:
+  /// **'We use cookies and similar technologies to:'**
+  String get cookie_policy_1;
+
+  /// No description provided for @cookie_policy_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Remember your login credentials'**
+  String get cookie_policy_2;
+
+  /// No description provided for @cookie_policy_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• Remember your preferences'**
+  String get cookie_policy_3;
+
+  /// No description provided for @cookie_policy_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• Analyze app performance'**
+  String get cookie_policy_4;
+
+  /// No description provided for @cookie_policy_5.
+  ///
+  /// In en, this message translates to:
+  /// **'• Provide personalized content'**
+  String get cookie_policy_5;
+
+  /// No description provided for @cookie_policy_6.
+  ///
+  /// In en, this message translates to:
+  /// **'You can manage cookie preferences through your device settings'**
+  String get cookie_policy_6;
+
+  /// No description provided for @child_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Privacy'**
+  String get child_privacy;
+
+  /// No description provided for @child_privacy_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Our services are not directed at children under 13.'**
+  String get child_privacy_1;
+
+  /// No description provided for @child_privacy_2.
+  ///
+  /// In en, this message translates to:
+  /// **'If we discover we have collected personal information from children under 13,'**
+  String get child_privacy_2;
+
+  /// No description provided for @child_privacy_3.
+  ///
+  /// In en, this message translates to:
+  /// **'we will take steps to delete that information.'**
+  String get child_privacy_3;
+
+  /// No description provided for @policy_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy Changes'**
+  String get policy_changes;
+
+  /// No description provided for @policy_changes_1.
+  ///
+  /// In en, this message translates to:
+  /// **'We may update this privacy policy from time to time.'**
+  String get policy_changes_1;
+
+  /// No description provided for @policy_changes_2.
+  ///
+  /// In en, this message translates to:
+  /// **'After changes, we will notify you within the app.'**
+  String get policy_changes_2;
+
+  /// No description provided for @policy_changes_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Continued use of our services indicates acceptance of the updated policy.'**
+  String get policy_changes_3;
+
+  /// No description provided for @policy_changes_4.
+  ///
+  /// In en, this message translates to:
+  /// **'We recommend checking this page regularly for the latest information.'**
+  String get policy_changes_4;
+
+  /// No description provided for @contact_us_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contact_us_section;
+
+  /// No description provided for @contact_us_1.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have any questions or concerns about this privacy policy, please contact us:'**
+  String get contact_us_1;
+
+  /// No description provided for @contact_us_2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Email: support@refundo.com'**
+  String get contact_us_2;
+
+  /// No description provided for @contact_us_3.
+  ///
+  /// In en, this message translates to:
+  /// **'• In-App Feedback: Settings > Help & Feedback'**
+  String get contact_us_3;
+
+  /// No description provided for @contact_us_4.
+  ///
+  /// In en, this message translates to:
+  /// **'• We will respond within 30 days'**
+  String get contact_us_4;
+
+  /// No description provided for @view_privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'View Privacy Policy'**
+  String get view_privacy_policy;
+
+  /// No description provided for @get_help_and_feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Help and Feedback'**
+  String get get_help_and_feedback;
+
+  /// No description provided for @not_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Set'**
+  String get not_set;
+
+  /// No description provided for @search_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Search help topics...'**
+  String get search_help;
+
+  /// No description provided for @frequently_asked_questions.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions'**
+  String get frequently_asked_questions;
+
+  /// No description provided for @faq1_question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I scan an order?'**
   String get faq1_question;
 
-  /// FAQ 1 答案: 在订单页面选择您想要退款的商品，点击"退款"按钮，填写退款原因后提交申请
+  /// No description provided for @faq1_answer.
   ///
   /// In en, this message translates to:
-  ///  **'On the order page, select the items you want to refund, click the "Refund" button, provide a reason and submit your application'**
+  /// **'Tap the scan button on the orders page and point your camera at the QR code on your receipt.'**
   String get faq1_answer;
 
-  /// FAQ 2: 退款需要多长时间？
+  /// No description provided for @faq2_question.
   ///
   /// In en, this message translates to:
-  ///  **'How long does the refund process take?'**
+  /// **'What are the refund requirements?'**
   String get faq2_question;
 
-  /// FAQ 2 答案: 退款处理通常需要5-15个工作日，具体时间取决于银行和支付方式
+  /// No description provided for @faq2_answer.
   ///
   /// In en, this message translates to:
-  ///  **'The refund process typically takes 5-15 business days, depending on the bank and payment method'**
+  /// **'Orders must be at least 5 months old and have a minimum refund amount of 5000 FCFA.'**
   String get faq2_answer;
 
-  /// FAQ 3: 退款申请被拒绝了怎么办？
+  /// No description provided for @faq3_question.
   ///
   /// In en, this message translates to:
-  ///  **'What if my refund application is rejected?'**
+  /// **'How long does refund processing take?'**
   String get faq3_question;
 
-  /// FAQ 3 答案: 如果被拒绝，您可以查看拒绝原因，修改后重新提交申请，或联系客服寻求帮助
+  /// No description provided for @faq3_answer.
   ///
   /// In en, this message translates to:
-  ///  **'If rejected, you can view the rejection reason, modify and resubmit your application, or contact customer support for assistance'**
+  /// **'Refund applications are typically processed within 3-5 business days.'**
   String get faq3_answer;
 
-  /// FAQ 4: 如何查看退款进度？
+  /// No description provided for @faq4_question.
   ///
   /// In en, this message translates to:
-  ///  **'How do I check my refund status?'**
+  /// **'Can I track my refund status?'**
   String get faq4_question;
 
-  /// FAQ 4 答案: 在"退款"页面可以查看所有退款申请的状态，包括"处理中"、"已批准"、"已拒绝"等
+  /// No description provided for @faq4_answer.
   ///
   /// In en, this message translates to:
-  ///  **'On the "Refunds" page, you can view the status of all refund applications, including "Processing", "Approved", "Rejected", etc.'**
+  /// **'Yes, you can track your refund status in the Refunds section of the app.'**
   String get faq4_answer;
 
-  /// 视频教程标题
+  /// No description provided for @video_tutorials.
   ///
   /// In en, this message translates to:
   /// **'Video Tutorials'**
   String get video_tutorials;
 
-  /// 教程1: 如何扫描商品
+  /// No description provided for @tutorial1_title.
   ///
   /// In en, this message translates to:
-  ///  **'How to scan products'**
+  /// **'Getting Started with RefundO'**
   String get tutorial1_title;
 
-  /// 教程1描述: 扫描商品的步骤演示
+  /// No description provided for @tutorial1_desc.
   ///
   /// In en, this message translates to:
-  ///  **'Step-by-step guide on scanning products'**
+  /// **'Learn the basics of scanning orders and requesting refunds'**
   String get tutorial1_desc;
 
-  /// 教程2: 如何申请退款
+  /// No description provided for @tutorial2_title.
   ///
   /// In en, this message translates to:
-  ///  **'How to apply for refund'**
+  /// **'Advanced Features Guide'**
   String get tutorial2_title;
 
-  /// 教程2描述: 退款申请的详细流程
+  /// No description provided for @tutorial2_desc.
   ///
   /// In en, this message translates to:
-  ///  **'Detailed process of refund application'**
+  /// **'Explore advanced features like batch refunds and statistics'**
   String get tutorial2_desc;
 
-  /// 联系我们标题
+  /// No description provided for @contact_us.
   ///
   /// In en, this message translates to:
   /// **'Contact Us'**
   String get contact_us;
 
-  /// 邮件支持
+  /// No description provided for @email_support.
   ///
   /// In en, this message translates to:
-  ///  **'Email Support'**
+  /// **'Email Support'**
   String get email_support;
 
-  /// 邮件地址
+  /// No description provided for @email_support_address.
   ///
   /// In en, this message translates to:
-  ///  **'support@refundo.com'**
+  /// **'support@refundo.com'**
   String get email_support_address;
 
-  /// 电话支持
+  /// No description provided for @phone_support.
   ///
   /// In en, this message translates to:
-  ///  **'Phone Support'**
+  /// **'Phone Support'**
   String get phone_support;
 
-  /// 电话号码
+  /// No description provided for @phone_support_number.
   ///
   /// In en, this message translates to:
-  ///  **'+1234567890'**
+  /// **'+237 XXX XXX XXX'**
   String get phone_support_number;
 
-  /// WhatsApp支持
+  /// No description provided for @whatsapp_support.
   ///
   /// In en, this message translates to:
-  ///  **'WhatsApp Support'**
+  /// **'WhatsApp Support'**
   String get whatsapp_support;
 
-  /// WhatsApp可用时间
+  /// No description provided for @whatsapp_available.
   ///
   /// In en, this message translates to:
-  ///  **'Available on WhatsApp'**
+  /// **'Available Mon-Fri 9:00-17:00'**
   String get whatsapp_available;
 
-  /// 发送反馈标题
+  /// No description provided for @send_feedback.
   ///
   /// In en, this message translates to:
-  ///  **'Send Feedback'**
+  /// **'Send Feedback'**
   String get send_feedback;
 
-  /// 反馈描述
+  /// No description provided for @feedback_description.
   ///
   /// In en, this message translates to:
-  ///  **'Please describe your problem or suggestion in detail. We will do our best to solve it for you.'**
+  /// **'We value your feedback! Please let us know how we can improve our services.'**
   String get feedback_description;
 
-  /// 输入反馈提示
+  /// No description provided for @enter_your_feedback.
   ///
   /// In en, this message translates to:
-  ///  **'Enter your feedback here...'**
+  /// **'Enter your feedback here...'**
   String get enter_your_feedback;
 
-  /// 提交反馈按钮
+  /// No description provided for @submit_feedback.
   ///
   /// In en, this message translates to:
-  ///  **'Submit'**
+  /// **'Submit Feedback'**
   String get submit_feedback;
 
-  /// 反馈提交成功提示
+  /// No description provided for @feedback_submitted_successfully.
   ///
   /// In en, this message translates to:
-  ///  **'Feedback submitted successfully'**
+  /// **'Thank you! Your feedback has been submitted successfully.'**
   String get feedback_submitted_successfully;
+
+  /// No description provided for @verify_identity.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Identity'**
+  String get verify_identity;
+
+  /// No description provided for @new_email.
+  ///
+  /// In en, this message translates to:
+  /// **'New Email'**
+  String get new_email;
+
+  /// No description provided for @confirm_new_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Email'**
+  String get confirm_new_email;
+
+  /// No description provided for @enter_old_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Old Password'**
+  String get enter_old_password;
+
+  /// No description provided for @please_enter_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter new password'**
+  String get please_enter_new_password;
+
+  /// No description provided for @please_enter_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter password'**
+  String get please_enter_password;
+
+  /// No description provided for @enter_password_to_verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password to verify your identity'**
+  String get enter_password_to_verify;
+
+  /// No description provided for @enter_old_password_tip.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current password to confirm the change'**
+  String get enter_old_password_tip;
+
+  /// No description provided for @email_format_tip.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address (e.g., example@domain.com)'**
+  String get email_format_tip;
+
+  /// No description provided for @emails_do_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'The email addresses do not match'**
+  String get emails_do_not_match;
+
+  /// No description provided for @tips.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips'**
+  String get tips;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @no_orders_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Orders Yet'**
+  String get no_orders_yet;
+
+  /// No description provided for @scan_products_to_add_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan products to add orders'**
+  String get scan_products_to_add_orders;
+
+  /// No description provided for @scan_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Now'**
+  String get scan_now;
+
+  /// No description provided for @no_refunds_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Refunds Yet'**
+  String get no_refunds_yet;
+
+  /// No description provided for @submit_refund_requests_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit refund requests here'**
+  String get submit_refund_requests_here;
+
+  /// No description provided for @date_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get date_range;
+
+  /// No description provided for @sort_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sort_by;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @transaction_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Failed'**
+  String get transaction_failed;
+
+  /// No description provided for @transaction_receipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Receipt'**
+  String get transaction_receipt;
+
+  /// No description provided for @few_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Few'**
+  String get few_label;
+
+  /// No description provided for @withdrawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn'**
+  String get withdrawn;
+
+  /// No description provided for @pending_withdrawal.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Withdrawal'**
+  String get pending_withdrawal;
+
+  /// No description provided for @click_to_view_full_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view full image'**
+  String get click_to_view_full_image;
+
+  /// No description provided for @image_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load'**
+  String get image_load_failed;
+
+  /// No description provided for @no_orders_yet_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code to add your first order'**
+  String get no_orders_yet_detail;
+
+  /// No description provided for @no_refunds_yet_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Your refund applications will appear here'**
+  String get no_refunds_yet_detail;
+
+  /// No description provided for @no_search_results.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get no_search_results;
+
+  /// No description provided for @no_search_results_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'No content found matching \"{query}\"'**
+  String no_search_results_detail(Object query);
+
+  /// No description provided for @clear_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Search'**
+  String get clear_search;
+
+  /// No description provided for @network_connection_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Network Connection Failed'**
+  String get network_connection_failed;
+
+  /// No description provided for @check_network_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your network settings and try again'**
+  String get check_network_settings;
+
+  /// No description provided for @server_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Server Error'**
+  String get server_error_title;
+
+  /// No description provided for @server_error_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Server temporarily unavailable, please try again later'**
+  String get server_error_detail;
+
+  /// No description provided for @no_more_data.
+  ///
+  /// In en, this message translates to:
+  /// **'No more data'**
+  String get no_more_data;
+
+  /// No description provided for @total_orders_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders'**
+  String get total_orders_label;
+
+  /// No description provided for @orders_count_label.
+  ///
+  /// In en, this message translates to:
+  /// **'orders'**
+  String get orders_count_label;
+
+  /// No description provided for @total_amount_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get total_amount_label;
+
+  /// No description provided for @order_statistics_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Statistics'**
+  String get order_statistics_section;
+
+  /// No description provided for @todays_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Orders'**
+  String get todays_orders;
+
+  /// No description provided for @refund_statistics_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Statistics'**
+  String get refund_statistics_section;
+
+  /// No description provided for @pending_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending_label;
+
+  /// No description provided for @completed_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed_label;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

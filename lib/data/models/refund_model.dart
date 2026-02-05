@@ -43,6 +43,9 @@ class RefundModel{
   // 提现审批状态
   RefundStates refundState;
 
+  // 汇款凭证（交易凭证）
+  final String? remittanceReceipt;
+
   // 初始化方法
   RefundModel({
     required this.recordId,
@@ -57,16 +60,17 @@ class RefundModel{
     required this.email,
     required this.refundAmount,
     required this.timestamp,
-    required this.refundState
+    required this.refundState,
+    this.remittanceReceipt
   });
 
   String get_refundMethod(BuildContext context){
     if (refundMethod == 1){
-      return AppLocalizations.of(context)!.phone_payment;
+      return AppLocalizations.of(context)!.orange_money;
     }else if(refundMethod == 2){
-      return AppLocalizations.of(context)!.sanke_money;
+      return AppLocalizations.of(context)!.wave;
     }else{
-      return AppLocalizations.of(context)!.wave_payment;
+      return AppLocalizations.of(context)!.phone_number_label;
     }
   }
 
@@ -86,29 +90,75 @@ class RefundModel{
     'refundState': refundState.index
   };
 
-  // 从Json的转化方法
+  // 从Json的转化方法 - 匹配后端RefundResponse的数据结构
   factory RefundModel.fromJson(Map<String,dynamic> json){
     RefundStates state;
-    if(json['refund']['state'] != null)
-        state = json['refund']['state'] ? RefundStates.success : RefundStates.approval;
-    else
-        state = RefundStates.padding;
 
+    // 后端返回的数据结构：{refund: {requestStatus, ...}, userName, email, phoneNumber, amount, remittanceReceipt}
+    final refund = json['refund'];
+    if (refund != null) {
+      // requestStatus: Long类型，对应退款申请的5个状态
+      // 0=待审核, 1=审批通过等待交易, 2=审批拒绝, 4=交易完成, 5=交易失败
+      final requestStatus = refund['requestStatus'] as int?;
+      state = _getStatusFromRequestStatus(requestStatus);
+
+      // 调试日志
+      print('📦 RefundModel.fromJson - requestStatus: $requestStatus, state: $state');
+      print('📦 remittanceReceipt from json: ${json['remittanceReceipt']}');
+
+      return RefundModel(
+        recordId: refund['requestId'] as int? ?? 0,
+        orderId: refund['orderId'] as int? ?? 0,
+        orderNumber: refund['orderNumber'] as String? ?? '',
+        productId: refund['productId'] as String? ?? '',
+        refundMethod: refund['paymentMethod'] as int? ?? 0,
+        account: refund['paymentNumber'] as String? ?? '',
+        phone: json['phoneNumber'] as String? ?? '',
+        userId: refund['userId'] as int? ?? 0,
+        nickName: json['userName'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        refundAmount: Decimal.parse((json['amount'] ?? refund['amount'] ?? 0).toString()),
+        timestamp: refund['createTime'] as String? ?? '',
+        refundState: state,
+        remittanceReceipt: json['remittanceReceipt'] as String?
+      );
+    }
+
+    // 兼容旧格式（如果不存在refund字段）
+    state = RefundStates.pending;
     return RefundModel(
-        recordId: json['refund']['refundId'] as int ? ?? 0 ,
-        orderId: json['refund']['orderId'] as int ? ?? 0,
-        orderNumber: json['refund']['orderNumber'] as String ? ?? '',
-        refundMethod: json['refund']['method'] as int ? ?? 0,
-        account: json['refund']['account'] as String ? ?? '',
-        phone: json['phoneNumber'] as String ? ?? '',
-        userId: json['refund']['uid'] as int ? ?? 0,
-        nickName: json['userName'] as String ? ?? '',
-        email: json['email'] as String ? ?? '',
-        refundAmount: Decimal.parse(json['amount']?.toString() ?? '0' ),
-        timestamp: json['refund']['time'] as String ? ?? '',
-        productId: json['refund']['productId'] as String ? ?? '',
+        recordId: json['refundId'] as int? ?? 0,
+        orderId: 0,
+        orderNumber: '',
+        refundMethod: json['method'] as int? ?? 0,
+        account: json['account'] as String? ?? '',
+        phone: json['phoneNumber'] as String? ?? '',
+        userId: 0,
+        nickName: '',
+        email: '',
+        refundAmount: Decimal.parse(json['amount']?.toString() ?? '0'),
+        timestamp: '',
+        productId: '',
         refundState: state
     );
+  }
+
+  // 根据requestStatus获取对应的RefundStates
+  static RefundStates _getStatusFromRequestStatus(int? requestStatus) {
+    switch (requestStatus) {
+      case 0:
+        return RefundStates.pending;           // 待审核
+      case 1:
+        return RefundStates.approved;          // 审批通过，等待交易
+      case 2:
+        return RefundStates.rejected;          // 审批拒绝
+      case 4:
+        return RefundStates.completed;         // 交易完成
+      case 5:
+        return RefundStates.transactionFailed;  // 交易失败
+      default:
+        return RefundStates.pending;
+    }
   }
 
   // 重写输出方法
@@ -120,7 +170,9 @@ class RefundModel{
 }
 
 enum RefundStates{
-  approval,
-  success,
-  padding
+  pending,           // 0 - 待审核
+  approved,          // 1 - 审批通过，等待交易
+  rejected,          // 2 - 审批拒绝
+  completed,         // 4 - 交易完成
+  transactionFailed  // 5 - 交易失败
 }

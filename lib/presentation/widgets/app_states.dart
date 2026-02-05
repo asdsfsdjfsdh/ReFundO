@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:refundo/core/theme/app_theme.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/widgets/app_cards.dart';
 
 /// 应用空状态组件
@@ -80,46 +81,40 @@ class AppEmptyStates {
   }
 
   /// 订单空状态
-  static Widget orders({
-    String? actionLabel,
-    VoidCallback? onAction,
-  }) {
+  static Widget orders(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return basic(
-      title: '暂无订单',
-      message: '扫描二维码添加您的第一个订单',
+      title: l10n.no_orders_yet,
+      message: l10n.no_orders_yet_detail,
       icon: Icons.receipt_long_outlined,
-      actionLabel: actionLabel,
-      onAction: onAction,
     );
   }
 
   /// 退款空状态
-  static Widget refunds() {
+  static Widget refunds(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return basic(
-      title: '暂无退款记录',
-      message: '您的退款申请将显示在这里',
+      title: l10n.no_refunds_yet,
+      message: l10n.no_refunds_yet_detail,
       icon: Icons.account_balance_wallet_outlined,
     );
   }
 
   /// 搜索结果空状态
-  static Widget search({
-    required String query,
-    VoidCallback? onClear,
-  }) {
+  static Widget search(BuildContext context, String query, VoidCallback? onClear) {
+    final l10n = AppLocalizations.of(context)!;
     return basic(
-      title: '未找到相关结果',
-      message: '没有找到与 "$query" 相关的内容',
+      title: l10n.no_search_results,
+      message: l10n.no_search_results_detail(query),
       icon: Icons.search_off,
-      actionLabel: '清除搜索',
+      actionLabel: l10n.clear_search,
       onAction: onClear,
     );
   }
 
   /// 网络错误空状态
-  static Widget networkError({
-    VoidCallback? onRetry,
-  }) {
+  static Widget networkError(BuildContext context, {VoidCallback? onRetry}) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -144,14 +139,14 @@ class AppEmptyStates {
 
             // 标题
             Text(
-              '网络连接失败',
+              l10n.network_connection_failed,
               style: AppTextStyles.headlineSmall,
             ),
             const SizedBox(height: AppSpacing.sm),
 
             // 描述
             Text(
-              '请检查网络设置后重试',
+              l10n.check_network_settings,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -163,7 +158,7 @@ class AppEmptyStates {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('重试'),
+                label: Text(l10n.retry),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -184,14 +179,13 @@ class AppEmptyStates {
   }
 
   /// 服务器错误空状态
-  static Widget serverError({
-    VoidCallback? onRetry,
-  }) {
+  static Widget serverError(BuildContext context, {VoidCallback? onRetry}) {
+    final l10n = AppLocalizations.of(context)!;
     return basic(
-      title: '服务器错误',
-      message: '服务器暂时无法响应，请稍后重试',
+      title: l10n.server_error_title,
+      message: l10n.server_error_detail,
       icon: Icons.cloud_off,
-      actionLabel: '重试',
+      actionLabel: l10n.retry,
       onAction: onRetry,
     );
   }
@@ -285,14 +279,13 @@ class AppLoadingStates {
   }
 
   /// 没有更多数据提示
-  static Widget noMoreData({
-    String message = '没有更多数据了',
-  }) {
+  static Widget noMoreData(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       height: 60,
       alignment: Alignment.center,
       child: Text(
-        message,
+        l10n.no_more_data,
         style: AppTextStyles.bodySmall.copyWith(
           color: AppColors.textHint,
         ),
