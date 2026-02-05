@@ -142,7 +142,7 @@ class UserDetailPage extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xs),
                     // UID
                     Text(
-                      '${l10n.uid_label}: ${user.userAccount}',
+                      '${l10n.uid_label}: ${user.userId?.toString() ?? ''}',
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: Colors.white.withOpacity(0.8),
                       ),
@@ -211,7 +211,7 @@ class UserDetailPage extends StatelessWidget {
                     icon: Icons.account_balance_wallet_rounded,
                     iconColor: AppColors.successLight,
                     title: 'Refunded Amount',
-                    value: '${(user.RefundedAmount ?? 0.0).toStringAsFixed(0)} FCFA',
+                    value: '${(user.refundedAmount).toStringAsFixed(0)} FCFA',
                   ),
                 ]),
 
@@ -284,7 +284,7 @@ class UserDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${(user.AmountSum ?? 0.0).toStringAsFixed(0)} FCFA',
+                '${user.balance.toStringAsFixed(0)} FCFA',
                 style: AppTextStyles.headlineMedium.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

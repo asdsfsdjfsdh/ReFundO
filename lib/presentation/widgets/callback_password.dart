@@ -270,7 +270,7 @@ class _CheckCodeState extends State<CheckCode> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final email = Provider.of<EmailProvider>(context, listen: false).Email;
+    final email = Provider.of<EmailProvider>(context, listen: false).email;
 
     return GestureDetector(
       onTap: () {
@@ -354,10 +354,10 @@ class _CheckCodeState extends State<CheckCode> {
                             onPressed: () {
                               if (sendColor == Colors.blue) {
                                 final message =
-                                Provider.of<EmailProvider>(
+                                Provider.of<UserProvider>(
                                   context,
                                   listen: false,
-                                ).sendEmail(email, context,1);
+                                ).forget(email, context);
                                 if (message == 200) {
                                   ShowToast.showCenterToast(context, l10n.verification_code_sent);
                                   setState(() {
@@ -395,11 +395,11 @@ class _CheckCodeState extends State<CheckCode> {
                                 button_flex = 6;
                                 sendColor = Colors.grey;
                                 final message =
-                                Provider.of<EmailProvider>(
+                                Provider.of<UserProvider>(
                                   context,
                                   listen: false,
-                                ).sendEmail(email, context,1);
-                                if (message != "Error") {
+                                ).forget(email, context);
+                                if (message == 200) {
                                   ShowToast.showCenterToast(context, l10n.verification_code_sent_success);
                                   _startCountdown();
                                 } else {

@@ -193,8 +193,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildUserHeaderCard(BuildContext context, UserProvider userProvider, bool isLogin) {
     final l10n = AppLocalizations.of(context)!;
     final userName = userProvider.user?.username ?? l10n.guest_user;
-    final userEmail = userProvider.user?.Email ?? l10n.not_logged_in;
-    final userBalance = userProvider.user?.AmountSum ?? 0.0;
+    final userEmail = userProvider.user?.email ?? l10n.not_logged_in;
+    final userBalance = userProvider.user?.balance ?? 0.0;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),

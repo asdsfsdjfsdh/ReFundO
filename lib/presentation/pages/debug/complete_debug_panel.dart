@@ -461,7 +461,7 @@ class _CompleteDebugPanelPageState extends State<CompleteDebugPanelPage>
       status = p.isLogin ? '已登录' : '未登录';
       details = [
         '用户: ${p.user?.username ?? "N/A"}',
-        '余额: ${p.user?.AmountSum ?? "N/A"}',
+        '余额: ${p.user?.balance ?? "N/A"}',
       ];
     } else if (provider is OrderProvider) {
       final p = provider as OrderProvider;

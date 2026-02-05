@@ -757,6 +757,8 @@ class _RefundsPageState extends State<RefundsPage> {
         return AppColors.info;         // 审批通过，等待交易 - 蓝色
       case RefundStates.completed:
         return AppColors.success;       // 交易完成 - 绿色
+      case RefundStates.processing:
+        return AppColors.info;         // 处理中 - 蓝色
       case RefundStates.rejected:
         return AppColors.error;         // 审批拒绝 - 红色
       case RefundStates.transactionFailed:
@@ -773,6 +775,8 @@ class _RefundsPageState extends State<RefundsPage> {
         return Icons.schedule;          // 等待交易
       case RefundStates.completed:
         return Icons.check_circle;       // 交易完成
+      case RefundStates.processing:
+        return Icons.refresh;            // 处理中
       case RefundStates.rejected:
         return Icons.cancel;             // 审批拒绝
       case RefundStates.transactionFailed:
@@ -788,7 +792,9 @@ class _RefundsPageState extends State<RefundsPage> {
       case RefundStates.approved:
         return l10n.pending;             // 等待交易
       case RefundStates.completed:
-        return l10n.completed;          // 交易完成
+        return l10n.completed;    
+      case RefundStates.processing:
+        return l10n.processing;          // 处理中
       case RefundStates.rejected:
         return l10n.rejected;            // 审批拒绝
       case RefundStates.transactionFailed:

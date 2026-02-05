@@ -257,7 +257,7 @@ class _SettingPageState extends State<SettingPage> {
         _buildInfoCard(
           context: context,
           title: l10n.bank_card_number,
-          subtitle: Provider.of<UserProvider>(context, listen: false).user!.phoneNumber,
+          subtitle: Provider.of<UserProvider>(context, listen: false).user!.phoneNumber ?? l10n.not_set,
           icon: Icons.credit_card_rounded,
           iconColor: Colors.green.shade600,
           actionText: l10n.manage_payment_info, // 第三行提示文本

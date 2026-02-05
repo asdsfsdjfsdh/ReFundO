@@ -215,7 +215,7 @@ class DioProvider extends ChangeNotifier {
     }
 
     // Token保存成功后，自动获取CSRF Token
-    await _fetchCsrfToken();
+    // await _fetchCsrfToken();
   }
 
   /// 获取CSRF Token

@@ -754,7 +754,7 @@ class _ProviderDetailCard extends StatelessWidget {
       return '登录: ${userProvider!.isLogin}\n'
              '用户名: ${userProvider!.user?.username ?? "N/A"}\n'
              '邮箱: ${userProvider!.user?.email ?? "N/A"}\n'
-             '余额: ${userProvider!.user?.AmountSum ?? "N/A"}';
+             '余额: ${userProvider!.user?.balance ?? "N/A"}';
     }
     if (orderProvider != null) {
       return '订单数: ${orderProvider!.orders?.length ?? 0}\n'
