@@ -53,7 +53,7 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     return Consumer3<OrderProvider, UserProvider, RefundProvider>(
       builder: (context, orderProvider, userProvider, refundProvider, child) {
-        _totalAmount = userProvider.user?.AmountSum ?? 0.0;
+        _totalAmount = userProvider.user?.balance ?? 0.0;
 
         return Scaffold(
           appBar: _buildAppBar(context, orderProvider, refundProvider),

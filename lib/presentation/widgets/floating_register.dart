@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/showToast.dart';
@@ -41,11 +40,12 @@ class FloatingRegister {
     String username,
     String userEmail,
     String password,
+    String verificationCode,
   ) async {
     Provider.of<UserProvider>(
       context,
       listen: false,
-    ).register(username, userEmail, password, context);
+    ).register(username, userEmail, password, verificationCode, context);
   }
 
   /// 获取验证码按钮点击事件
@@ -176,31 +176,6 @@ class FloatingRegister {
                     );
                     _isRegister = false;
                     return;
-                  } else {
-                    final message =
-                        await Provider.of<EmailProvider>(
-                          context,
-                          listen: false,
-                        ).checkCode(
-                          email,
-                          _verificationCodeController.text,
-                          context,
-                        );
-                    print(message);
-                    if (message == 410) {
-                      ShowToast.showCenterToast(context, "验证码已过期，请重新获取");
-                      return;
-                    } else if (message == 200) {
-                    } else if (message == 411) {
-                      ShowToast.showCenterToast(context, "验证码错误");
-                      return;
-                    } else if (message == 400) {
-                      ShowToast.showCenterToast(context, "请求参数格式不正确");
-                      return;
-                    } else {
-                      ShowToast.showCenterToast(context, "验证码服务暂时不可用，请稍后重试");
-                      return;
-                    }
                   }
                   if (password.isEmpty || password.length < 6) {
                     setState(
@@ -223,7 +198,13 @@ class FloatingRegister {
                   });
 
                   try {
-                    await onRegister(context, username, email, password);
+                    await onRegister(
+                      context,
+                      username,
+                      email,
+                      password,
+                      verificationCode,
+                    );
                     final userProvider = Provider.of<UserProvider>(
                       context,
                       listen: false,

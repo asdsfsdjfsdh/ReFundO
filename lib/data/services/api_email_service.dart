@@ -3,160 +3,99 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/presentation/providers/dio_provider.dart';
 
-class ApiEmailService{
- 
- Future<int?> sendEmail_findback(String email,BuildContext context) async {
-  try{
-    print('开始发送邮件');
-    Response response = await Provider.of<DioProvider>(context, listen: false).dio.get(
-      '/api/email/findback', 
-      queryParameters: {
-      'email': email
-    });
-    print('邮件发送成功');
-    final statusCode = response.statusCode;
-    return statusCode;
-  } on DioException catch (e) {
-      String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
-      print("Dio错误详情:");
-      print("请求URL: ${e.requestOptions.uri}");
-      print("请求方法: ${e.requestOptions.method}");
-      print("请求头: ${e.requestOptions.headers}");
-      print("请求体: ${e.requestOptions.data}");
-      print("响应状态码: ${e.response?.statusCode}");
-      print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
-        message = '请求超时: + ${e.message}';
-      } else if (e.type == DioExceptionType.connectionTimeout) {
-        // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
-      } else if (e.response != null) {
-        // 服务器返回错误状态码
-        final statusCode = e.response!.statusCode;
-        if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
-        } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
-        } else {
-          message = '服务器返回错误状态码: $statusCode';
+class ApiEmailService {
+
+  /// 发送验证码（找回密码/注册通用）
+  /// 使用统一的后端接口: POST /api/verification-code/send
+  Future<int?> sendVerificationCode(String email, BuildContext context) async {
+    try {
+      print('开始发送验证码邮件到: $email');
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+        '/api/verification-code/send',
+        data: {
+          'email': email
         }
-      } else {
-        message = '网络请求异常: ${e.message}';
-      }
-      return e.response!.statusCode;
+      );
+      print('验证码邮件发送成功，状态码: ${response.statusCode}');
+      return response.statusCode;
+    } on DioException catch (e) {
+      String message = _handleDioError(e, '发送验证码');
+      print('发送验证码失败: $message');
+      return e.response?.statusCode ?? -1;
     } catch (e) {
-      // 处理其他异常
-      print('未知错误: $e');
-      String message = '未知错误: $e';
+      print('发送验证码未知错误: $e');
       return -1;
     }
- }
+  }
 
-  Future<int?> sendEmail_register(String email,BuildContext context) async {
-  try{
-    print('开始发送邮件');
-    Response response = await Provider.of<DioProvider>(context, listen: false).dio.get(
-      '/api/email/registerCode', 
-      queryParameters: {
-      'email': email
-    });
-    print('邮件发送成功');
-    final statusCode = response.statusCode;
-    return statusCode;
-  } on DioException catch (e) {
-      String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
-      print("Dio错误详情:");
-      print("请求URL: ${e.requestOptions.uri}");
-      print("请求方法: ${e.requestOptions.method}");
-      print("请求头: ${e.requestOptions.headers}");
-      print("请求体: ${e.requestOptions.data}");
-      print("响应状态码: ${e.response?.statusCode}");
-      print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
-        message = '请求超时: + ${e.message}';
-      } else if (e.type == DioExceptionType.connectionTimeout) {
-        // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
-      } else if (e.response != null) {
-        // 服务器返回错误状态码
-        final statusCode = e.response!.statusCode;
-        if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
-        } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
-        } else {
-          message = '服务器返回错误状态码: $statusCode';
+  /// 验证验证码
+  /// 使用后端接口: POST /api/verification-code/verify
+  Future<int?> verifyCode(String email, String code, BuildContext context) async {
+    try {
+      print('开始验证验证码: email=$email, code=$code');
+      Response response = await Provider.of<DioProvider>(context, listen: false).dio.post(
+        '/api/verification-code/verify',
+        data: {
+          'email': email,
+          'code': code
         }
-      } else {
-        message = '网络请求异常: ${e.message}';
-      }
-      return e.response!.statusCode;
+      );
+      print('验证码验证成功，状态码: ${response.statusCode}');
+      return response.statusCode;
+    } on DioException catch (e) {
+      String message = _handleDioError(e, '验证验证码');
+      print('验证验证码失败: $message');
+      return e.response?.statusCode ?? -1;
     } catch (e) {
-      // 处理其他异常
-      print('未知错误: $e');
-      String message = '未知错误: $e';
+      print('验证验证码未知错误: $e');
       return -1;
     }
- }
+  }
 
- Future<int?> CheckCode(String email,String code,BuildContext context)async{
-  try{
-    
-    Response response = await Provider.of<DioProvider>(context, listen: false).dio.get(
-      '/api/email/checkCode', 
-      queryParameters: {
-      'email': email,
-      'code': code
-    });
-    int? statusCode = response.statusCode;
-    return statusCode;
-  } on DioException catch (e) {
-      String message = '占位错误';
-      Map<String, dynamic> result = {"message": message, "order": null};
-      print("Dio错误详情:");
-      print("请求URL: ${e.requestOptions.uri}");
-      print("请求方法: ${e.requestOptions.method}");
-      print("请求头: ${e.requestOptions.headers}");
-      print("请求体: ${e.requestOptions.data}");
-      print("响应状态码: ${e.response?.statusCode}");
-      print("响应数据: ${e.response?.data}");
-      // 处理Dio相关的异常
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
-        message = '请求超时: + ${e.message}';
-      } else if (e.type == DioExceptionType.connectionTimeout) {
-        // 服务器不可达或网络连接失败
-        message = '网络连接失败: 无法连接到服务器';
-      } else if (e.response != null) {
-        // 服务器返回错误状态码
-        final statusCode = e.response!.statusCode;
-        if (statusCode == 404) {
-          message = "服务器返回404错误: 请求的资源未找到";
-        } else if (statusCode == 500) {
-          message = '服务器返回500错误: 服务器内部错误';
-        } else {
-          message = '服务器返回错误状态码: $statusCode';
-        }
+  /// 兼容旧方法：发送找回密码验证码
+  @Deprecated('使用 sendVerificationCode 代替')
+  Future<int?> sendEmail_findback(String email, BuildContext context) async {
+    return sendVerificationCode(email, context);
+  }
+
+  /// 兼容旧方法：发送注册验证码
+  @Deprecated('使用 sendVerificationCode 代替')
+  Future<int?> sendEmail_register(String email, BuildContext context) async {
+    return sendVerificationCode(email, context);
+  }
+
+  /// 兼容旧方法：检查验证码
+  @Deprecated('使用 verifyCode 代替')
+  Future<int?> CheckCode(String email, String code, BuildContext context) async {
+    return verifyCode(email, code, context);
+  }
+
+  /// 统一的Dio错误处理
+  String _handleDioError(DioException e, String operation) {
+    print("Dio错误详情 [$operation]:");
+    print("请求URL: ${e.requestOptions.uri}");
+    print("请求方法: ${e.requestOptions.method}");
+    print("请求头: ${e.requestOptions.headers}");
+    print("请求体: ${e.requestOptions.data}");
+    print("响应状态码: ${e.response?.statusCode}");
+    print("响应数据: ${e.response?.data}");
+
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return '请求超时: ${e.message}';
+    } else if (e.type == DioExceptionType.connectionError) {
+      return '网络连接失败: 无法连接到服务器';
+    } else if (e.response != null) {
+      final statusCode = e.response!.statusCode;
+      if (statusCode == 404) {
+        return "服务器返回404错误: 请求的资源未找到";
+      } else if (statusCode == 500) {
+        return '服务器返回500错误: 服务器内部错误';
       } else {
-        message = '网络请求异常: ${e.message}';
+        return '服务器返回错误状态码: $statusCode';
       }
-      message = e.response?.data;
-      return e.response!.statusCode;
-    } catch (e) {
-      // 处理其他异常
-      print('未知错误: $e');
-      String message = '未知错误: $e';
-      return -1;
+    } else {
+      return '网络请求异常: ${e.message}';
     }
- }
-
+  }
 }

@@ -126,16 +126,16 @@ class RefundProvider with ChangeNotifier {
     notifyListeners();
   }
   
-  // 检查退款条件
-  Future<int> checkRefundConditions(BuildContext context) async {
+  // 检查退款条件 - 计算退款金额
+  Future<Map<String, dynamic>> checkRefundConditions(BuildContext context) async {
     try {
-      final statusCode = await _orderService.checkRefundConditions(context,_orders!);
-      return statusCode;
+      final result = await _orderService.checkRefundConditions(context, _orders!);
+      return result;
     } catch (e) {
       if (kDebugMode) {
         print("检查退款条件失败: $e");
       }
-      return -1;
+      return {"success": false, "message": "检查退款条件失败"};
     }
   }
 

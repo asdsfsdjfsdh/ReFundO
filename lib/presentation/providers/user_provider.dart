@@ -11,7 +11,6 @@ import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
-import 'package:refundo/presentation/providers/dio_provider.dart';
 import 'package:refundo/data/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
@@ -113,10 +112,11 @@ class UserProvider with ChangeNotifier {
     String username,
     String userEmail,
     String password,
+    String verificationCode,
     BuildContext context
   ) async {
     try {
-      UserModel User =  await _service.register(username, userEmail, password,context);
+      UserModel User =  await _service.register(username, userEmail, password, verificationCode, context);
       _errorMessage = User.errorMessage;
       print(_errorMessage);
     } catch (e) {
@@ -175,29 +175,27 @@ class UserProvider with ChangeNotifier {
     try {
       UserModel? user = _user;
 
+      // 使用 copyWith 创建新的用户对象
       switch (updateType) {
         case 1:
-          user?.username = Info;
+          user = user?.copyWith(username: Info);
           break;
         case 2:
-          if(email != null){
-            user?.Email = email;
-          }
-          user?.password = Info;
-          break;
+          // 密码修改使用专用接口
+          return await _service.updatePassword(Info, context);
         case 3:
           print("email:$Info");
-          user?.Email = Info;
+          user = user?.copyWith(email: Info);
           break;
         case 4:
-          user?.phoneNumber = Info;
+          user = user?.copyWith(phoneNumber: Info);
           break;
-        
+
         default:
           return "Error";
       }
 
-      final updatedUser = await _service.updateUserInfo(user!,updateType,context);
+      final updatedUser = await _service.updateUserInfo(user!, updateType, context);
 
       if(updatedUser.errorMessage.isEmpty){
         _user = updatedUser;
@@ -222,7 +220,7 @@ class UserProvider with ChangeNotifier {
   ) async {
     try {
       String message = await _service.verifyUserInfo(email,password,context);
-      if(message == "验证通过"){
+      if(message == "验证成功"){
         return true;
       } else {
         LogUtil.e("验证用户身份", message);
@@ -236,4 +234,22 @@ class UserProvider with ChangeNotifier {
 
   // 注销账号（别名方法，保持命名一致性）
   Future<void> logout(BuildContext context) => logOut(context);
+
+  Future<int?> forget(String email, BuildContext context) async {
+    try {
+      LogUtil.d("找回密码", "开始请求找回密码");
+      UserModel? User = await _service.resetPassword(email,context);
+      if (User != null && User.errorMessage.isEmpty) {
+        LogUtil.d("找回密码", "找回密码请求成功");
+        return 200;
+      } else {
+        String error = User?.errorMessage ?? "未知错误";
+        LogUtil.e("找回密码", error);
+        return -1;
+      }
+    } catch (e) {
+      LogUtil.e("找回密码", e.toString());
+      return -1;
+    }
+  }
 }

@@ -447,8 +447,8 @@ class _DebugPanelPageState extends State<DebugPanelPage> {
         '用户信息',
         '用户名: ${userProvider.user!.username}\n'
         '邮箱: ${userProvider.user!.email}\n'
-        '余额: ${userProvider.user!.AmountSum}\n'
-        '账户: ${userProvider.user!.userAccount}',
+        '余额: ${userProvider.user!.balance}\n'
+        '账户: ${userProvider.user!.userId}',
       );
     } else {
       _showErrorDialog(context, '未登录');

@@ -23,7 +23,6 @@ class ApiOrderService {
     int page = 1,
     int pageSize = 20,
   }) async {
-    // 使用全局DioProvider实例
     DioProvider dioProvider = DioProvider.globalInstance;
     List<OrderModel> _orders = [];
 
@@ -31,12 +30,13 @@ class ApiOrderService {
       print('📋 获取订单列表: isRefund=$isRefund, page=$page, pageSize=$pageSize');
     }
 
-    Response response = await dioProvider.dio.post(
-      '/api/orders/init',
-      data: {
-        "isRefund": isRefund,
-        "page": page,
+    Response response = await dioProvider.dio.get(
+      '/api/scan/records',
+      queryParameters: {
+        "pageNum": page,
         "pageSize": pageSize,
+        "orderBy": "create_time",
+        "orderDirection": "desc",
       },
     );
 
@@ -44,21 +44,28 @@ class ApiOrderService {
       print('📋 订单列表响应: ${response.data}');
     }
 
-    // 处理后端返回的数据结构: {msg, code, data: {result: [...]}}
-    final responseData = response.data;
-    final data = responseData['data'];
-    final result = data?['result'];
+    // 处理后端返回的数据结构: {Code, Data: {records: [...], total, pageNum, pageSize, pages}}
+    final code = response.data['code'];
+    if (code != 1) {
+      if (kDebugMode) {
+        print('❌ 后端返回错误码: $code');
+      }
+      return _orders;
+    }
+
+    final data = response.data['data'];
+    final records = data?['records'];
 
     if (kDebugMode) {
-      print('📋 解析后的result: $result');
-      print('📋 result类型: ${result.runtimeType}');
-      if (result is List) {
-        print('📋 result长度: ${result.length}');
+      print('📋 解析后的records: $records');
+      print('📋 records类型: ${records.runtimeType}');
+      if (records is List) {
+        print('📋 records长度: ${records.length}');
       }
     }
 
-    if (result != null && result is List) {
-      for (var orderData in result) {
+    if (records != null && records is List) {
+      for (var orderData in records) {
         Map<String, dynamic> ordersresult = orderData;
         OrderModel order = OrderModel.fromJson(ordersresult);
         _orders.add(order);
@@ -77,17 +84,23 @@ class ApiOrderService {
     DioProvider dioProvider = DioProvider.globalInstance;
 
     try {
-      Response response = await dioProvider.dio.post(
-        '/api/orders/count',
-        data: {
-          "isRefund": isRefund,
+      Response response = await dioProvider.dio.get(
+        '/api/scan/records',
+        queryParameters: {
+          "pageNum": 1,
+          "pageSize": 1,
+          "orderBy": "create_time",
+          "orderDirection": "desc",
         },
       );
 
-      // 处理后端返回的数据结构: {msg, code, data: {result}}
-      final data = response.data['data'];
-      final result = data?['result'];
-      return result ?? 0;
+      // 从响应中获取 total
+      final code = response.data['Code'];
+      if (code == 1) {
+        final data = response.data['Data'];
+        return data?['total'] ?? 0;
+      }
+      return 0;
     } catch (e) {
       if (kDebugMode) {
         print('获取订单总数失败: $e');
@@ -106,11 +119,11 @@ class ApiOrderService {
 
       // 将Decimal转换为字符串以确保正确序列化
       final requestData = {
-        "price": product.price.toString(),
         "productId": product.ProductId,
-        "refundAmount": product.RefundAmount.toString(),
+        "originalPrice": product.price.toString(),
+        "refundRatio": product.RefundPercent,
         "hash": product.Hash,
-        "refundPercent": product.RefundPercent,
+        "value": product.RefundAmount.toString(),
       };
 
       if (kDebugMode) {
@@ -118,7 +131,7 @@ class ApiOrderService {
       }
 
       Response response = await dioProvider.dio.post(
-        '/api/orders/insert',
+        '/api/scan/insert',
         data: requestData,
       );
 
@@ -129,30 +142,19 @@ class ApiOrderService {
       // 检查响应状态码
       if (response.statusCode == 200) {
         final data = response.data;
-
-        // 获取消息（支持 msg 和 message 两种字段名）
-        String message = data['msg'] ?? data['message'] ?? '操作成功';
+        final code = data['Code'];
 
         // 检查是否有业务错误
-        final code = data['code'];
-        if (code != null && code != 200) {
-          // 业务错误
+        if (code != 1) {
+          final message = data['Message'] ?? '操作失败';
           if (kDebugMode) {
             print('业务错误: $message (code: $code)');
           }
           return {"message": message, "result": null};
         }
 
-        // 成功响应，解析订单数据
-        final resultData = data['data'];
-        final result = resultData?['result'];
-
-        if (result != null) {
-          OrderModel order = OrderModel.fromJson(result);
-          return {"message": message, "result": order};
-        } else {
-          return {"message": message, "result": null};
-        }
+        // 成功响应
+        return {"message": "操作成功", "result": null};
       } else {
         return {"message": "服务器返回异常状态码: ${response.statusCode}", "result": null};
       }
@@ -173,19 +175,15 @@ class ApiOrderService {
       // 处理Dio相关的异常
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
         message = '请求超时: ${e.message}';
       } else if (e.type == DioExceptionType.connectionError) {
-        // 服务器不可达或网络连接失败
         message = '网络连接失败: 无法连接到服务器';
       } else if (e.response != null) {
-        // 服务器返回错误状态码，尝试提取错误消息
         final statusCode = e.response!.statusCode;
         final responseData = e.response!.data;
 
-        // 尝试从响应中提取错误消息
         if (responseData is Map) {
-          message = responseData['msg'] ?? responseData['message'] ??
+          message = responseData['Message'] ?? responseData['message'] ??
                    '服务器返回错误状态码: $statusCode';
         } else {
           message = '服务器返回错误状态码: $statusCode';
@@ -207,24 +205,38 @@ class ApiOrderService {
       result["message"] = message;
       return result;
     } catch (e) {
-      // 处理其他异常
       print('未知错误: $e');
       String message = '未知错误: ${e.toString()}';
       return {"message": message, "result": null};
     }
   }
 
-  // 检查退款条件
-  Future<int> checkRefundConditions(BuildContext context, Set<OrderModel> orders) async {
+  // 检查退款条件 - 计算退款金额
+  Future<Map<String, dynamic>> checkRefundConditions(BuildContext context, Set<OrderModel> orders) async {
     DioProvider dioProvider = DioProvider.globalInstance;
     try {
-      List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
-      Response response = await dioProvider.dio.post('/api/orders/check',
-        data: {
-          "orders" : ordersJson
-        }
+      // 将订单ID转换为逗号分隔的字符串
+      String scanIds = orders.map((o) => o.orderid.toString()).join(',');
+
+      if (kDebugMode) {
+        print('📦 计算退款金额 scanIds: $scanIds');
+      }
+
+      Response response = await dioProvider.dio.get(
+        '/api/refund-request/calculate-amount',
+        queryParameters: {
+          "scanIds": scanIds,
+        },
       );
-      return response.statusCode ?? -1;
+
+      final code = response.data['Code'];
+      if (code == 1) {
+        final amount = response.data['Data'];
+        return {"success": true, "amount": amount};
+      } else {
+        final message = response.data['Message'] ?? '计算失败';
+        return {"success": false, "message": message};
+      }
     } on DioException catch (e) {
       if (kDebugMode) {
         print("Dio错误详情:");
@@ -235,37 +247,39 @@ class ApiOrderService {
         print("响应状态码: ${e.response?.statusCode}");
         print("响应数据: ${e.response?.data}");
       }
-      
+
       if (e.response != null) {
-        return e.response!.statusCode ?? -1;
+        final statusCode = e.response!.statusCode;
+        return {"success": false, "message": "服务器返回错误状态码: $statusCode"};
       } else {
-        return -1;
+        return {"success": false, "message": "网络连接失败"};
       }
     } catch (e) {
-      // 处理其他异常
       if (kDebugMode) {
         print('未知错误: $e');
       }
-      return -1;
+      return {"success": false, "message": "未知错误: ${e.toString()}"};
     }
   }
 
   // 退款功能
-  Future<int> Refund(BuildContext context,Set<OrderModel> orders,int refundType,String refundAccount) async{
+  Future<int> Refund(BuildContext context, Set<OrderModel> orders, int refundType, String refundAccount) async {
     DioProvider dioProvider = DioProvider.globalInstance;
-    try{
-      List<Map<String, dynamic>> ordersJson = orders.map((order) => order.toJson()).toList();
+    try {
+      // 将订单ID转换为逗号分隔的字符串
+      String scanIds = orders.map((o) => o.orderid.toString()).join(',');
+
       if (kDebugMode) {
-        print('📦 退款请求订单数据: $ordersJson');
+        print('📦 退款请求 scanIds: $scanIds, refundType: $refundType, account: $refundAccount');
       }
 
       Response response = await dioProvider.dio.post(
-        "/api/refund/insert",
+        "/api/refund-request",
         data: {
-          "orders" : ordersJson,
-          "refundMethod" : refundType,
-          "account": refundAccount,
-        }
+          "scanIds": scanIds,
+          "paymentMethod": refundType,
+          "paymentNumber": refundAccount,
+        },
       );
 
       if (kDebugMode) {
@@ -275,20 +289,13 @@ class ApiOrderService {
       // 检查响应状态码
       if (response.statusCode == 200) {
         final data = response.data;
+        final code = data['Code'];
 
-        // 获取消息（支持 msg 和 message 两种字段名）
-        String message = data['msg'] ?? data['message'] ?? '操作成功';
-
-        // 检查是否有业务错误
-        final code = data['code'];
-        if (code != null && code != 200) {
-          // 业务错误
+        if (code != 1) {
+          final message = data['Message'] ?? '操作失败';
           if (kDebugMode) {
             print('❌ 退款业务错误: $message (code: $code)');
           }
-          // 返回业务错误码
-          if (code == 201) return 201; // 订单需满5个月
-          if (code == 202) return 202; // 退款金额小于5000
           return -1;
         }
 
@@ -303,7 +310,7 @@ class ApiOrderService {
         }
         return -1;
       }
-    }on DioException catch (e) {
+    } on DioException catch (e) {
       String message = '占位错误';
       Map<String, dynamic> result = {"message": message, "order": null};
       if (kDebugMode) {
@@ -318,15 +325,12 @@ class ApiOrderService {
       // 处理Dio相关的异常
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        // 请求超时
         message = '请求超时: ${e.message}';
         return -1;
       } else if (e.type == DioExceptionType.connectionError) {
-        // 服务器不可达或网络连接失败
         message = '网络连接失败: 无法连接到服务器';
         return -1;
       } else if (e.response != null) {
-        // 服务器返回错误状态码
         final statusCode = e.response!.statusCode;
         if (statusCode == 404) {
           if (kDebugMode) {
@@ -348,7 +352,6 @@ class ApiOrderService {
       }
       return -1;
     } catch (e) {
-      // 处理其他异常
       if (kDebugMode) {
         print('未知错误: $e');
       }

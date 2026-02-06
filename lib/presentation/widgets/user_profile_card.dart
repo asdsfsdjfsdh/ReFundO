@@ -132,7 +132,7 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
             memCacheWidth: 140,
             memCacheHeight: 140,
             // 使用唯一缓存key，避免头像更新后不刷新的问题
-            cacheKey: 'avatar_${provider.user!.userAccount}_${provider.user!.avatarUrl}',
+            cacheKey: 'avatar_${provider.user!.userId?.toString() ?? ''}_${provider.user!.avatarUrl}',
             placeholder: (context, url) => _buildAvatarPlaceholder(context, provider),
             errorWidget: (context, url, error) => _buildAvatarPlaceholder(context, provider),
           ),
@@ -209,7 +209,7 @@ class _PremiumUserProfileCardState extends State<UserProfileCard> {
     final l10n = AppLocalizations.of(context);
 
     return Text(
-      '${l10n!.uid_label}:${provider.user!.userAccount}',
+      '${l10n!.uid_label}:${provider.user!.userId?.toString() ?? ''}',
       style: TextStyle(
         fontSize: 16,
         color: Colors.white.withOpacity(0.8),
