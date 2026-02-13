@@ -1333,6 +1333,12 @@ abstract class AppLocalizations {
   /// **'Sync error'**
   String get sync_error;
 
+  /// No description provided for @failed_to_load_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load data'**
+  String get failed_to_load_data;
+
   /// No description provided for @statistics.
   ///
   /// In en, this message translates to:
@@ -1524,6 +1530,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Selected orders contain non-refundable orders, please check your selection'**
   String get contains_non_refundable_orders;
+
+  /// No description provided for @calculating_refund_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating refund amount...'**
+  String get calculating_refund_amount;
 
   /// No description provided for @submitting_refund_application.
   ///
@@ -2802,6 +2814,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Completed'**
   String get completed_label;
+
+  /// No description provided for @registration_successful_please_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful! Please login with your account'**
+  String get registration_successful_please_login;
+
+  /// No description provided for @registration_failed_please_try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed, please try again'**
+  String get registration_failed_please_try_again;
+
+  /// No description provided for @check_for_updates.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates'**
+  String get check_for_updates;
+
+  /// No description provided for @check_update_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check if a new version is available'**
+  String get check_update_subtitle;
+
+  /// No description provided for @new_version_available.
+  ///
+  /// In en, this message translates to:
+  /// **'New Version Available'**
+  String get new_version_available;
+
+  /// No description provided for @current_version.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Version'**
+  String get current_version;
+
+  /// No description provided for @download_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Size'**
+  String get download_size;
+
+  /// No description provided for @update_log.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Log'**
+  String get update_log;
+
+  /// No description provided for @no_update_log_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No update log available'**
+  String get no_update_log_available;
+
+  /// No description provided for @remind_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind Later'**
+  String get remind_later;
+
+  /// No description provided for @update_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get update_now;
+
+  /// No description provided for @already_latest_version.
+  ///
+  /// In en, this message translates to:
+  /// **'Already Latest Version'**
+  String get already_latest_version;
+
+  /// No description provided for @check_update_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Update Failed'**
+  String get check_update_failed;
+
+  /// No description provided for @check_update_failed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to check for updates. Please check your network connection.'**
+  String get check_update_failed_message;
+
+  /// No description provided for @downloading_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading and installing the update...'**
+  String get downloading_update;
+
+  /// No description provided for @download_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed. Please try again.'**
+  String get download_failed;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

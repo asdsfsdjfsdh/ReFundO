@@ -538,7 +538,7 @@ class DebugTestTools {
     if (result == true) {
       try {
         final product = ProductModel(
-          ProductId: productIdController.text.trim(),
+          ProductId: int.parse(productIdController.text.trim()),
           Hash: hashController.text.trim(),
           price: Decimal.parse(priceController.text.trim()),
           RefundAmount: Decimal.parse(refundAmountController.text.trim()),
@@ -724,7 +724,9 @@ class DebugTestTools {
       }
 
       // 解析数据并转换类型
-      final productId = productData['productId'] as String? ?? '';
+      final productId = productData['productId'] is String
+          ? int.parse(productData['productId'] as String)
+          : productData['productId'] as int? ?? 0;
       final hash = productData['hash'] as String? ?? '';
       final priceStr = productData['price']?.toString() ?? '0';
       final refundAmountStr = productData['refundAmount']?.toString() ?? '0';
@@ -1074,7 +1076,7 @@ class DebugTestTools {
     // 生成5个测试订单
     for (int i = 0; i < 5; i++) {
       final testProduct = ProductModel(
-        ProductId: 'TEST_PRODUCT_${i}_${DateTime.now().millisecondsSinceEpoch}',
+        ProductId: DateTime.now().millisecondsSinceEpoch + i,
         Hash: 'test_hash_${i}_${DateTime.now().millisecondsSinceEpoch}',
         price: Decimal.fromInt((i + 1) * 500),
         RefundAmount: Decimal.fromInt((i + 1) * 400),

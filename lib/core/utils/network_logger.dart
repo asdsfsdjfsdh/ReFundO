@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
@@ -107,19 +108,58 @@ class NetworkLogger extends Interceptor {
     final key = '${options.method}:${options.uri.path}';
     _requestCounts[key] = (_requestCounts[key] ?? 0) + 1;
 
+    // 详细日志：打印请求信息
+    if (kDebugMode) {
+      debugPrint('========================================');
+      debugPrint('🌐 [REQUEST] ${options.method} ${options.uri.path}');
+      debugPrint('Headers: ${options.headers}');
+      if (options.data != null) {
+        debugPrint('Request Body: ${options.data}');
+        debugPrint('Request Body Type: ${options.data.runtimeType}');
+      }
+      if (options.queryParameters.isNotEmpty) {
+        debugPrint('Query Parameters: ${options.queryParameters}');
+      }
+      debugPrint('========================================');
+    }
+
     // 继续请求
     handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    // 这里可以记录响应
+    // 详细日志：打印响应信息
+    if (kDebugMode) {
+      debugPrint('========================================');
+      debugPrint('✅ [RESPONSE] ${response.requestOptions.method} ${response.requestOptions.uri.path}');
+      debugPrint('Status Code: ${response.statusCode}');
+      debugPrint('Response Data: ${response.data}');
+      debugPrint('Response Data Type: ${response.data.runtimeType}');
+      debugPrint('========================================');
+    }
+
     handler.next(response);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // 这里可以记录错误
+    // 详细日志：打印错误信息
+    if (kDebugMode) {
+      debugPrint('========================================');
+      debugPrint('❌ [ERROR] ${err.requestOptions.method} ${err.requestOptions.uri.path}');
+      debugPrint('Error Type: ${err.type}');
+      debugPrint('Error Message: ${err.message}');
+      if (err.response != null) {
+        debugPrint('Error Status Code: ${err.response?.statusCode}');
+        debugPrint('Error Response Data: ${err.response?.data}');
+      }
+      if (err.requestOptions.data != null) {
+        debugPrint('Request Body that caused error: ${err.requestOptions.data}');
+      }
+      debugPrint('========================================');
+    }
+
     handler.next(err);
   }
 

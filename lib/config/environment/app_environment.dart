@@ -35,7 +35,7 @@ class AppEnvironment {
       case dev:
         // Android模拟器使用10.0.2.2访问主机localhost
         // iOS模拟器和真机可以使用localhost
-        return 'http://10.0.2.2:4040'; // 开发环境 - 指向本地后端服务器
+        return 'http://10.0.2.2:8080'; // 开发环境 - 指向本地后端服务器
       case test:
         return 'http://120.26.110.204:8080'; // 测试环境
       case prod:

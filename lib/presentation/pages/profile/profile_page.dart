@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/theme/app_theme.dart';
+import 'package:refundo/core/utils/log_util.dart';
+import 'package:refundo/core/services/update_service.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/providers/app_provider.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
@@ -96,6 +98,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: AppColors.secondary,
                       children: [
                         _buildLanguageSettingTile(context, l10n),
+                        _buildSettingTile(
+                          icon: Icons.system_update_rounded,
+                          iconColor: AppColors.primaryLight,
+                          title: l10n.check_for_updates,
+                          subtitle: l10n.check_update_subtitle,
+                          onTap: () {
+                            LogUtil.d("设置页", "检查更新");
+                            UpdateService().checkUpdate(context);
+                          },
+                        ),
                         _buildSettingTile(
                           icon: Icons.history_rounded,
                           iconColor: AppColors.infoLight,

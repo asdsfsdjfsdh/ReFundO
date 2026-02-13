@@ -28,6 +28,7 @@ class FloatingRegister {
   static bool _isLoading = false;
   static String? _errorMessage;
   static bool _isRegister = false;
+  static bool _isSuccess = false;
 
   // 验证码倒计时相关变量
   static bool _isButtonDisabled = false;
@@ -146,6 +147,54 @@ class FloatingRegister {
                 final double top =
                     position?.dy ?? MediaQuery.of(context).size.height * 0.23;
 
+                // 格式化错误信息，过滤技术性内容
+                String _formatErrorMessage(String error) {
+                  // 移除常见的错误前缀和技术性内容
+                  String formatted = error;
+
+                  // 移除异常类型前缀（如 "Exception: ", "Error: ", "DioException: " 等）
+                  formatted = formatted.replaceFirst(RegExp(r'^[A-Z]\w+Exception:\s*'), '');
+                  formatted = formatted.replaceFirst(RegExp(r'^[A-Z]\w+:\s*'), '');
+
+                  // 移除常见的技术性标识
+                  if (formatted.contains('TimeoutException') ||
+                      formatted.contains('SocketException') ||
+                      formatted.contains('HttpException') ||
+                      formatted.contains('DioException') ||
+                      formatted.contains('NetworkException') ||
+                      formatted.contains('Connection timeout') ||
+                      formatted.contains('Timeout')) {
+                    return l10n!.network_error_check_connection;
+                  }
+
+                  // 移除堆栈跟踪信息
+                  final stackTraceIndex = formatted.indexOf('Stack Trace');
+                  if (stackTraceIndex != -1) {
+                    formatted = formatted.substring(0, stackTraceIndex).trim();
+                  }
+
+                  // 移除包含 Dart/Flutter 包路径的行
+                  final lines = formatted.split('\n');
+                  final filteredLines = lines.where((line) {
+                    return !line.contains('package:') &&
+                        !line.contains('dart:') &&
+                        !line.trim().startsWith('at ') &&
+                        !line.trim().startsWith('#');
+                  }).toList();
+
+                  formatted = filteredLines.join('\n').trim();
+
+                  // 如果是空字符串或包含大量技术性内容，返回通用错误消息
+                  if (formatted.isEmpty ||
+                      formatted.contains('Dio') ||
+                      formatted.contains('HttpException') ||
+                      formatted.length > 200) {
+                    return l10n!.registration_failed_please_try_again;
+                  }
+
+                  return formatted;
+                }
+
                 // 提交表单
                 Future<void> _submitForm() async {
                   final username = _usernameController.text.trim();
@@ -209,12 +258,27 @@ class FloatingRegister {
                       context,
                       listen: false,
                     );
+
                     setState(() {
-                      _errorMessage = userProvider.errorMessage;
+                      if (userProvider.errorMessage == null ||
+                          userProvider.errorMessage == '') {
+                        // 注册成功
+                        _isSuccess = true;
+                        _isRegister = false;
+                        _errorMessage = l10n!.registration_successful_please_login;
+                      } else {
+                        // 注册失败
+                        _isSuccess = false;
+                        _isRegister = false;
+                        _errorMessage = _formatErrorMessage(userProvider.errorMessage!);
+                      }
                     });
-                    _isRegister = true;
                   } catch (e) {
-                    setState(() => _errorMessage = e.toString());
+                    setState(() {
+                      _isSuccess = false;
+                      _isRegister = false;
+                      _errorMessage = _formatErrorMessage(e.toString());
+                    });
                   } finally {
                     setState(() {
                       _isLoading = false;
@@ -280,20 +344,42 @@ class FloatingRegister {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: _isRegister
+                                  color: _isSuccess
                                       ? Colors.green[50]
                                       : Colors.red[50],
                                   borderRadius: BorderRadius.circular(8),
-                                  border: _isRegister
+                                  border: _isSuccess
                                       ? Border.all(color: Colors.green[200]!)
                                       : Border.all(color: Colors.red[200]!),
                                 ),
-                                child: Text(
-                                  _errorMessage!,
-                                  style: _isRegister
-                                      ? TextStyle(color: Colors.green[700])
-                                      : TextStyle(color: Colors.red[700]),
-                                  textAlign: TextAlign.center,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      _isSuccess ? Icons.check_circle : Icons.error,
+                                      color: _isSuccess ? Colors.green[700] : Colors.red[700],
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        _errorMessage!,
+                                        style: TextStyle(
+                                          color: _isSuccess ? Colors.green[700] : Colors.red[700],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    // 成功时显示关闭按钮
+                                    if (_isSuccess)
+                                      IconButton(
+                                        icon: Icon(Icons.close, color: Colors.green[700], size: 20),
+                                        onPressed: () {
+                                          hide();
+                                          FloatingLogin.show(context: context);
+                                        },
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                      ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -501,5 +587,11 @@ class FloatingRegister {
     _countdownTimer?.cancel();
     _overlayEntry?.remove();
     _overlayEntry = null;
+    _isSuccess = false;
+    _isRegister = false;
+    _errorMessage = null;
+    // 重置验证码计时器状态
+    _isButtonDisabled = false;
+    _countdownSeconds = 60;
   }
 }

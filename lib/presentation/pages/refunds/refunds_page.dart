@@ -16,6 +16,8 @@ class RefundsPage extends StatefulWidget {
 }
 
 class _RefundsPageState extends State<RefundsPage> {
+  bool _isLoading = false; // 加载状态
+
   @override
   void initState() {
     super.initState();
@@ -25,13 +27,46 @@ class _RefundsPageState extends State<RefundsPage> {
     });
   }
 
+  /// 公共刷新方法 - 从外部调用
+  void _refreshData() {
+    if (!_isLoading) {
+      _loadRefunds();
+    }
+  }
+
   // 加载退款数据
   Future<void> _loadRefunds() async {
+    if (_isLoading) return; // 防止重复加载
+
+    setState(() {
+      _isLoading = true;
+    });
+
     final refundProvider = Provider.of<RefundProvider>(context, listen: false);
     try {
       await refundProvider.getRefunds(context);
     } catch (e) {
-      // 忽略错误，Provider已经处理了错误显示
+      // 显示错误提示
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.failed_to_load_data}: $e'),
+            backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: l10n.retry,
+              textColor: Colors.white,
+              onPressed: () => _loadRefunds(),
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

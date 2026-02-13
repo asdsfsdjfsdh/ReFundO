@@ -635,6 +635,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sync_error => 'Sync error';
 
   @override
+  String get failed_to_load_data => 'Échec du chargement des données';
+
+  @override
   String get statistics => 'Statistiques';
 
   @override
@@ -745,6 +748,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get contains_non_refundable_orders => 'Les commandes sélectionnées contiennent des commandes non remboursables, veuillez vérifier votre sélection';
+
+  @override
+  String get calculating_refund_amount => 'Calcul du montant de remboursement...';
 
   @override
   String get submitting_refund_application => 'Soumission de la demande de remboursement...';
@@ -1396,4 +1402,55 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get completed_label => 'Terminé';
+
+  @override
+  String get registration_successful_please_login => 'Inscription réussie ! Veuillez vous connecter avec votre compte';
+
+  @override
+  String get registration_failed_please_try_again => 'Inscription échouée, veuillez réessayer';
+
+  @override
+  String get check_for_updates => 'Vérifier les mises à jour';
+
+  @override
+  String get check_update_subtitle => 'Vérifier si une nouvelle version est disponible';
+
+  @override
+  String get new_version_available => 'Nouvelle version disponible';
+
+  @override
+  String get current_version => 'Version actuelle';
+
+  @override
+  String get download_size => 'Taille du téléchargement';
+
+  @override
+  String get update_log => 'Journal des mises à jour';
+
+  @override
+  String get no_update_log_available => 'Aucun journal de mise à jour disponible';
+
+  @override
+  String get remind_later => 'Me rappeler plus tard';
+
+  @override
+  String get update_now => 'Mettre à jour maintenant';
+
+  @override
+  String get already_latest_version => 'Dernière version';
+
+  @override
+  String get check_update_failed => 'Échec de la vérification';
+
+  @override
+  String get check_update_failed_message => 'Impossible de vérifier les mises à jour. Veuillez vérifier votre connexion réseau.';
+
+  @override
+  String get downloading_update => 'Téléchargement et installation de la mise à jour...';
+
+  @override
+  String get download_failed => 'Échec du téléchargement. Veuillez réessayer.';
+
+  @override
+  String get ok => 'OK';
 }

@@ -635,6 +635,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_error => 'Sync error';
 
   @override
+  String get failed_to_load_data => 'Failed to load data';
+
+  @override
   String get statistics => 'Statistics';
 
   @override
@@ -745,6 +748,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contains_non_refundable_orders => 'Selected orders contain non-refundable orders, please check your selection';
+
+  @override
+  String get calculating_refund_amount => 'Calculating refund amount...';
 
   @override
   String get submitting_refund_application => 'Submitting refund application...';
@@ -1396,4 +1402,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completed_label => 'Completed';
+
+  @override
+  String get registration_successful_please_login => 'Registration successful! Please login with your account';
+
+  @override
+  String get registration_failed_please_try_again => 'Registration failed, please try again';
+
+  @override
+  String get check_for_updates => 'Check for Updates';
+
+  @override
+  String get check_update_subtitle => 'Check if a new version is available';
+
+  @override
+  String get new_version_available => 'New Version Available';
+
+  @override
+  String get current_version => 'Current Version';
+
+  @override
+  String get download_size => 'Download Size';
+
+  @override
+  String get update_log => 'Update Log';
+
+  @override
+  String get no_update_log_available => 'No update log available';
+
+  @override
+  String get remind_later => 'Remind Later';
+
+  @override
+  String get update_now => 'Update Now';
+
+  @override
+  String get already_latest_version => 'Already Latest Version';
+
+  @override
+  String get check_update_failed => 'Check Update Failed';
+
+  @override
+  String get check_update_failed_message => 'Unable to check for updates. Please check your network connection.';
+
+  @override
+  String get downloading_update => 'Downloading and installing the update...';
+
+  @override
+  String get download_failed => 'Download failed. Please try again.';
+
+  @override
+  String get ok => 'OK';
 }

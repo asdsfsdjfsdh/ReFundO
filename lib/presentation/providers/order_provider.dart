@@ -24,10 +24,12 @@ class OrderProvider with ChangeNotifier {
 
   // 分页相关
   int _currentPage = 1;
-  int _pageSize = 20;
+  int _pageSize = 100; // 增加初始页面大小，以便获取更多数据进行统计
   int _totalOrders = 0;
+  int _refundableOrdersCount = 0; // 可退款订单总数
   bool _hasMore = true;
   bool _isLoadingMore = false;
+  bool _isLoadingAll = false; // 是否正在后台加载所有数据
 
   List<OrderModel>? get orders => _orders;
 
@@ -38,6 +40,8 @@ class OrderProvider with ChangeNotifier {
   bool get hasMore => _hasMore;
   bool get isLoadingMore => _isLoadingMore;
   int get currentPage => _currentPage;
+  int get totalOrders => _totalOrders;
+  int get refundableOrdersCount => _refundableOrdersCount;
 
   // 获取订单信息（首次加载或刷新）
   Future<void> getOrders(BuildContext context) async {
@@ -60,10 +64,17 @@ class OrderProvider with ChangeNotifier {
             pageSize: _pageSize,
           );
 
-          // 注释：后端暂未提供订单总数接口，使用返回的订单数量判断
-          // _totalOrders = await _orderService.getOrdersCount(context, false);
-          _totalOrders = _orders!.length;
-          _hasMore = false; // 暂时分页功能禁用
+          // 从响应中获取总订单数
+          _totalOrders = _orderService.totalOrders;
+          _hasMore = _orders!.length >= _pageSize;
+
+          // 计算可退款订单数（基于已加载的订单）
+          _calculateRefundableCount();
+
+          // 如果有更多数据，在后台继续加载以获取准确的统计
+          if (_hasMore && !_isLoadingAll) {
+            _loadAllOrdersInBackground(context);
+          }
         } on DioException catch (e) {
           if (kDebugMode) {
             print(token);
@@ -80,6 +91,7 @@ class OrderProvider with ChangeNotifier {
       } else {
         _orders = [];
         _hasMore = false;
+        _refundableOrdersCount = 0;
       }
     } catch (e) {
       if (kDebugMode) {
@@ -87,15 +99,84 @@ class OrderProvider with ChangeNotifier {
       }
       _orders = [];
       _hasMore = false;
+      _refundableOrdersCount = 0;
 
     }finally {
       notifyListeners();
     }
   }
 
+  // 计算可退款订单数
+  void _calculateRefundableCount() {
+    if (_orders == null) {
+      _refundableOrdersCount = 0;
+      return;
+    }
+    _refundableOrdersCount = _orders!.where((order) => _isOrderRefundable(order)).length;
+  }
+
+  // 检查订单是否可退款（未退款、满5个月）
+  bool _isOrderRefundable(OrderModel order) {
+    // 检查是否已申请退款
+    if (order.isRefund == true) {
+      return false;
+    }
+
+    // 检查订单时间是否满5个月
+    try {
+      if (order.orderTime != null) {
+        final dateTime = DateTime.parse(order.orderTime.toString());
+        final fiveMonthsAgo = DateTime.now().subtract(const Duration(days: 150));
+        return dateTime.isBefore(fiveMonthsAgo);
+      }
+    } catch (e) {
+      return false;
+    }
+
+    return false;
+  }
+
+  // 后台加载所有订单（用于获取准确的统计数据）
+  Future<void> _loadAllOrdersInBackground(BuildContext context) async {
+    if (_isLoadingAll || !_hasMore) return;
+
+    _isLoadingAll = true;
+    // 不通知UI，这是后台加载
+
+    try {
+      while (_hasMore && _orders != null) {
+        _currentPage++;
+        final newOrders = await _orderService.getOrders(
+          context,
+          false,
+          page: _currentPage,
+          pageSize: _pageSize,
+        );
+
+        if (newOrders.isEmpty) {
+          _hasMore = false;
+        } else {
+          _orders!.addAll(newOrders);
+          _hasMore = _orders!.length < _totalOrders;
+        }
+      }
+
+      // 所有数据加载完成后，重新计算可退款订单数
+      _calculateRefundableCount();
+      notifyListeners(); // 更新UI显示准确的统计
+    } catch (e) {
+      if (kDebugMode) {
+        print("后台加载订单失败: $e");
+      }
+      _currentPage--; // 回退页码
+    } finally {
+      _isLoadingAll = false;
+    }
+  }
+
   // 加载更多订单
   Future<void> loadMoreOrders(BuildContext context) async {
-    if (_isLoadingMore || !_hasMore) return;
+    if (_isLoadingMore || !_hasMore || _isLoadingAll) return;
 
     _isLoadingMore = true;
     notifyListeners();
@@ -115,6 +196,9 @@ class OrderProvider with ChangeNotifier {
         _orders ??= [];
         _orders!.addAll(newOrders);
         _hasMore = _orders!.length < _totalOrders;
+
+        // 重新计算可退款订单数
+        _calculateRefundableCount();
       }
     } catch (e) {
       if (kDebugMode) {

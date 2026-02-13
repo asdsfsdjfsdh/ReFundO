@@ -1,8 +1,5 @@
 {
   "permissions": {
-    "additionalDirectories": [
-      "E:\\java\\ReFundO"
-    ],
     "allow": [
       "Bash(flutter analyze:*)",
       "Bash(find:*)",
@@ -30,7 +27,12 @@
       "Bash(tasklist:*)",
       "Bash(wc:*)",
       "Bash(flutter.bat pub get:*)",
-      "Bash(flutter.bat analyze:*)"
+      "Bash(flutter.bat analyze:*)",
+      "WebSearch",
+      "Bash(flutter devices:*)"
+    ],
+    "additionalDirectories": [
+      "E:\\java\\ReFundO"
     ]
   }
 }

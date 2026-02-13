@@ -85,6 +85,54 @@ class FloatingLogin {
                 final double top = position?.dy ?? MediaQuery.of(context).size.height * 0.3;
                 final double cardWidth = MediaQuery.of(context).size.width * 0.8;
 
+                // 格式化错误信息，过滤技术性内容
+                String _formatErrorMessage(String error) {
+                  // 移除常见的错误前缀和技术性内容
+                  String formatted = error;
+
+                  // 移除异常类型前缀（如 "Exception: ", "Error: ", "DioException: " 等）
+                  formatted = formatted.replaceFirst(RegExp(r'^[A-Z]\w+Exception:\s*'), '');
+                  formatted = formatted.replaceFirst(RegExp(r'^[A-Z]\w+:\s*'), '');
+
+                  // 移除常见的技术性标识
+                  if (formatted.contains('TimeoutException') ||
+                      formatted.contains('SocketException') ||
+                      formatted.contains('HttpException') ||
+                      formatted.contains('DioException') ||
+                      formatted.contains('NetworkException') ||
+                      formatted.contains('Connection timeout') ||
+                      formatted.contains('Timeout')) {
+                    return l10n!.network_error_check_connection;
+                  }
+
+                  // 移除堆栈跟踪信息
+                  final stackTraceIndex = formatted.indexOf('Stack Trace');
+                  if (stackTraceIndex != -1) {
+                    formatted = formatted.substring(0, stackTraceIndex).trim();
+                  }
+
+                  // 移除包含 Dart/Flutter 包路径的行
+                  final lines = formatted.split('\n');
+                  final filteredLines = lines.where((line) {
+                    return !line.contains('package:') &&
+                        !line.contains('dart:') &&
+                        !line.trim().startsWith('at ') &&
+                        !line.trim().startsWith('#');
+                  }).toList();
+
+                  formatted = filteredLines.join('\n').trim();
+
+                  // 如果是空字符串或包含大量技术性内容，返回通用错误消息
+                  if (formatted.isEmpty ||
+                      formatted.contains('Dio') ||
+                      formatted.contains('HttpException') ||
+                      formatted.length > 200) {
+                    return l10n!.network_error_check_connection;
+                  }
+
+                  return formatted;
+                }
+
                 // 提交表单逻辑
                 Future<void> _submitForm() async {
                   final username = _usernameController.text.trim();
@@ -104,6 +152,9 @@ class FloatingLogin {
                     if (_errorMessage == null || _errorMessage == '') {
                       hide();
                       setState(() => _errorMessage = null);
+                    } else {
+                      // 格式化错误信息
+                      setState(() => _errorMessage = _formatErrorMessage(_errorMessage!));
                     }
                   } finally {
                     setState(() => _isLoading = false);
@@ -163,18 +214,24 @@ class FloatingLogin {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: _isLoading ? Colors.green.shade50 : Colors.red.shade50,
+                                color: Colors.red.shade50,
                                 borderRadius: BorderRadius.circular(8),
-                                border: _isLoading
-                                    ? Border.all(color: Colors.green.shade200!)
-                                    : Border.all(color: Colors.red.shade200!),
+                                border: Border.all(color: Colors.red.shade200!),
                               ),
-                              child: Text(
-                                _errorMessage!,
-                                style: _isLoading
-                                    ? TextStyle(color: Colors.green.shade700)
-                                    : TextStyle(color: Colors.red.shade700),
-                                textAlign: TextAlign.center,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.error, color: Colors.red.shade700, size: 20),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _errorMessage!,
+                                      style: TextStyle(
+                                        color: Colors.red.shade700,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 16),

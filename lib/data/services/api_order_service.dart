@@ -15,6 +15,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiOrderService {
   bool _isInitialized = false;
+  int _totalOrders = 0;
+
+  // 获取总订单数
+  int get totalOrders => _totalOrders;
 
   // 获取订单数（支持分页）
   Future<List<OrderModel>> getOrders(
@@ -55,6 +59,11 @@ class ApiOrderService {
 
     final data = response.data['data'];
     final records = data?['records'];
+    _totalOrders = data?['total'] ?? 0;
+
+    if (kDebugMode) {
+      print('📋 总订单数: $_totalOrders');
+    }
 
     if (kDebugMode) {
       print('📋 解析后的records: $records');
@@ -95,9 +104,9 @@ class ApiOrderService {
       );
 
       // 从响应中获取 total
-      final code = response.data['Code'];
+      final code = response.data['code'];
       if (code == 1) {
-        final data = response.data['Data'];
+        final data = response.data['data'];
         return data?['total'] ?? 0;
       }
       return 0;
@@ -142,11 +151,11 @@ class ApiOrderService {
       // 检查响应状态码
       if (response.statusCode == 200) {
         final data = response.data;
-        final code = data['Code'];
+        final code = data['code'];
 
         // 检查是否有业务错误
         if (code != 1) {
-          final message = data['Message'] ?? '操作失败';
+          final message = data['message'] ?? '操作失败';
           if (kDebugMode) {
             print('业务错误: $message (code: $code)');
           }
@@ -229,12 +238,12 @@ class ApiOrderService {
         },
       );
 
-      final code = response.data['Code'];
+      final code = response.data['code'];
       if (code == 1) {
-        final amount = response.data['Data'];
+        final amount = response.data['data'];
         return {"success": true, "amount": amount};
       } else {
-        final message = response.data['Message'] ?? '计算失败';
+        final message = response.data['message'] ?? '计算失败';
         return {"success": false, "message": message};
       }
     } on DioException catch (e) {
@@ -271,28 +280,39 @@ class ApiOrderService {
 
       if (kDebugMode) {
         print('📦 退款请求 scanIds: $scanIds, refundType: $refundType, account: $refundAccount');
+        print('📦 订单数量: ${orders.length}');
+        for (var order in orders) {
+          print('  - 订单ID: ${order.orderid}, 订单号: ${order.orderNumber}');
+        }
+      }
+
+      final requestData = {
+        "scanIds": scanIds,
+        "paymentMethod": refundType,
+        "paymentNumber": refundAccount,
+      };
+
+      if (kDebugMode) {
+        print('📦 发送的JSON数据: $requestData');
       }
 
       Response response = await dioProvider.dio.post(
         "/api/refund-request",
-        data: {
-          "scanIds": scanIds,
-          "paymentMethod": refundType,
-          "paymentNumber": refundAccount,
-        },
+        data: requestData,
       );
 
       if (kDebugMode) {
+        print('📦 响应状态码: ${response.statusCode}');
         print('📦 退款响应: ${response.data}');
       }
 
       // 检查响应状态码
       if (response.statusCode == 200) {
         final data = response.data;
-        final code = data['Code'];
+        final code = data['code'];
 
         if (code != 1) {
-          final message = data['Message'] ?? '操作失败';
+          final message = data['message'] ?? data['Message'] ?? '操作失败';
           if (kDebugMode) {
             print('❌ 退款业务错误: $message (code: $code)');
           }

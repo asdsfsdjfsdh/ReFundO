@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
 
 class ProductModel{
-  final String ProductId;
+  final int ProductId;
   final Decimal price;
   final Decimal RefundAmount;
   final String Hash;
@@ -24,7 +24,7 @@ class ProductModel{
   };
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-    ProductId: json['ProductId'] as String ? ?? '',
+    ProductId: json['ProductId'] as int ? ?? 0,
     price: Decimal.parse(json['price']?.toString() ?? '0') ,
     RefundAmount: Decimal.parse(json['RefundAmount']?.toString() ?? '0'),
     Hash: json['Hash'] as String ? ?? '',

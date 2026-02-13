@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:refundo/core/utils/log_util.dart';
+import 'package:refundo/core/services/update_service.dart';
 import 'package:refundo/presentation/widgets/callback_password.dart';
 import 'package:refundo/presentation/providers/app_provider.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
@@ -355,6 +356,20 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               );
             }
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // 检查更新
+        _buildAppSettingCard(
+          context: context,
+          title: l10n.check_for_updates,
+          subtitle: l10n.check_update_subtitle,
+          icon: Icons.system_update,
+          iconColor: Colors.blue.shade600,
+          onTap: () {
+            LogUtil.d("设置页", "检查更新");
+            UpdateService().checkUpdate(context);
           },
         ),
         const SizedBox(height: 8),

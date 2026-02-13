@@ -169,7 +169,7 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                    product.ProductId,
+                    product.ProductId.toString(),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -260,7 +260,7 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
             ),
           ),
             const SizedBox(height: 16),
-            _buildDetailRow(l10n.product_id, product.ProductId),
+            _buildDetailRow(l10n.product_id, product.ProductId.toString()),
             _buildDetailRow(l10n.price, '${product.price.toStringAsFixed(2)} FCFA'),
             _buildDetailRow(l10n!.refund_percent, '${product.RefundPercent}%'),
             _buildDetailRow(l10n!.refund_amount, '${product.RefundAmount.toStringAsFixed(2)} FCFA'),

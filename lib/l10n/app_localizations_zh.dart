@@ -635,6 +635,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_error => '同步错误';
 
   @override
+  String get failed_to_load_data => '加载数据失败';
+
+  @override
   String get statistics => '统计';
 
   @override
@@ -745,6 +748,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get contains_non_refundable_orders => '所选订单中包含不可退款的订单，请检查选择';
+
+  @override
+  String get calculating_refund_amount => '正在计算退款金额...';
 
   @override
   String get submitting_refund_application => '正在提交退款申请...';
@@ -1396,4 +1402,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get completed_label => '已完成';
+
+  @override
+  String get registration_successful_please_login => '注册成功！请使用您的账号登录';
+
+  @override
+  String get registration_failed_please_try_again => '注册失败，请重试';
+
+  @override
+  String get check_for_updates => '检查更新';
+
+  @override
+  String get check_update_subtitle => '检查是否有新版本可用';
+
+  @override
+  String get new_version_available => '发现新版本';
+
+  @override
+  String get current_version => '当前版本';
+
+  @override
+  String get download_size => '下载大小';
+
+  @override
+  String get update_log => '更新日志';
+
+  @override
+  String get no_update_log_available => '暂无更新日志';
+
+  @override
+  String get remind_later => '稍后提醒';
+
+  @override
+  String get update_now => '立即更新';
+
+  @override
+  String get already_latest_version => '已是最新版本';
+
+  @override
+  String get check_update_failed => '检查更新失败';
+
+  @override
+  String get check_update_failed_message => '无法检查更新，请检查网络连接';
+
+  @override
+  String get downloading_update => '正在下载并安装更新...';
+
+  @override
+  String get download_failed => '下载失败，请重试';
+
+  @override
+  String get ok => '确定';
 }

@@ -68,6 +68,8 @@ dependencies:
   decimal: ^3.2.4
   flutter_local_notifications: ^18.0.1
   path_provider: ^2.1.5
+  # 版本更新 - 使用 open_file 安装 APK
+  open_file: ^3.5.0
 
 dev_dependencies:
   flutter_test:

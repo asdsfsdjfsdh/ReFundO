@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +8,15 @@ import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
 import 'package:refundo/presentation/providers/user_provider.dart';
 import 'package:refundo/presentation/pages/scanner/scanner_page.dart';
+import 'package:refundo/data/services/api_order_service.dart';
 import 'package:intl/intl.dart';
+
+/// 订单筛选类型
+enum OrderFilterType {
+  all,      // 全部
+  refundable,  // 可退款
+  pending,  // 待审核
+}
 
 /// 订单页面 - Material Design 3风格
 class OrdersPage extends StatefulWidget {
@@ -22,7 +29,10 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   late UserProvider _userProvider;
   late double _totalAmount = 0.0;
-  bool _isSelectAll = false;
+  late ScrollController _scrollController;
+  OrderFilterType _selectedFilter = OrderFilterType.all;
+  bool _isSelectAll = false; // 全选状态
+  bool _isLoading = false; // 加载状态
 
   @override
   void initState() {
@@ -31,6 +41,37 @@ class _OrdersPageState extends State<OrdersPage> {
     _userProvider.onloginSuccess = _initAmount;
     _userProvider.onlogout = _loadData;
     _userProvider.onOrder = _loadData;
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  /// 公共刷新方法 - 从外部调用
+  void _refreshData() {
+    if (!_isLoading) {
+      _loadData();
+    }
+  }
+
+  /// 刷新订单数据（用于RefreshIndicator）
+  Future<void> _onRefresh() async {
+    await _loadData();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  /// 滚动监听，加载更多
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      if (orderProvider.hasMore && !orderProvider.isLoadingMore) {
+        orderProvider.loadMoreOrders(context);
+      }
+    }
   }
 
   Future<void> _initAmount(double amount) async {
@@ -40,12 +81,24 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   Future<void> _loadData() async {
+    if (_isLoading) return; // 防止重复加载
+
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       await Future.delayed(const Duration(milliseconds: 100));
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
       await orderProvider.getOrders(context);
     } catch (e) {
       LogUtil.e("订单页", "加载数据失败: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -118,33 +171,33 @@ class _OrdersPageState extends State<OrdersPage> {
           Stack(
             clipBehavior: Clip.none,
             children: [
-            IconButton(
-              icon: const Icon(Icons.cloud_sync, color: Colors.white),
-              tooltip: l10n.sync_offline_orders,
-              onPressed: () async {
-                await orderProvider.syncOfflineOrders(context);
-                if (mounted) setState(() {});
-              },
-            ),
-            if (orderProvider.offlineOrderCount > 0)
-              Positioned(
-                right: 3,
-                top: 3,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                  child: Text(
-                    '${orderProvider.offlineOrderCount}',
-                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+              IconButton(
+                icon: const Icon(Icons.cloud_sync, color: Colors.white),
+                tooltip: l10n.sync_offline_orders,
+                onPressed: () async {
+                  await orderProvider.syncOfflineOrders(context);
+                  if (mounted) setState(() {});
+                },
+              ),
+              if (orderProvider.offlineOrderCount > 0)
+                Positioned(
+                  right: 3,
+                  top: 3,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                    child: Text(
+                      '${orderProvider.offlineOrderCount}',
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
-          ],
-        ),
+            ],
+          ),
       ],
     );
   }
@@ -156,10 +209,25 @@ class _OrdersPageState extends State<OrdersPage> {
     RefundProvider refundProvider,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final orders = orderProvider.orders ?? [];
-    final selectedOrders = refundProvider.orders ?? {};
+    final allOrders = orderProvider.orders ?? [];
 
-    if (orders.isEmpty) {
+    // 根据筛选条件过滤订单
+    List filteredOrders = allOrders;
+    switch (_selectedFilter) {
+      case OrderFilterType.refundable:
+        // 可退款包括所有满足基本条件的订单（未退款、满5个月），不管金额是否足够
+        filteredOrders = allOrders.where((order) => _isOrderRefundable(order)).toList();
+        break;
+      case OrderFilterType.pending:
+        filteredOrders = allOrders.where((order) => order.isRefund == true).toList();
+        break;
+      case OrderFilterType.all:
+      default:
+        filteredOrders = allOrders;
+        break;
+    }
+
+    if (allOrders.isEmpty) {
       return _buildEmptyState(
         context,
         icon: Icons.inbox_rounded,
@@ -170,8 +238,10 @@ class _OrdersPageState extends State<OrdersPage> {
       );
     }
 
-    // 计算可退款的订单数量
-    final refundableOrders = orders.where((order) => _isOrderRefundable(order)).length;
+    // 计算可退款的订单数量（使用provider统计的完整数据）
+    final totalOrders = orderProvider.totalOrders;
+    final refundableOrders = orderProvider.refundableOrdersCount;
+    final selectedOrders = refundProvider.orders ?? {};
 
     return Column(
       children: [
@@ -181,69 +251,254 @@ class _OrdersPageState extends State<OrdersPage> {
           color: AppColors.background,
           child: Column(
             children: [
-              // 主统计卡片 - 带环形进度条
-              _buildUnifiedStatCard(context, l10n, orders.length, refundableOrders, _totalAmount),
+              _buildUnifiedStatCard(context, l10n, totalOrders, refundableOrders, _totalAmount),
               const SizedBox(height: AppSpacing.md),
               // 选中订单统计
               if (selectedOrders.isNotEmpty) ...[
+                _buildSelectedOrdersCard(context, l10n, selectedOrders, refundProvider),
                 const SizedBox(height: AppSpacing.md),
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    gradient: AppColors.gradientOrange,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    boxShadow: AppShadows.card,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.selected_orders_count(selectedOrders.length),
-                            style: AppTextStyles.titleSmall.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.estimated_refund(_calculateTotalRefund(selectedOrders).toStringAsFixed(2)),
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: Colors.white.withOpacity(0.9),
-                            ),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.white),
-                        onPressed: () {
-                          refundProvider.clearRefunds();
-                          setState(() => _isSelectAll = false);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ],
+              // 筛选行
+              _buildFilterRow(context, l10n),
             ],
           ),
         ),
-        // 订单列表
+        // 订单列表 - 带上拉刷新和滚动加载
         Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              final isSelected = selectedOrders.any((o) => o.orderid == order.orderid);
-              return _buildOrderCard(context, order, isSelected, refundProvider);
-            },
+          child: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+              itemCount: filteredOrders.length + (orderProvider.isLoadingMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == filteredOrders.length) {
+                  // 加载更多指示器
+                  return const Padding(
+                    padding: EdgeInsets.all(AppSpacing.md),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                final order = filteredOrders[index];
+                return _buildOrderCard(context, order, refundProvider);
+              },
+            ),
           ),
         ),
       ],
     );
+  }
+
+  /// 构建筛选行
+  Widget _buildFilterRow(BuildContext context, AppLocalizations l10n) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      child: Row(
+        children: [
+          _buildFilterChip(
+            context,
+            l10n.all,
+            OrderFilterType.all,
+            Icons.list,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          _buildFilterChip(
+            context,
+            l10n.refundable,
+            OrderFilterType.refundable,
+            Icons.check_circle,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          _buildFilterChip(
+            context,
+            l10n.pending,
+            OrderFilterType.pending,
+            Icons.pending,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建筛选按钮
+  Widget _buildFilterChip(
+    BuildContext context,
+    String label,
+    OrderFilterType filterType,
+    IconData icon,
+  ) {
+    final isSelected = _selectedFilter == filterType;
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedFilter = filterType;
+        });
+      },
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.white,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.divider,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? Colors.white : AppColors.textSecondary,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: isSelected ? Colors.white : AppColors.textSecondary,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 选中订单统计卡片
+  Widget _buildSelectedOrdersCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    Set<dynamic> selectedOrders,
+    RefundProvider refundProvider,
+  ) {
+    final totalRefund = _calculateTotalRefund(selectedOrders);
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        gradient: AppColors.gradientOrange,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        boxShadow: AppShadows.card,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.selected_orders_count(selectedOrders.length),
+                  style: AppTextStyles.titleSmall.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.estimated_refund(totalRefund.toStringAsFixed(2)),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 清空全部按钮
+          InkWell(
+            onTap: () {
+              refundProvider.clearSelectedOrders();
+              setState(() => _isSelectAll = false);
+            },
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.clear, color: Colors.white, size: 28),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 单个已选订单的小标签（可点击移除）
+  Widget _buildSelectedOrderChip(
+    BuildContext context,
+    dynamic order,
+    RefundProvider refundProvider,
+  ) {
+    final orderNumber = order.orderNumber ?? 'N/A';
+    final refundAmount = _roundToTwoDecimals(order.refundAmount?.toDouble() ?? 0.0);
+
+    return InkWell(
+      onTap: () {
+        // 移除该订单
+        refundProvider.removeOrder(order.orderid);
+
+        // 更新全选状态
+        final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+        final orders = orderProvider.orders ?? [];
+        final refundableOrders = orders.where((o) => _isOrderRefundable(o)).toList();
+        final selectedCount = refundProvider.orders?.length ?? 0;
+
+        setState(() {
+          _isSelectAll = selectedCount == refundableOrders.length && refundableOrders.isNotEmpty;
+        });
+      },
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: 4,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '#$orderNumber',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: Colors.white,
+                fontSize: 11,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '$refundAmount FCFA',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: Colors.white.withOpacity(0.9),
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.close,
+              size: 14,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 四舍五入到两位小数
+  double _roundToTwoDecimals(double value) {
+    return (value * 100).roundToDouble() / 100;
   }
 
   /// 计算总退款金额
@@ -252,7 +507,7 @@ class _OrdersPageState extends State<OrdersPage> {
     for (var order in selectedOrders) {
       total += order.refundAmount?.toDouble() ?? 0.0;
     }
-    return total;
+    return _roundToTwoDecimals(total);
   }
 
   /// 统一统计卡片 - 带环形进度条展示可退款比例
@@ -371,7 +626,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 _buildStatItem(
                   Icons.account_balance_wallet_rounded,
                   l10n.balance,
-                  '${totalAmount.toStringAsFixed(0)} FCFA',
+                  '${_roundToTwoDecimals(totalAmount).toStringAsFixed(0)} FCFA',
                   Colors.white,
                 ),
               ],
@@ -495,20 +750,23 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget _buildOrderCard(
     BuildContext context,
     dynamic order,
-    bool isSelected,
     RefundProvider refundProvider,
   ) {
     final l10n = AppLocalizations.of(context)!;
     final orderNumber = order.orderNumber ?? 'N/A';
-    final price = (order.price?.toDouble() ?? 0.0).toStringAsFixed(2);
-    final refundAmount = (order.refundAmount?.toDouble() ?? 0.0).toStringAsFixed(2);
+    final price = _roundToTwoDecimals(order.price?.toDouble() ?? 0.0).toStringAsFixed(2);
+    final refundAmount = _roundToTwoDecimals(order.refundAmount?.toDouble() ?? 0.0).toStringAsFixed(2);
     final refundPercent = order.refundpercent?.toDouble() ?? 0.0;
 
     // 检查订单退款状态
-    final isRefundable = _isOrderRefundable(order);
+    final isRefundable = _isOrderRefundable(order); // 是否可退款（未退款、满5个月）
     final isIndividuallyRefundable = _isOrderIndividuallyRefundable(order);
     final needsMultiSelect = _needsMultiSelect(order);
     final nonRefundableReason = _getNonRefundableReason(order);
+    final isPending = order.isRefund == true;
+
+    // 检查是否已选中
+    final isSelected = refundProvider.orders?.any((o) => o.orderid == order.orderid) ?? false;
 
     // 确定状态显示
     String statusText;
@@ -516,13 +774,19 @@ class _OrdersPageState extends State<OrdersPage> {
     Color statusBgColor;
     IconData statusIcon;
 
-    if (isIndividuallyRefundable) {
+    if (isPending) {
+      // 已提交审核 - 使用蓝色/紫色而不是红色
+      statusText = l10n.in_review;
+      statusColor = const Color(0xFF6366F1); // 靛蓝色
+      statusBgColor = const Color(0x1F6366F1); // 靛蓝色半透明
+      statusIcon = Icons.pending_actions;
+    } else if (isIndividuallyRefundable) {
       statusText = l10n.refundable_status;
       statusColor = AppColors.success;
       statusBgColor = AppColors.successLight;
       statusIcon = Icons.check_circle;
     } else if (needsMultiSelect) {
-      statusText = l10n.needs_multi_select;
+      statusText = l10n.insufficient_amount_need_more;
       statusColor = AppColors.warning;
       statusBgColor = AppColors.warningLight;
       statusIcon = Icons.warning;
@@ -564,48 +828,42 @@ class _OrdersPageState extends State<OrdersPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 第一列：复选框 + 订单图标
-              Column(
-                children: [
-                  // 选择复选框 - 不可退款的订单禁用
-                  InkWell(
-                    onTap: () {
-                      if (isRefundable) {
-                        _toggleOrderSelection(order, refundProvider);
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(4),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Checkbox(
-                        value: isSelected,
-                        visualDensity: VisualDensity.compact,
-                        activeColor: AppColors.primary,
-                        onChanged: isRefundable ? (value) {
-                          _toggleOrderSelection(order, refundProvider);
-                        } : null,
-                      ),
-                    ),
+              // 复选框
+              InkWell(
+                onTap: () {
+                  if (isRefundable) {
+                    _toggleOrderSelection(order, refundProvider);
+                  }
+                },
+                borderRadius: BorderRadius.circular(4),
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Checkbox(
+                    value: isSelected,
+                    visualDensity: VisualDensity.compact,
+                    activeColor: AppColors.primary,
+                    onChanged: isRefundable ? (value) {
+                      _toggleOrderSelection(order, refundProvider);
+                    } : null,
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  // 订单图标
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.gradientBlue,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                    ),
-                    child: const Icon(
-                      Icons.receipt_long_rounded,
-                      color: Colors.white,
-                      size: 26,
-                    ),
-                  ),
-                ],
+                ),
+              ),
+              // 订单图标
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: AppColors.gradientBlue,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: const Icon(
+                  Icons.receipt_long_rounded,
+                  color: Colors.white,
+                  size: 26,
+                ),
               ),
               const SizedBox(width: AppSpacing.md),
-              // 第二列：订单信息（多行布局）
+              // 订单信息（多行布局）
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -761,58 +1019,16 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
-  /// 切换订单选择状态
-  void _toggleOrderSelection(dynamic order, RefundProvider refundProvider) {
-    final isSelected = refundProvider.orders?.any((o) => o.orderid == order.orderid) ?? false;
-
-    if (isSelected) {
-      refundProvider.removeOrder(order.orderid);
-    } else {
-      refundProvider.addOrder(order);
-    }
-
-    // 检查是否全部选中
-    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
-    final orders = orderProvider.orders ?? [];
-    final selectedCount = refundProvider.orders?.length ?? 0;
-    setState(() {
-      _isSelectAll = selectedCount == orders.length && orders.isNotEmpty;
-    });
-  }
-
-  /// 全选/取消全选
-  void _handleSelectAll(
-    BuildContext context,
-    OrderProvider orderProvider,
-    RefundProvider refundProvider,
-  ) {
-    final orders = orderProvider.orders ?? [];
-
-    if (_isSelectAll) {
-      // 取消全选
-      refundProvider.clearRefunds();
-      setState(() => _isSelectAll = false);
-    } else {
-      // 全选
-      refundProvider.clearRefunds();
-      for (var order in orders) {
-        refundProvider.addOrder(order);
-      }
-      setState(() => _isSelectAll = true);
-    }
-  }
-
   /// 显示订单详情
   void _showOrderDetail(BuildContext context, dynamic order) {
     final l10n = AppLocalizations.of(context)!;
     final orderNumber = order.orderNumber ?? 'N/A';
-    final price = (order.price?.toDouble() ?? 0.0).toStringAsFixed(2);
-    final refundAmount = (order.refundAmount?.toDouble() ?? 0.0).toStringAsFixed(2);
+    final price = _roundToTwoDecimals(order.price?.toDouble() ?? 0.0).toStringAsFixed(2);
+    final refundAmount = _roundToTwoDecimals(order.refundAmount?.toDouble() ?? 0.0).toStringAsFixed(2);
     final refundPercent = order.refundpercent?.toDouble() ?? 0.0;
     final productId = order.ProductId ?? 'N/A';
 
     // 检查订单退款状态
-    final isRefundable = _isOrderRefundable(order);
     final isIndividuallyRefundable = _isOrderIndividuallyRefundable(order);
     final needsMultiSelect = _needsMultiSelect(order);
     final nonRefundableReason = _getNonRefundableReason(order);
@@ -960,7 +1176,7 @@ class _OrdersPageState extends State<OrdersPage> {
     final refundProvider = Provider.of<RefundProvider>(context, listen: false);
 
     // 清空之前选择的订单
-    refundProvider.clearRefunds();
+    refundProvider.clearSelectedOrders();
 
     // 添加当前订单
     refundProvider.addOrder(order);
@@ -972,13 +1188,59 @@ class _OrdersPageState extends State<OrdersPage> {
   /// 快速退款 - 直接从卡片按钮触发
   Future<void> _handleQuickRefund(BuildContext context, dynamic order, RefundProvider refundProvider) async {
     // 清空之前选择的订单
-    refundProvider.clearRefunds();
+    refundProvider.clearSelectedOrders();
 
     // 添加当前订单
     refundProvider.addOrder(order);
 
     // 直接调用_handleRefund，它会显示对话框并提交
     await _handleRefund(context, refundProvider);
+  }
+
+  /// 切换订单选择状态
+  void _toggleOrderSelection(dynamic order, RefundProvider refundProvider) {
+    final isSelected = refundProvider.orders?.any((o) => o.orderid == order.orderid) ?? false;
+
+    if (isSelected) {
+      refundProvider.removeOrder(order.orderid);
+    } else {
+      refundProvider.addOrder(order);
+    }
+
+    // 检查是否全部选中
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    final orders = orderProvider.orders ?? [];
+    // 只统计可退款的订单
+    final refundableOrders = orders.where((o) => _isOrderRefundable(o)).toList();
+    final selectedCount = refundProvider.orders?.length ?? 0;
+
+    setState(() {
+      _isSelectAll = selectedCount == refundableOrders.length && refundableOrders.isNotEmpty;
+    });
+  }
+
+  /// 全选/取消全选
+  void _handleSelectAll(
+    BuildContext context,
+    OrderProvider orderProvider,
+    RefundProvider refundProvider,
+  ) {
+    final orders = orderProvider.orders ?? [];
+    // 只能选择可退款的订单
+    final refundableOrders = orders.where((o) => _isOrderRefundable(o)).toList();
+
+    if (_isSelectAll) {
+      // 取消全选
+      refundProvider.clearSelectedOrders();
+      setState(() => _isSelectAll = false);
+    } else {
+      // 全选 - 只选择可退款的订单
+      refundProvider.clearSelectedOrders();
+      for (var order in refundableOrders) {
+        refundProvider.addOrder(order);
+      }
+      setState(() => _isSelectAll = true);
+    }
   }
 
   /// 详情行
@@ -1058,8 +1320,43 @@ class _OrdersPageState extends State<OrdersPage> {
       return;
     }
 
-    // 计算累积退款金额
-    final totalRefund = _calculateTotalRefund(selectedOrders);
+    // 显示加载对话框
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text(l10n.calculating_refund_amount),
+          ],
+        ),
+      ),
+    );
+
+    // 调用后端接口计算退款金额
+    final ApiOrderService orderService = ApiOrderService();
+    final result = await orderService.checkRefundConditions(context, selectedOrders);
+
+    // 关闭加载对话框
+    if (mounted) Navigator.pop(context);
+
+    if (!result.containsKey("success") || !result["success"]) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result["message"] ?? '计算退款金额失败'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+      return;
+    }
+
+    // 获取后端计算的退款金额
+    final totalRefund = double.tryParse(result["amount"]?.toString() ?? '0') ?? 0.0;
 
     // 检查累积金额是否满足要求
     if (totalRefund < 5000) {
@@ -1074,7 +1371,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
       if (allMeetBasicConditions) {
         // 如果所有订单都满足基本条件，但累积金额不足
-        final remainingAmount = (5000 - totalRefund).toStringAsFixed(2);
+        final remainingAmount = _roundToTwoDecimals(5000 - totalRefund).toStringAsFixed(2);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(l10n.cumulative_amount_insufficient(remainingAmount)),
@@ -1101,17 +1398,17 @@ class _OrdersPageState extends State<OrdersPage> {
     }
 
     // 显示退款选项对话框
-    final result = await showDialog<Map<String, dynamic>>(
+    final dialogResult = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (context) => _RefundMethodDialog(
-        totalAmount: totalRefund,
+        totalAmount: _roundToTwoDecimals(totalRefund),
         orderCount: selectedOrders.length,
       ),
     );
 
-    if (result != null && result['method'] != null && result['method'] > 0) {
-      final refundMethod = result['method'] as int;
-      final refundAccount = result['account'] as String? ?? '';
+    if (dialogResult != null && dialogResult['method'] != null && dialogResult['method'] > 0) {
+      final refundMethod = dialogResult['method'] as int;
+      final refundAccount = dialogResult['account'] as String? ?? '';
 
       // 提交退款
       final l10n = AppLocalizations.of(context)!;
@@ -1146,7 +1443,7 @@ class _OrdersPageState extends State<OrdersPage> {
           case 1:
             message = l10n.refund_application_submitted;
             backgroundColor = AppColors.success;
-            refundProvider.clearRefunds();
+            refundProvider.clearSelectedOrders();
             setState(() => _isSelectAll = false);
             break;
           case -1:

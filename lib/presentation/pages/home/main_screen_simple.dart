@@ -6,6 +6,9 @@ import 'package:refundo/presentation/pages/refunds/refunds_page.dart';
 import 'package:refundo/presentation/pages/profile/profile_page.dart';
 import 'package:refundo/presentation/pages/initialization_model.dart';
 import 'package:refundo/presentation/pages/statistics/statistics_page.dart';
+import 'package:refundo/presentation/providers/order_provider.dart';
+import 'package:refundo/presentation/providers/refund_provider.dart';
+import 'package:refundo/core/services/update_service.dart';
 
 /// 简化的主屏幕 - 4个Tab（订单、退款、统计、我的）
 class MainScreenSimple extends StatefulWidget {
@@ -43,8 +46,31 @@ class _MainScreenSimpleState extends State<MainScreenSimple> {
             const ProfilePage(),
           ];
         });
+
+        // 初始化更新服务并自动检查更新
+        UpdateService().initXUpdate();
+        UpdateService().autoCheckUpdate(context);
       }
     });
+  }
+
+  /// 页面切换时的回调
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    // 切换到订单页面时刷新
+    if (index == 0) {
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      orderProvider.getOrders(context);
+    }
+
+    // 切换到退款页面时刷新
+    if (index == 1) {
+      final refundProvider = Provider.of<RefundProvider>(context, listen: false);
+      refundProvider.getRefunds(context);
+    }
   }
 
   @override
@@ -58,11 +84,7 @@ class _MainScreenSimpleState extends State<MainScreenSimple> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onPageChanged,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue.shade700,
         unselectedItemColor: Colors.grey.shade500,

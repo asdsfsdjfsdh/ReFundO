@@ -186,4 +186,10 @@ class RefundProvider with ChangeNotifier {
     _refunds = [];
     notifyListeners();
   }
+
+  // 清除选中的订单
+  void clearSelectedOrders(){
+    _orders?.clear();
+    notifyListeners();
+  }
 }
