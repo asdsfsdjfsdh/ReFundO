@@ -45,6 +45,19 @@ class AppEnvironment {
     }
   }
 
+  /// 获取版本更新专用 Base URL（用于下载 APK 等大文件）
+  static String get updateBaseUrl {
+    switch (_currentEnvironment) {
+      case dev:
+      case test:
+        return 'http://120.26.110.204:8080';
+      case prod:
+        return 'https://api.production.com'; // 生产环境（需要配置）
+      default:
+        return 'http://120.26.110.204:8080';
+    }
+  }
+
   /// 获取超时时间（毫秒）
   static Duration get connectTimeout => const Duration(milliseconds: 15000);
   static Duration get receiveTimeout => const Duration(milliseconds: 15000);

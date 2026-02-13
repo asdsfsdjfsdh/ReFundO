@@ -19,7 +19,7 @@ class ApiUpdateService {
 
     try {
       final response = await dioProvider.dio.get(
-        '/api/system/app/version',
+        '/api/version/get',
       );
 
       if (kDebugMode) {
