@@ -79,15 +79,15 @@ class FloatingRegister {
         listen: false,
       ).sendEmail(mail, context, 2);
       if (message == 200) {
-        ShowToast.showCenterToast(context, "验证码已发送至您的邮箱，请查收");
+        ShowToast.showCenterToast(context, l10n!.verification_code_sent);
       } else if (message == 411) {
-        ShowToast.showCenterToast(context, "邮件发送失败，请检查邮箱地址或稍后重试");
+        ShowToast.showCenterToast(context, l10n!.email_send_failed);
       } else if (message == 412) {
-        ShowToast.showCenterToast(context, "用户信息不唯一，请联系客服处理");
+        ShowToast.showCenterToast(context, l10n!.user_info_not_unique);
       } else if (message == 400) {
         ShowToast.showCenterToast(context, "未找到与该邮箱关联的用户账户");
       } else {
-        ShowToast.showCenterToast(context, "邮件服务暂时不可用，请稍后重试");
+        ShowToast.showCenterToast(context, l10n!.verification_code_send_failed);
       }
 
       _startCountdownTimer(setState);

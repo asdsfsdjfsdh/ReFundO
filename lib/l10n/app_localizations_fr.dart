@@ -1453,4 +1453,127 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get updateSuccessMessage => 'Modification réussie';
+
+  @override
+  String get registerSuccessDefault => 'Inscription réussie';
+
+  @override
+  String get server_exception => 'Exception serveur, veuillez réessayer plus tard';
+
+  @override
+  String get order_added_success_default => 'Commande ajoutée avec succès';
+
+  @override
+  String get calculation_failed => 'Calcul échoué';
+
+  @override
+  String server_returned_error_code(Object code) {
+    return 'Le serveur a renvoyé le code d\'erreur: $code';
+  }
+
+  @override
+  String unknown_error_with_details(Object error) {
+    return 'Erreur inconnue: $error';
+  }
+
+  @override
+  String get important_update => 'Mise à jour importante';
+
+  @override
+  String get network_connection_failed_check_settings => 'Échec de la connexion réseau, veuillez vérifier les paramètres réseau';
+
+  @override
+  String get login_expired_please_relogin => 'Connexion expirée, veuillez vous reconnecter';
+
+  @override
+  String get resource_not_found => 'Ressource demandée introuvable';
+
+  @override
+  String get server_error_please_retry => 'Erreur serveur, veuillez réessayer plus tard';
+
+  @override
+  String get request_cancelled => 'Demande annulée';
+
+  @override
+  String get unknown_error_please_retry => 'Erreur inconnue survenue, veuillez réessayer plus tard';
+
+  @override
+  String get request_failed => 'Échec de la demande';
+
+  @override
+  String get request_timeout => 'Délai de demande expiré';
+
+  @override
+  String get unauthorized_please_relogin => 'Non autorisé, veuillez vous reconnecter';
+
+  @override
+  String get order_sync_completed => 'Synchronisation des commandes terminée';
+
+  @override
+  String successfully_synced_orders(Object count) {
+    return '$count commandes synchronisées avec succès';
+  }
+
+  @override
+  String failed_orders_count(Object count) {
+    return ', $count échoué';
+  }
+
+  @override
+  String get refund_request_approved => 'Demande de remboursement approuvée';
+
+  @override
+  String refund_request_approved_body(Object orderNumber, Object amount) {
+    return 'La demande de remboursement pour la commande $orderNumber a été approuvée, montant: $amount FCFA';
+  }
+
+  @override
+  String get refund_request_rejected => 'Demande de remboursement rejetée';
+
+  @override
+  String refund_request_rejected_body(Object orderNumber, Object reason) {
+    return 'La demande de remboursement pour la commande $orderNumber a été rejetée, raison: $reason';
+  }
+
+  @override
+  String get filter_all => 'Tous';
+
+  @override
+  String get filter_today => 'Aujourd\'hui';
+
+  @override
+  String get filter_this_week => 'Cette semaine';
+
+  @override
+  String get filter_this_month => 'Ce mois';
+
+  @override
+  String get filter_custom => 'Personnalisé';
+
+  @override
+  String get status_all => 'Tous les statuts';
+
+  @override
+  String get status_pending => 'En attente';
+
+  @override
+  String get status_approved => 'Approuvé';
+
+  @override
+  String get status_rejected => 'Rejeté';
+
+  @override
+  String get sort_newest_first => 'Plus récent d\'abord';
+
+  @override
+  String get sort_oldest_first => 'Plus ancien d\'abord';
+
+  @override
+  String get sort_amount_high_to_low => 'Montant élevé à bas';
+
+  @override
+  String get sort_amount_low_to_high => 'Montant bas à élevé';
 }

@@ -1453,4 +1453,127 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ok => '确定';
+
+  @override
+  String get updateSuccessMessage => '修改成功';
+
+  @override
+  String get registerSuccessDefault => '注册成功';
+
+  @override
+  String get server_exception => '服务器异常，请稍后重试';
+
+  @override
+  String get order_added_success_default => '订单添加成功';
+
+  @override
+  String get calculation_failed => '计算失败';
+
+  @override
+  String server_returned_error_code(Object code) {
+    return '服务器返回错误状态码: $code';
+  }
+
+  @override
+  String unknown_error_with_details(Object error) {
+    return '未知错误: $error';
+  }
+
+  @override
+  String get important_update => '重要更新';
+
+  @override
+  String get network_connection_failed_check_settings => '网络连接失败，请检查网络设置';
+
+  @override
+  String get login_expired_please_relogin => '登录已过期，请重新登录';
+
+  @override
+  String get resource_not_found => '请求的资源不存在';
+
+  @override
+  String get server_error_please_retry => '服务器错误，请稍后重试';
+
+  @override
+  String get request_cancelled => '请求已取消';
+
+  @override
+  String get unknown_error_please_retry => '发生未知错误，请稍后重试';
+
+  @override
+  String get request_failed => '请求失败';
+
+  @override
+  String get request_timeout => '请求超时';
+
+  @override
+  String get unauthorized_please_relogin => '未授权，请重新登录';
+
+  @override
+  String get order_sync_completed => '订单同步完成';
+
+  @override
+  String successfully_synced_orders(Object count) {
+    return '成功同步 $count 条订单';
+  }
+
+  @override
+  String failed_orders_count(Object count) {
+    return '，失败 $count 条';
+  }
+
+  @override
+  String get refund_request_approved => '退款申请已批准';
+
+  @override
+  String refund_request_approved_body(Object orderNumber, Object amount) {
+    return '订单 $orderNumber 的退款申请已通过，金额: $amount FCFA';
+  }
+
+  @override
+  String get refund_request_rejected => '退款申请已拒绝';
+
+  @override
+  String refund_request_rejected_body(Object orderNumber, Object reason) {
+    return '订单 $orderNumber 的退款申请被拒绝，原因: $reason';
+  }
+
+  @override
+  String get filter_all => '全部';
+
+  @override
+  String get filter_today => '今天';
+
+  @override
+  String get filter_this_week => '本周';
+
+  @override
+  String get filter_this_month => '本月';
+
+  @override
+  String get filter_custom => '自定义';
+
+  @override
+  String get status_all => '全部状态';
+
+  @override
+  String get status_pending => '待处理';
+
+  @override
+  String get status_approved => '已批准';
+
+  @override
+  String get status_rejected => '已拒绝';
+
+  @override
+  String get sort_newest_first => '最新优先';
+
+  @override
+  String get sort_oldest_first => '最早优先';
+
+  @override
+  String get sort_amount_high_to_low => '金额从高到低';
+
+  @override
+  String get sort_amount_low_to_high => '金额从低到高';
 }

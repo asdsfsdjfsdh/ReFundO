@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/providers/dio_provider.dart';
 import 'package:refundo/data/models/user_model.dart';
 import 'package:dio/dio.dart';
@@ -25,8 +26,7 @@ class ApiUserLogicService {
       // 处理后端返回的数据结构: {msg, code, data: {result: UserLoginVO}}
       // UserLoginVO 直接包含: UserId, UserName, Balance, PhoneNumber, Email, Sangke, WAVE, Token
       final data = responseData['data'];
-      final message =
-          responseData['msg'] ?? data?['message'] ?? 'Unknown error';
+      final message = responseData?['message'];
 
       if (data == null) {
         LogUtil.e('API User Service', 'Login failed: $message');
@@ -101,8 +101,7 @@ class ApiUserLogicService {
 
       // 处理后端返回的数据结构: {msg, code, data: {result: {...}}}
       final data = responseData['data'];
-      final message =
-          responseData['msg'] ?? data?['message'] ?? 'Unknown error';
+      final message = responseData['message'];
 
       if (data != null) {
         return UserModel.fromJson(data);
@@ -172,7 +171,7 @@ class ApiUserLogicService {
       LogUtil.d('API Response', 'Register response: ${response.data}');
 
       // 处理后端返回的数据结构: {msg, code, data}
-      final message = responseData['msg'] ?? responseData['message'] ?? '注册成功';
+      final message = responseData['msg'] ?? responseData['message'] ?? AppLocalizations.of(context)!.registerSuccessDefault;
       return UserModel.fromJson({}, errorMessage: message);
     } on DioException catch (e) {
       String message = '占位错误';
@@ -251,11 +250,10 @@ class ApiUserLogicService {
 
       // 处理后端返回的数据结构: {msg, code, data: {result: {...}}}
       final data = responseData['data'];
-      final result = data?['result'];
-      final message = responseData['msg'] ?? data?['message'] ?? '更新成功';
+      final message = data?['message'] ?? AppLocalizations.of(context)!.updateSuccessMessage;
 
-      if (result != null) {
-        return UserModel.fromJson(result);
+      if (data != null) {
+        return UserModel.fromJson(data);
       } else {
         return UserModel.fromJson({}, errorMessage: message);
       }
@@ -311,7 +309,8 @@ class ApiUserLogicService {
         "/api/user/check",
         data: {"email": email, "password": password},
       );
-      String message = response.data['message'] ?? '验证成功';
+      final l10n = AppLocalizations.of(context);
+      String message = response.data['message'] ?? l10n!.verification_success;
       return message;
     } on DioException catch (e) {
       String message = '占位错误';
@@ -366,8 +365,9 @@ class ApiUserLogicService {
         "/api/user/password",
         queryParameters: {"newPassword": newPassword},
       );
+      final l10n = AppLocalizations.of(context);
       Map<String, dynamic> responseData = response.data;
-      final message = responseData['msg'] ?? '密码更新成功';
+      final message = responseData['msg'] ?? l10n!.update_success;
       return message;
     } on DioException catch (e) {
       String message = '占位错误';

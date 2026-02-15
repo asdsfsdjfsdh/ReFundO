@@ -2916,6 +2916,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @updateSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Update successful'**
+  String get updateSuccessMessage;
+
+  /// No description provided for @registerSuccessDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful'**
+  String get registerSuccessDefault;
+
+  /// No description provided for @server_exception.
+  ///
+  /// In en, this message translates to:
+  /// **'Server exception, please try again later'**
+  String get server_exception;
+
+  /// No description provided for @order_added_success_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Order added successfully'**
+  String get order_added_success_default;
+
+  /// No description provided for @calculation_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculation failed'**
+  String get calculation_failed;
+
+  /// No description provided for @server_returned_error_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Server returned error code: {code}'**
+  String server_returned_error_code(Object code);
+
+  /// No description provided for @unknown_error_with_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error: {error}'**
+  String unknown_error_with_details(Object error);
+
+  /// No description provided for @important_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Important Update'**
+  String get important_update;
+
+  /// No description provided for @network_connection_failed_check_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection failed, please check network settings'**
+  String get network_connection_failed_check_settings;
+
+  /// No description provided for @login_expired_please_relogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Login expired, please login again'**
+  String get login_expired_please_relogin;
+
+  /// No description provided for @resource_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested resource not found'**
+  String get resource_not_found;
+
+  /// No description provided for @server_error_please_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error, please try again later'**
+  String get server_error_please_retry;
+
+  /// No description provided for @request_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled'**
+  String get request_cancelled;
+
+  /// No description provided for @unknown_error_please_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error occurred, please try again later'**
+  String get unknown_error_please_retry;
+
+  /// No description provided for @request_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Request failed'**
+  String get request_failed;
+
+  /// No description provided for @request_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timeout'**
+  String get request_timeout;
+
+  /// No description provided for @unauthorized_please_relogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized, please login again'**
+  String get unauthorized_please_relogin;
+
+  /// No description provided for @order_sync_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Order sync completed'**
+  String get order_sync_completed;
+
+  /// No description provided for @successfully_synced_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully synced {count} orders'**
+  String successfully_synced_orders(Object count);
+
+  /// No description provided for @failed_orders_count.
+  ///
+  /// In en, this message translates to:
+  /// **', {count} failed'**
+  String failed_orders_count(Object count);
+
+  /// No description provided for @refund_request_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund request approved'**
+  String get refund_request_approved;
+
+  /// No description provided for @refund_request_approved_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund request for order {orderNumber} has been approved, amount: {amount} FCFA'**
+  String refund_request_approved_body(Object orderNumber, Object amount);
+
+  /// No description provided for @refund_request_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund request rejected'**
+  String get refund_request_rejected;
+
+  /// No description provided for @refund_request_rejected_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund request for order {orderNumber} has been rejected, reason: {reason}'**
+  String refund_request_rejected_body(Object orderNumber, Object reason);
+
+  /// No description provided for @filter_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filter_all;
+
+  /// No description provided for @filter_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get filter_today;
+
+  /// No description provided for @filter_this_week.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get filter_this_week;
+
+  /// No description provided for @filter_this_month.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get filter_this_month;
+
+  /// No description provided for @filter_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get filter_custom;
+
+  /// No description provided for @status_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All Status'**
+  String get status_all;
+
+  /// No description provided for @status_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get status_pending;
+
+  /// No description provided for @status_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get status_approved;
+
+  /// No description provided for @status_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get status_rejected;
+
+  /// No description provided for @sort_newest_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest First'**
+  String get sort_newest_first;
+
+  /// No description provided for @sort_oldest_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest First'**
+  String get sort_oldest_first;
+
+  /// No description provided for @sort_amount_high_to_low.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount High to Low'**
+  String get sort_amount_high_to_low;
+
+  /// No description provided for @sort_amount_low_to_high.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount Low to High'**
+  String get sort_amount_low_to_high;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
