@@ -469,5 +469,74 @@
   "downloading_update": "Téléchargement et installation de la mise à jour...",
   "download_failed": "Échec du téléchargement. Veuillez réessayer.",
   "retry": "Réessayer",
-  "ok": "OK"
+  "ok": "OK",
+  "updateSuccessMessage": "Modification réussie",
+  "registerSuccessDefault": "Inscription réussie",
+  "server_exception": "Exception serveur, veuillez réessayer plus tard",
+  "order_added_success_default": "Commande ajoutée avec succès",
+  "calculation_failed": "Calcul échoué",
+  "server_returned_error_code": "Le serveur a renvoyé le code d'erreur: {code}",
+  "unknown_error_with_details": "Erreur inconnue: {error}",
+  "important_update": "Mise à jour importante",
+  "network_connection_failed_check_settings": "Échec de la connexion réseau, veuillez vérifier les paramètres réseau",
+  "login_expired_please_relogin": "Connexion expirée, veuillez vous reconnecter",
+  "resource_not_found": "Ressource demandée introuvable",
+  "server_error_please_retry": "Erreur serveur, veuillez réessayer plus tard",
+  "request_cancelled": "Demande annulée",
+  "unknown_error_please_retry": "Erreur inconnue survenue, veuillez réessayer plus tard",
+  "request_failed": "Échec de la demande",
+  "request_timeout": "Délai de demande expiré",
+  "unauthorized_please_relogin": "Non autorisé, veuillez vous reconnecter",
+  "order_sync_completed": "Synchronisation des commandes terminée",
+  "successfully_synced_orders": "{count} commandes synchronisées avec succès",
+  "failed_orders_count": ", {count} échoué",
+  "refund_request_approved": "Demande de remboursement approuvée",
+  "refund_request_approved_body": "La demande de remboursement pour la commande {orderNumber} a été approuvée, montant: {amount} FCFA",
+  "refund_request_rejected": "Demande de remboursement rejetée",
+  "refund_request_rejected_body": "La demande de remboursement pour la commande {orderNumber} a été rejetée, raison: {reason}",
+  "filter_all": "Tous",
+  "filter_today": "Aujourd'hui",
+  "filter_this_week": "Cette semaine",
+  "filter_this_month": "Ce mois",
+  "filter_custom": "Personnalisé",
+  "status_all": "Tous les statuts",
+  "status_pending": "En attente",
+  "status_approved": "Approuvé",
+  "status_rejected": "Rejeté",
+  "sort_newest_first": "Plus récent d'abord",
+  "sort_oldest_first": "Plus ancien d'abord",
+  "sort_amount_high_to_low": "Montant élevé à bas",
+  "sort_amount_low_to_high": "Montant bas à élevé",
+  "@server_returned_error_code": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "@unknown_error_with_details": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@successfully_synced_orders": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "@failed_orders_count": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "@refund_request_approved_body": {
+    "placeholders": {
+      "orderNumber": {},
+      "amount": {}
+    }
+  },
+  "@refund_request_rejected_body": {
+    "placeholders": {
+      "orderNumber": {},
+      "reason": {}
+    }
+  }
 }

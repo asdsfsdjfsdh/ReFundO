@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -9,6 +10,7 @@ import 'package:refundo/core/utils/log_util.dart';
 import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/data/services/api_update_service.dart';
 import 'package:refundo/data/models/app_update_model.dart';
+import 'package:refundo/config/environment/app_environment.dart';
 
 /// 版本更新服务
 class UpdateService {
@@ -17,6 +19,51 @@ class UpdateService {
   UpdateService._internal();
 
   final ApiUpdateService _apiService = ApiUpdateService();
+
+  /// 专用于下载更新的 Dio 实例
+  Dio? _downloadDio;
+
+  /// 获取下载专用的 Dio 实例（懒加载）
+  Dio get _downloadDioInstance {
+    _downloadDio ??= Dio(
+      BaseOptions(
+        connectTimeout: const Duration(minutes: 5),
+        receiveTimeout: const Duration(minutes: 10),
+        sendTimeout: const Duration(minutes: 5),
+      ),
+    );
+
+    // 禁用 SSL 证书验证（仅用于开发/测试环境）
+    // 注意：生产环境应该移除此代码或使用正确的证书
+    _downloadDio!.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final client = HttpClient();
+        client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+          LogUtil.d("下载服务", "跳过SSL证书验证: $host:$port");
+          return true; // 允许所有证书（包括自签名和IP不匹配的证书）
+        };
+        return client;
+      },
+    );
+
+    // 添加日志拦截器（开发环境）
+    if (AppEnvironment.enableDebugLog) {
+      _downloadDio!.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            LogUtil.d("下载服务", "请求: ${options.uri}");
+            return handler.next(options);
+          },
+          onError: (e, handler) {
+            LogUtil.e("下载服务", "错误: ${e.message}");
+            return handler.next(e);
+          },
+        ),
+      );
+    }
+
+    return _downloadDio!;
+  }
 
   /// 初始化更新服务
   Future<void> initXUpdate() async {
@@ -430,10 +477,14 @@ class _DownloadProgressDialogState extends State<_DownloadProgressDialog> {
   @override
   void initState() {
     super.initState();
-    _downloadApk();
+    // 延迟到第一帧之后执行，确保 widget 树完全构建
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _downloadApk();
+    });
   }
 
   Future<void> _downloadApk() async {
+    if (!mounted) return;
     final l10n = AppLocalizations.of(context)!;
 
     try {
@@ -441,15 +492,20 @@ class _DownloadProgressDialogState extends State<_DownloadProgressDialog> {
       final tempDir = await getTemporaryDirectory();
       final apkPath = '${tempDir.path}/app_${widget.version}.apk';
 
-      // 下载文件
-      await Dio().download(
+      LogUtil.d("更新服务", "下载地址: ${widget.downloadUrl}");
+      LogUtil.d("更新服务", "保存路径: $apkPath");
+      LogUtil.d("更新服务", "Base URL: ${AppEnvironment.updateBaseUrl}");
+
+      // 使用专用的下载 Dio 实例
+      await UpdateService()._downloadDioInstance.download(
         widget.downloadUrl,
         apkPath,
         onReceiveProgress: (received, total) {
-          if (total != -1) {
+          if (total != -1 && mounted) {
             setState(() {
               _progress = received / total;
             });
+            LogUtil.d("更新服务", "下载进度: ${(received / total * 100).toStringAsFixed(1)}%");
           }
         },
       );
@@ -475,9 +531,7 @@ class _DownloadProgressDialogState extends State<_DownloadProgressDialog> {
 
     try {
       final result = await OpenFile.open(_apkPath!);
-      if (result.type == ResultType.done) {
         Navigator.of(context).pop();
-      }
     } catch (e) {
       LogUtil.e("更新服务", "安装失败: $e");
       setState(() {

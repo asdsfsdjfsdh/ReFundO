@@ -1453,4 +1453,127 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get updateSuccessMessage => 'Update successful';
+
+  @override
+  String get registerSuccessDefault => 'Registration successful';
+
+  @override
+  String get server_exception => 'Server exception, please try again later';
+
+  @override
+  String get order_added_success_default => 'Order added successfully';
+
+  @override
+  String get calculation_failed => 'Calculation failed';
+
+  @override
+  String server_returned_error_code(Object code) {
+    return 'Server returned error code: $code';
+  }
+
+  @override
+  String unknown_error_with_details(Object error) {
+    return 'Unknown error: $error';
+  }
+
+  @override
+  String get important_update => 'Important Update';
+
+  @override
+  String get network_connection_failed_check_settings => 'Network connection failed, please check network settings';
+
+  @override
+  String get login_expired_please_relogin => 'Login expired, please login again';
+
+  @override
+  String get resource_not_found => 'Requested resource not found';
+
+  @override
+  String get server_error_please_retry => 'Server error, please try again later';
+
+  @override
+  String get request_cancelled => 'Request cancelled';
+
+  @override
+  String get unknown_error_please_retry => 'Unknown error occurred, please try again later';
+
+  @override
+  String get request_failed => 'Request failed';
+
+  @override
+  String get request_timeout => 'Request timeout';
+
+  @override
+  String get unauthorized_please_relogin => 'Unauthorized, please login again';
+
+  @override
+  String get order_sync_completed => 'Order sync completed';
+
+  @override
+  String successfully_synced_orders(Object count) {
+    return 'Successfully synced $count orders';
+  }
+
+  @override
+  String failed_orders_count(Object count) {
+    return ', $count failed';
+  }
+
+  @override
+  String get refund_request_approved => 'Refund request approved';
+
+  @override
+  String refund_request_approved_body(Object orderNumber, Object amount) {
+    return 'Refund request for order $orderNumber has been approved, amount: $amount FCFA';
+  }
+
+  @override
+  String get refund_request_rejected => 'Refund request rejected';
+
+  @override
+  String refund_request_rejected_body(Object orderNumber, Object reason) {
+    return 'Refund request for order $orderNumber has been rejected, reason: $reason';
+  }
+
+  @override
+  String get filter_all => 'All';
+
+  @override
+  String get filter_today => 'Today';
+
+  @override
+  String get filter_this_week => 'This Week';
+
+  @override
+  String get filter_this_month => 'This Month';
+
+  @override
+  String get filter_custom => 'Custom';
+
+  @override
+  String get status_all => 'All Status';
+
+  @override
+  String get status_pending => 'Pending';
+
+  @override
+  String get status_approved => 'Approved';
+
+  @override
+  String get status_rejected => 'Rejected';
+
+  @override
+  String get sort_newest_first => 'Newest First';
+
+  @override
+  String get sort_oldest_first => 'Oldest First';
+
+  @override
+  String get sort_amount_high_to_low => 'Amount High to Low';
+
+  @override
+  String get sort_amount_low_to_high => 'Amount Low to High';
 }

@@ -115,7 +115,7 @@ class RefundModel {
     final requestStatus = getInt(['requestStatus', 'RequestStatus']);
     RefundStates state = _getStatusFromRequestStatus(requestStatus);
 
-    final scanIdsStr = getString(['scanIds', 'ScanIds']);
+    final scanIdsStr = getString(['scanId', 'ScanId']);
     int parsedOrderId = 0;
     if (scanIdsStr.isNotEmpty) {
       final ids = scanIdsStr.split(',');
@@ -158,6 +158,6 @@ class RefundModel {
 
   @override
   String toString() {
-    return "返还金额：$refundAmount，提现时间：$timestamp，审批状态:$refundState";
+    return 'RefundModel{refundAmount: $refundAmount, timestamp: $timestamp, refundState: $refundState}';
   }
 }

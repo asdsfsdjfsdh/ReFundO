@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/dio_provider.dart';
@@ -151,21 +152,13 @@ class ApiOrderService {
       // 检查响应状态码
       if (response.statusCode == 200) {
         final data = response.data;
-        final code = data['code'];
-
-        // 检查是否有业务错误
-        if (code != 1) {
-          final message = data['message'] ?? '操作失败';
-          if (kDebugMode) {
-            print('业务错误: $message (code: $code)');
-          }
-          return {"message": message, "result": null};
-        }
+        final message = data['message'] ?? AppLocalizations.of(context)!.order_added_success_default;
+        OrderModel order = OrderModel.fromJson(data['data']);
 
         // 成功响应
-        return {"message": "操作成功", "result": null};
+        return {"message": message, "result": order};
       } else {
-        return {"message": "服务器返回异常状态码: ${response.statusCode}", "result": null};
+        return {"message": AppLocalizations.of(context)!.server_exception, "result": null};
       }
     } on DioException catch (e) {
       String message = '占位错误';
@@ -311,23 +304,12 @@ class ApiOrderService {
         final data = response.data;
         final code = data['code'];
 
-        if (code != 1) {
-          final message = data['message'] ?? data['Message'] ?? '操作失败';
-          if (kDebugMode) {
-            print('❌ 退款业务错误: $message (code: $code)');
-          }
-          return -1;
-        }
-
-        // 成功
-        if (kDebugMode) {
-          print('✅ 退款申请成功');
-        }
-        return 1;
+        return code;
       } else {
         if (kDebugMode) {
           print('❌ 服务器返回异常状态码: ${response.statusCode}');
         }
+        // TODO 将硬编码的服务器异常消息提取到配置文件
         return -1;
       }
     } on DioException catch (e) {
@@ -375,9 +357,9 @@ class ApiOrderService {
       if (kDebugMode) {
         print('未知错误: $e');
       }
-      String message = '未知错误: $e';
+      String message = '服务器异常';
       Map<String, dynamic> result = {"message": message, "order": null};
-      return 0;
+      return -1;
     }
   }
 }

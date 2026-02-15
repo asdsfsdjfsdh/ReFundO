@@ -505,5 +505,74 @@
   "downloading_update": "Downloading and installing the update...",
   "download_failed": "Download failed. Please try again.",
   "retry": "Retry",
-  "ok": "OK"
+  "ok": "OK",
+  "updateSuccessMessage": "Update successful",
+  "registerSuccessDefault": "Registration successful",
+  "server_exception": "Server exception, please try again later",
+  "order_added_success_default": "Order added successfully",
+  "calculation_failed": "Calculation failed",
+  "server_returned_error_code": "Server returned error code: {code}",
+  "unknown_error_with_details": "Unknown error: {error}",
+  "important_update": "Important Update",
+  "network_connection_failed_check_settings": "Network connection failed, please check network settings",
+  "login_expired_please_relogin": "Login expired, please login again",
+  "resource_not_found": "Requested resource not found",
+  "server_error_please_retry": "Server error, please try again later",
+  "request_cancelled": "Request cancelled",
+  "unknown_error_please_retry": "Unknown error occurred, please try again later",
+  "request_failed": "Request failed",
+  "request_timeout": "Request timeout",
+  "unauthorized_please_relogin": "Unauthorized, please login again",
+  "order_sync_completed": "Order sync completed",
+  "successfully_synced_orders": "Successfully synced {count} orders",
+  "failed_orders_count": ", {count} failed",
+  "refund_request_approved": "Refund request approved",
+  "refund_request_approved_body": "Refund request for order {orderNumber} has been approved, amount: {amount} FCFA",
+  "refund_request_rejected": "Refund request rejected",
+  "refund_request_rejected_body": "Refund request for order {orderNumber} has been rejected, reason: {reason}",
+  "filter_all": "All",
+  "filter_today": "Today",
+  "filter_this_week": "This Week",
+  "filter_this_month": "This Month",
+  "filter_custom": "Custom",
+  "status_all": "All Status",
+  "status_pending": "Pending",
+  "status_approved": "Approved",
+  "status_rejected": "Rejected",
+  "sort_newest_first": "Newest First",
+  "sort_oldest_first": "Oldest First",
+  "sort_amount_high_to_low": "Amount High to Low",
+  "sort_amount_low_to_high": "Amount Low to High",
+  "@server_returned_error_code": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "@unknown_error_with_details": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@successfully_synced_orders": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "@failed_orders_count": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "@refund_request_approved_body": {
+    "placeholders": {
+      "orderNumber": {},
+      "amount": {}
+    }
+  },
+  "@refund_request_rejected_body": {
+    "placeholders": {
+      "orderNumber": {},
+      "reason": {}
+    }
+  }
 }

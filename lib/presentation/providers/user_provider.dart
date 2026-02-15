@@ -9,6 +9,7 @@ import 'package:refundo/core/utils/storage/setting_storage.dart';
 import 'package:refundo/core/utils/storage/user_storage.dart';
 import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/data/services/api_user_logic_service.dart';
+import 'package:refundo/l10n/app_localizations.dart';
 import 'package:refundo/presentation/providers/order_provider.dart';
 import 'package:refundo/presentation/providers/refund_provider.dart';
 import 'package:refundo/data/models/user_model.dart';
@@ -174,6 +175,7 @@ class UserProvider with ChangeNotifier {
   ) async {
     try {
       UserModel? user = _user;
+      final l10n = AppLocalizations.of(context);
 
       // 使用 copyWith 创建新的用户对象
       switch (updateType) {
@@ -199,7 +201,7 @@ class UserProvider with ChangeNotifier {
 
       if(updatedUser.errorMessage.isEmpty){
         _user = updatedUser;
-        return "修改成功";
+        return l10n!.modification_success;
       }else{
         LogUtil.e("更新用户信息", updatedUser.errorMessage);
         return updatedUser.errorMessage;
@@ -220,7 +222,9 @@ class UserProvider with ChangeNotifier {
   ) async {
     try {
       String message = await _service.verifyUserInfo(email,password,context);
-      if(message == "验证成功"){
+      final l10n = AppLocalizations.of(context);
+      
+      if(message == l10n!.verification_success){
         return true;
       } else {
         LogUtil.e("验证用户身份", message);

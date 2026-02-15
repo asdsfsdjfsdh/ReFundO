@@ -211,7 +211,7 @@ class UserDetailPage extends StatelessWidget {
                     icon: Icons.account_balance_wallet_rounded,
                     iconColor: AppColors.successLight,
                     title: 'Refunded Amount',
-                    value: '${(user.refundedAmount).toStringAsFixed(0)} FCFA',
+                    value: '${(user.balance).toStringAsFixed(0)} FCFA',
                   ),
                 ]),
 
@@ -284,7 +284,7 @@ class UserDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${user.balance.toStringAsFixed(0)} FCFA',
+                '${(user.balance).toStringAsFixed(0)} FCFA',
                 style: AppTextStyles.headlineMedium.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

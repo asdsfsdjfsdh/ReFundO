@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:refundo/core/utils/network_logger.dart';
 import 'package:refundo/core/services/secure_storage_service.dart';
 import 'package:refundo/core/services/api_signature_service.dart';
@@ -79,6 +80,16 @@ class DioProvider extends ChangeNotifier {
               debugPrint('CSRF Request: Adding Authorization header');
             }
           }
+
+          // 添加语言标识请求头
+          final prefs = await SharedPreferences.getInstance();
+          final languageCode = prefs.getString('languageCode') ?? 'zh';
+          final countryCode = prefs.getString('countryCode') ?? 'CN';
+          options.headers['Accept-Language'] = '$languageCode-${countryCode.toLowerCase()}';
+          if (AppEnvironment.enableDebugLog) {
+            debugPrint('CSRF Request: Adding Accept-Language header: $languageCode-${countryCode.toLowerCase()}');
+          }
+
           return handler.next(options);
         },
       ),
@@ -106,6 +117,15 @@ class DioProvider extends ChangeNotifier {
             if (AppEnvironment.enableDebugLog) {
               debugPrint('No token found, skipping Authorization header');
             }
+          }
+
+          // 添加语言标识请求头
+          final prefs = await SharedPreferences.getInstance();
+          final languageCode = prefs.getString('languageCode') ?? 'zh';
+          final countryCode = prefs.getString('countryCode') ?? 'CN';
+          options.headers['Accept-Language'] = '$languageCode-${countryCode.toLowerCase()}';
+          if (AppEnvironment.enableDebugLog) {
+            debugPrint('Adding Accept-Language header: $languageCode-${countryCode.toLowerCase()}');
           }
 
           // 只对需要CSRF Token的路径添加CSRF Token
